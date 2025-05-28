@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="Dalamud.Plugin.Bootstrap.targets" />
+    <Import Project="Dalamud.Plugin.Bootstrap.targets" />
 
-  <PropertyGroup>
-    <Version>0.0.0.1</Version>
-    <Description>MinigameCollection</Description>
-    <PackageProjectUrl>https://github.com/goatcorp/MinigameCollection</PackageProjectUrl>
-    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Authors>Pistachio Herald</Authors>
+        <Version>0.0.0.1</Version>
+        <RootNamespace>MinigameCollection</RootNamespace>
+        <AssemblyName>MinigameCollection</AssemblyName>
+        <FileVersion>0.0.0.1</FileVersion>
+        <AssemblyVersion>0.0.0.1</AssemblyVersion>
+        <Description>A collection of chat minigames for FFXIV</Description>
+        <PackageProjectUrl>https://https://github.com/Pistachio-dev/MinigameCollection</PackageProjectUrl>
+        <PackageId>MinigameCollection</PackageId>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Platforms>x64</Platforms>
+        <Nullable>enable</Nullable>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <LangVersion>latest</LangVersion>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\TruthOrDareHelper\DalamudBasics\DalamudBasics.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\DalamudBasics\DalamudBasics\DalamudBasics.csproj" />
+    </ItemGroup>
 </Project>

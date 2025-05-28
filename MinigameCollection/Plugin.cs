@@ -16,7 +16,7 @@ namespace MinigameCollection;
 
 public sealed class Plugin : IDalamudPlugin
 {
-    private const string CommandName = "/MinigameCollection";
+    private const string CommandName = "/minig";
 
     public Configuration Configuration { get; init; }
 
@@ -43,7 +43,7 @@ public sealed class Plugin : IDalamudPlugin
 
         serviceProvider.GetRequiredService<ICommandManager>().AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Type /MinigameCollection to start"
+            HelpMessage = "Type /minig to start"
         });
 
         pluginInterface.UiBuilder.Draw += DrawUI;

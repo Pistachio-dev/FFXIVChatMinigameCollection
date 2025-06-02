@@ -33,5 +33,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DalamudBasics\DalamudBasics\DalamudBasics.csproj" />
+        <ProjectReference Include="..\Model\PersistentModel.csproj" />
     </ItemGroup>
 </Project>

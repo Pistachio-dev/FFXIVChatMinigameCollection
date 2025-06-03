@@ -47,13 +47,18 @@ namespace PersistentModel.Model.Banking
             return newTransaction;
         }
 
-        private GilTransaction(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, bool isHouseCut, long amount)
+        public GilTransaction(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, bool isHouseCut, long amount)
         {
             HostPlayer = hostPlayer;
             PatronPlayer = patronPlayer;
             IsHouseCut = isHouseCut;
             Amount = amount;
             WhenUtc = DateTime.UtcNow;
+        }
+
+        internal GilTransaction()
+        {
+
         }
     }
 }

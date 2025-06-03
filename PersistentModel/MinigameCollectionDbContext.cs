@@ -15,7 +15,7 @@ namespace PersistentModel
 
         public DbSet<PlayerCashRecord> PlayerCashRecords { get; set; }
 
-        public DbSet<PlayerIdentifier> playerIdentifiers { get; set; }
+        public DbSet<PlayerIdentifier> PlayerIdentifiers { get; set; }
 
         public DbSet<PlayerOOGData> PlayerOOGEntries { get; set; }
 
@@ -30,6 +30,23 @@ namespace PersistentModel
         {
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
             base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<PlayerOOGData>()
+                .HasKey(p => p.Id);
+
+            modelBuilder.Entity<PlayerCashRecord>()
+                .HasKey(c => c.Id);
+
+            modelBuilder.Entity<GilTransaction>()
+                .HasKey(x => x.Id);
+
+            modelBuilder.Entity<PlayerIdentifier>()
+                .HasKey(i => i.Id);
         }
 
         public override void Dispose()

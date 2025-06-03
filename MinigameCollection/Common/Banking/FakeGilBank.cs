@@ -15,8 +15,10 @@ namespace MinigameCollection.Common.Banking
         }
 
         public long ManuallySetFunds(string playerName, string playerWorld, long newFunds)
-        {
-            throw new NotImplementedException();
+        {            
+            // If player does not exist, create one
+            // Create gilTransaction
+            // Add to player
         }
     }
 }

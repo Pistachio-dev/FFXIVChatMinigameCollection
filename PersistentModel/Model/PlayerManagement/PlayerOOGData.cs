@@ -38,7 +38,7 @@ namespace PersistentModel.Model.PlayerManagement
             World = world;
             CreatedAtUtc = DateTime.UtcNow;
             PreviousIdentities = new();
-            CashRecord = new PlayerCashRecord(this);
+            CashRecord = new PlayerCashRecord();
         }
     }
 }

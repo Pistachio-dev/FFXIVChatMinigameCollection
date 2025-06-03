@@ -14,9 +14,6 @@ namespace PersistentModel.Model.Banking
         public Guid Id { get; set; }
 
         [Required]
-        public PlayerOOGData Player { get; set; }
-
-        [Required]
         public long RealGilBalance { get; set; }
 
         [Required]
@@ -25,9 +22,8 @@ namespace PersistentModel.Model.Banking
         [Required]
         public List<GilTransaction> History { get; set; } = new();
 
-        public PlayerCashRecord(PlayerOOGData player)
+        public PlayerCashRecord()
         {
-            Player = player;
             RealGilBalance = 0;
             FakeGilBalance = 0;
             History = new();

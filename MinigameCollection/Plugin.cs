@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using MinigameCollection.Windows;
 using ECommons;
+using PersistentModel.Extensions;
 
 namespace MinigameCollection;
 
@@ -72,6 +73,7 @@ public sealed class Plugin : IDalamudPlugin
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
+        serviceCollection.AddRepositories();
 
         return serviceCollection.BuildServiceProvider();
     }

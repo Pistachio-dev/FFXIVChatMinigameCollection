@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinigameCollection", "Minig
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalamudBasics", "DalamudBasics\DalamudBasics\DalamudBasics.csproj", "{24909546-95D1-42DA-812D-58AF537324C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistentModel", "Model\PersistentModel.csproj", "{B0052832-A051-4A48-B56D-1A6FC6C91B6D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistentModel", "PersistentModel\PersistentModel.csproj", "{B0052832-A051-4A48-B56D-1A6FC6C91B6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

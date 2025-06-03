@@ -1,0 +1,5 @@
+Launched from the solution folder.
+Creating a migration:
+dotnet ef migrations add "NAME OF THE MIGRATION" --context MinigameCollectionDbContext --project "PersistentModel\PersistentModel.csproj"
+
+dotnet ef database update --context MinigameCollectionDbContext --project "PersistentModel\PersistentModel.csproj"

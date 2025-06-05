@@ -21,9 +21,23 @@ namespace PersistentModel
 
         public string DbPath { get; }
 
+        internal static bool Initialized;
+
         public MinigameCollectionDbContext(string configDir)
         {
             DbPath = $"{configDir}MinigameCollection.db";
+        }
+
+        public void InitializeIfNeeded()
+        {
+            if (Initialized) return;
+
+            var pendingMigrations = Database.GetPendingMigrations();
+
+            if (pendingMigrations.Any())
+            {
+                Database.Migrate();
+            }
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -58,5 +72,7 @@ namespace PersistentModel
         {
             await base.DisposeAsync();
         }
+
+
     }
 }

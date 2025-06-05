@@ -1,4 +1,5 @@
 using MinigameCollection.Common.Banking.Interface;
+using PersistentModel.Model.Banking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,8 @@ namespace MinigameCollection.Common.Banking
         }
 
         public long ManuallySetFunds(string playerName, string playerWorld, long newFunds)
-        {            
-            // If player does not exist, create one
-            // Create gilTransaction
-            // Add to player
+        {
+            throw new NotImplementedException();
         }
     }
 }

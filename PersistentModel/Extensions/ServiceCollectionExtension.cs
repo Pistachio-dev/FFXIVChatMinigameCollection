@@ -9,6 +9,7 @@ namespace PersistentModel.Extensions
     {
         public static IServiceCollection AddRepositories(this IServiceCollection serviceCollection)
         {
+            serviceCollection.AddDbContext<MinigameCollectionDbContext>();
             serviceCollection.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             serviceCollection.AddTransient(typeof(IGilTransactionRepository), typeof(GilTransactionRepository));
             serviceCollection.AddTransient(typeof(IPlayerCashRecordRepository), typeof(PlayerCashRecordRepository));

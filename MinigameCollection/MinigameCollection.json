@@ -1,9 +1,16 @@
 {
     "Author": "Pistachio Herald",
-    "Name": "MinigameCollection",
-    "Punchline": "A quippy one liner",
-    "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+    "Name": "Minigame Collection",
+    "Punchline": "A collection of of venue or casino games.",
+    "Description": "A collection of of venue or casino games. Type /minig to start.",
     "ApplicableVersion": "any",
     "Tags": [
+        "party",
+        "venue",
+        "casino",
+        "gil",
+        "roulette",
+        "garlean",
+        "darts"        
     ]
 }

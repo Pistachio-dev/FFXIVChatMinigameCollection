@@ -33,7 +33,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\DalamudBasics\DalamudBasics\DalamudBasics.csproj" />
-        <ProjectReference Include="..\Model\PersistentModel.csproj" />
         <ProjectReference Include="..\PersistentModel\PersistentModel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="DalamudPackager" Version="12.0.0" />
     </ItemGroup>
 </Project>

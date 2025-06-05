@@ -9,5 +9,10 @@ namespace PersistentModel.Repository
         public PlayerOOGDataRepository(MinigameCollectionDbContext minigameCollectionDbContext) : base(minigameCollectionDbContext)
         {
         }
+
+        public PlayerOOGData? TryGetPlayer(string name, string world)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

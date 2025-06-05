@@ -11,10 +11,12 @@ namespace PersistentModel.Repository.Generic
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
         private readonly MinigameCollectionDbContext _minigameCollectionDbContext;
+      
         public Repository(MinigameCollectionDbContext minigameCollectionDbContext)
         {
-            _minigameCollectionDbContext = minigameCollectionDbContext;
+            _minigameCollectionDbContext = minigameCollectionDbContext;        
         }
+
         public void Add(TEntity entity)
         {
             _minigameCollectionDbContext.Set<TEntity>().Add(entity);

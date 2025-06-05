@@ -15,7 +15,11 @@ namespace PersistentModel
             var fullPath = Path.Combine(appDataPath, "XIVLauncher", "pluginConfigs", "MinigameCollection");
 
             var configDir = fullPath + Path.DirectorySeparatorChar;
-            return new MinigameCollectionDbContext(configDir);
+            var dbContext = new MinigameCollectionDbContext(configDir);
+
+            dbContext.InitializeIfNeeded();
+
+            return dbContext;
         }
     }
 }

@@ -91,6 +91,7 @@ public class MainWindow : PluginWindowBase, IDisposable
         {
             ListFates();
         }
+        
     }
 
     private unsafe void ListFates()

@@ -7,26 +7,25 @@ using System.Linq;
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
-    public abstract class GameBoardBase
+    public class GameBoardBase
     {
         public GameBoardBase(IConfigurationService<Configuration> configurationService, PlayersInSessionManager playerManager)
         {
             this.config = configurationService.GetConfiguration();
             fakeBank = new FakeGilBank();
             realBank = new RealGilBank();
-            this.playerManager = playerManager;
+            this.PlayerManager = playerManager;
         }
 
-        public abstract string GameMode { get; }
         public bool UsingRealGil => config.UsingRealGil;
 
         protected Configuration config { get; }
         public IFakeGilBank fakeBank { get; }
         public IRealGilBank realBank { get; }
 
-        public PlayersInSessionManager playerManager { get; }
+        public PlayersInSessionManager PlayerManager { get; }
 
-        public List<PlayerInSession> Players => playerManager.InGame;
+        public List<PlayerInSession> Players => PlayerManager.InGame;
         
         public bool AddPlayer(string name, string world)
         {

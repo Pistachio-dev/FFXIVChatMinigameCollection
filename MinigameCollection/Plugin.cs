@@ -80,8 +80,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
         serviceCollection.AddRepositories();
-        serviceCollection.AddSingleton<GameModeManager>();
-        serviceCollection.AddSingleton<PlayersInSessionManager>();
+        serviceCollection.AddGamesBase();        
         serviceCollection.AddNoGame();
 
         return serviceCollection.BuildServiceProvider();

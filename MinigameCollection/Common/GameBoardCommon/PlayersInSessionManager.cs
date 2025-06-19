@@ -52,6 +52,17 @@ namespace MinigameCollection.Common.GameBoardCommon
             InGame.Add(new PlayerInSession(existingPlayer));
         }
 
+        public void RemovePlayer(string fullName)
+        {
+            var player = InGame.FirstOrDefault(p => p.FullName.Equals(fullName, StringComparison.OrdinalIgnoreCase));
+            if (player == null)
+            {
+                return;
+            }
+
+            InGame.Remove(player);
+        }
+
         public bool IsPlayerInSession(string name, string world)
         {
             return InGame.Any(p => p.Is(name, world));// || Spectating.Any(p => p.Is(name, world));

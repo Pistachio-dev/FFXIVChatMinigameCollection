@@ -16,8 +16,6 @@ namespace MinigameCollection.Games.NoGame
             CustomProperty = "Custom initialized property";
         }
 
-        public override string GameMode => "No game selected";
-
         public string CustomProperty {  get; set; }
     }
 }

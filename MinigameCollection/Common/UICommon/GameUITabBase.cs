@@ -1,3 +1,5 @@
+using DalamudBasics.GUI.Windows;
+using DalamudBasics.Logging;
 using ImGuiNET;
 using MinigameCollection.Common.GameActionsCommon;
 using MinigameCollection.Common.GameBoardCommon;
@@ -10,13 +12,13 @@ using System.Threading.Tasks;
 
 namespace MinigameCollection.Common.UICommon
 {
-    public abstract class GameUITab
+    public class GameUITabBase : PluginWindowBase
     {
         protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
         private readonly GameBoardBase gameBoard;
         private readonly GameActionsBase gameActions;
 
-        public GameUITab(GameBoardBase gameBoard, GameActionsBase gameActions)
+        public GameUITabBase(ILogService logService, GameBoardBase gameBoard, GameActionsBase gameActions) : base(logService, "##DefaultGameUITab")
         {
             this.gameBoard = gameBoard;
             this.gameActions = gameActions;
@@ -47,10 +49,20 @@ namespace MinigameCollection.Common.UICommon
                 ImGui.TextUnformatted(player.FullName);
 
                 ImGui.TableNextColumn();
-                ImGui.TextUnformatted("Placeholder");
+                if (ImGui.Button($"##{playerIndex}"))
+                {
+                    gameActions.RemovePlayer(player.FullName);
+                }
+
+                playerIndex++;
             }
 
             ImGui.EndTable();
+
+            if (ImGui.Button("Add target player"))
+            {
+                gameActions.AddTargetPlayer();
+            }
         }
     }
 }

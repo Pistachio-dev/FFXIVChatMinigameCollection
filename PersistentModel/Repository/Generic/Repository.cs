@@ -10,33 +10,34 @@ namespace PersistentModel.Repository.Generic
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        private readonly MinigameCollectionDbContext _minigameCollectionDbContext;
+        protected readonly MinigameCollectionDbContext _ctx;
       
         public Repository(MinigameCollectionDbContext minigameCollectionDbContext)
         {
-            _minigameCollectionDbContext = minigameCollectionDbContext;        
+            _ctx = minigameCollectionDbContext;
+            _ctx.ApplyPendingMigrations();
         }
 
         public void Add(TEntity entity)
         {
-            _minigameCollectionDbContext.Set<TEntity>().Add(entity);
-            _minigameCollectionDbContext.SaveChanges();
+            _ctx.Set<TEntity>().Add(entity);
+            _ctx.SaveChanges();
         }
         public void AddMany(IEnumerable<TEntity> entities)
         {
-            _minigameCollectionDbContext.Set<TEntity>().AddRange(entities);
-            _minigameCollectionDbContext.SaveChanges();
+            _ctx.Set<TEntity>().AddRange(entities);
+            _ctx.SaveChanges();
         }
         public void Delete(TEntity entity)
         {
-            _minigameCollectionDbContext.Set<TEntity>().Remove(entity);
-            _minigameCollectionDbContext.SaveChanges();
+            _ctx.Set<TEntity>().Remove(entity);
+            _ctx.SaveChanges();
         }
         public void DeleteMany(Expression<Func<TEntity, bool>> predicate)
         {
             var entities = Find(predicate);
-            _minigameCollectionDbContext.Set<TEntity>().RemoveRange(entities);
-            _minigameCollectionDbContext.SaveChanges();
+            _ctx.Set<TEntity>().RemoveRange(entities);
+            _ctx.SaveChanges();
         }
         public TEntity FindOne(Expression<Func<TEntity, bool>> predicate, FindOptions? findOptions = null)
         {
@@ -52,21 +53,21 @@ namespace PersistentModel.Repository.Generic
         }
         public void Update(TEntity entity)
         {
-            _minigameCollectionDbContext.Set<TEntity>().Update(entity);
-            _minigameCollectionDbContext.SaveChanges();
+            _ctx.Set<TEntity>().Update(entity);
+            _ctx.SaveChanges();
         }
         public bool Any(Expression<Func<TEntity, bool>> predicate)
         {
-            return _minigameCollectionDbContext.Set<TEntity>().Any(predicate);
+            return _ctx.Set<TEntity>().Any(predicate);
         }
         public int Count(Expression<Func<TEntity, bool>> predicate)
         {
-            return _minigameCollectionDbContext.Set<TEntity>().Count(predicate);
+            return _ctx.Set<TEntity>().Count(predicate);
         }
         private DbSet<TEntity> Get(FindOptions? findOptions = null)
         {
             findOptions ??= new FindOptions();
-            var entity = _minigameCollectionDbContext.Set<TEntity>();
+            var entity = _ctx.Set<TEntity>();
             if (findOptions.IsAsNoTracking && findOptions.IsIgnoreAutoIncludes)
             {
                 entity.IgnoreAutoIncludes().AsNoTracking();

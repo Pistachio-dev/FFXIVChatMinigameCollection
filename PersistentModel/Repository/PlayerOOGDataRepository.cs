@@ -12,7 +12,17 @@ namespace PersistentModel.Repository
 
         public PlayerOOGData? TryGetPlayer(string name, string world)
         {
-            throw new NotImplementedException();
+            return _ctx.PlayerOOGEntries.FirstOrDefault(p => p.Name == name && p.World == world);
+        }
+
+        public void AddPlayer(PlayerOOGData player)
+        {
+            Add(player);
+        }
+
+        public void RemovePlayer(PlayerOOGData player)
+        {
+            Delete(player);
         }
     }
 }

@@ -43,10 +43,13 @@ namespace MinigameCollection.Common.GameBoardCommon
 
             string[] splitName = nameWithWorld.Split('@');
 
-            var existingPlayer = playerOOGRepo.FindOne(p => p.Is(splitName[0], splitName[1]));
+            var existingPlayer = playerOOGRepo.TryGetPlayer(splitName[0], splitName[1]);
             if (existingPlayer == null)
-            {
+            {                
                 existingPlayer = new PlayerOOGData(splitName[0], splitName[1]);
+                logService.Info($"No DB info for player {existingPlayer.FullName}. Adding it.");
+                playerOOGRepo.Add(existingPlayer);
+                //TODO: Add a financial record at this point too
             }
 
             InGame.Add(new PlayerInSession(existingPlayer));
@@ -74,7 +77,7 @@ namespace MinigameCollection.Common.GameBoardCommon
             {
                 logService.Warning("Could not add target player: retrieved name is empty.");
                 chatGui.PrintError("Not targeting a player");
-                return false; ;
+                return false;
             }
 
             var splitName = nameWithWorld.Split("@");

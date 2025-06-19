@@ -33,9 +33,7 @@ namespace PersistentModel
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
             
             base.OnConfiguring(optionsBuilder);
-
-            ApplyPendingMigrations();
-        }
+        }        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,10 +58,10 @@ namespace PersistentModel
 
             var configDir = fullPath + Path.DirectorySeparatorChar;
 
-            return configDir;
+            return $"{configDir}MinigameCollection.cs";
         }
 
-        private void ApplyPendingMigrations()
+        internal void ApplyPendingMigrations()
         {
             if (Initialized) return;
 
@@ -73,6 +71,8 @@ namespace PersistentModel
             {
                 Database.Migrate();
             }
+
+            Initialized = true;
         }
 
         public override void Dispose()

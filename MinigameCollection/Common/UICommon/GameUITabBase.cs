@@ -17,6 +17,7 @@ namespace MinigameCollection.Common.UICommon
         protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
         private readonly GameBoardBase gameBoard;
         private readonly GameActionsBase gameActions;
+        private List<Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
 
         public GameUITabBase(ILogService logService, GameBoardBase gameBoard, GameActionsBase gameActions) : base(logService, "##DefaultGameUITab")
         {
@@ -51,7 +52,7 @@ namespace MinigameCollection.Common.UICommon
                 ImGui.TableNextColumn();
                 if (ImGui.Button($"##{playerIndex}"))
                 {
-                    gameActions.RemovePlayer(player.FullName);
+                    RunAfterDraw(() => gameActions.RemovePlayer(player.FullName));
                 }
 
                 playerIndex++;
@@ -63,6 +64,23 @@ namespace MinigameCollection.Common.UICommon
             {
                 gameActions.AddTargetPlayer();
             }
+
+            RunDelayedActions();
+        }
+
+        protected void RunAfterDraw(Action action)
+        {
+            delayedActions.Add(action);
+        }
+
+        protected void RunDelayedActions()
+        {
+            foreach (var action in delayedActions)
+            {
+                action();
+            }
+
+            delayedActions.Clear();
         }
     }
 }

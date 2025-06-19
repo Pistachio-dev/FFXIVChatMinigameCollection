@@ -1,24 +1,32 @@
 using DalamudBasics.Configuration;
+using MinigameCollection.Common.Banking;
 using MinigameCollection.Common.Banking.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace MinigameCollection.Common.Game
+namespace MinigameCollection.Common.GameBoardCommon
 {
     public abstract class GameBoardBase
     {
-        public GameBoardBase(IConfigurationService<Configuration> configurationService)
+        public GameBoardBase(IConfigurationService<Configuration> configurationService, PlayersInSessionManager playerManager)
         {
             this.config = configurationService.GetConfiguration();
+            fakeBank = new FakeGilBank();
+            realBank = new RealGilBank();
+            this.playerManager = playerManager;
         }
 
         public abstract string GameMode { get; }
         public bool UsingRealGil => config.UsingRealGil;
 
-        private Configuration config { get; }
-        private readonly IFakeGilBank fakeBank;
-        private readonly IRealGilBank realBank;
-        private readonly PlayerBase[] players;
+        protected Configuration config { get; }
+        public IFakeGilBank fakeBank { get; }
+        public IRealGilBank realBank { get; }
+
+        public PlayersInSessionManager playerManager { get; }
+
+        public List<PlayerInSession> Players => playerManager.InGame;
         
         public bool AddPlayer(string name, string world)
         {
@@ -37,7 +45,7 @@ namespace MinigameCollection.Common.Game
 
         public bool TogglePlayerAsAFK(string name, string world)
         {
-            var player = players.FirstOrDefault(p => p.PlayerOOGData.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
+            var player = Players.FirstOrDefault(p => p.PlayerOOGData.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
                 && p.PlayerOOGData.World.Equals(world, StringComparison.CurrentCultureIgnoreCase));
 
             if (player == null)

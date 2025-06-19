@@ -8,7 +8,7 @@ namespace MinigameCollection;
 public class Configuration : IConfiguration
 {
     public int Version { get; set; } = 0;
-    public XivChatType DefaultOutputChatType { get; set; } = XivChatType.Party;
+    public XivChatType DefaultOutputChatType { get; set; } = XivChatType.Echo;
     public bool LogOutgoingChatOutput { get; set; } = true;
     public bool LogClientOnlyChatOutput { get; set; } = true;
     public int LimitedChatChannelsMessageDelayInMs { get; set; } = 1000;

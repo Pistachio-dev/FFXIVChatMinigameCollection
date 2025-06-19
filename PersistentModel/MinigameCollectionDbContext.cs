@@ -19,31 +19,22 @@ namespace PersistentModel
 
         public DbSet<PlayerOOGData> PlayerOOGEntries { get; set; }
 
-        public string DbPath { get; }
+        public string DbPath { get; private set; }
 
         internal static bool Initialized;
 
-        public MinigameCollectionDbContext(string configDir)
+        public MinigameCollectionDbContext()
         {
-            DbPath = $"{configDir}MinigameCollection.db";
-        }
-
-        public void InitializeIfNeeded()
-        {
-            if (Initialized) return;
-
-            var pendingMigrations = Database.GetPendingMigrations();
-
-            if (pendingMigrations.Any())
-            {
-                Database.Migrate();
-            }
+            DbPath = GetPath();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
+            
             base.OnConfiguring(optionsBuilder);
+
+            ApplyPendingMigrations();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -61,6 +52,27 @@ namespace PersistentModel
 
             modelBuilder.Entity<PlayerIdentifier>()
                 .HasKey(i => i.Id);
+        }
+        private string GetPath()
+        {
+            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            var fullPath = Path.Combine(appDataPath, "XIVLauncher", "pluginConfigs", "MinigameCollection");
+
+            var configDir = fullPath + Path.DirectorySeparatorChar;
+
+            return configDir;
+        }
+
+        private void ApplyPendingMigrations()
+        {
+            if (Initialized) return;
+
+            var pendingMigrations = Database.GetPendingMigrations();
+
+            if (pendingMigrations.Any())
+            {
+                Database.Migrate();
+            }
         }
 
         public override void Dispose()

@@ -1,12 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PersistentModel.Model.Banking;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PersistentModel.Model.PlayerManagement
 {
@@ -39,6 +33,14 @@ namespace PersistentModel.Model.PlayerManagement
             CreatedAtUtc = DateTime.UtcNow;
             PreviousIdentities = new();
             CashRecord = new PlayerCashRecord();
+        }
+
+        public string FullName  => $"{Name}@{World}";        
+
+        public bool Is(string name, string world)
+        {
+            return Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                && World.Equals(world, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

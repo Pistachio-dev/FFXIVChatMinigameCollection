@@ -12,12 +12,18 @@ using System;
 using MinigameCollection.Windows;
 using ECommons;
 using PersistentModel.Extensions;
+using DalamudBasics.Chat.Output;
+using MinigameCollection.Windows.Name;
+using MinigameCollection.Games.NoGame;
+using MinigameCollection.Common;
+using MinigameCollection.Common.GameBoardCommon;
 
 namespace MinigameCollection;
 
 public sealed class Plugin : IDalamudPlugin
 {
     private const string CommandName = "/minig";
+    private const string WaterMark = "[MG]";
 
     public Configuration Configuration { get; init; }
 
@@ -74,6 +80,9 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
         serviceCollection.AddRepositories();
+        serviceCollection.AddSingleton<GameModeManager>();
+        serviceCollection.AddSingleton<PlayersInSessionManager>();
+        serviceCollection.AddNoGame();
 
         return serviceCollection.BuildServiceProvider();
     }
@@ -82,7 +91,8 @@ public sealed class Plugin : IDalamudPlugin
     {
         IFramework framework = serviceProvider.GetRequiredService<IFramework>();
         serviceProvider.GetRequiredService<ILogService>().AttachToGameLogicLoop(framework);
-        serviceProvider.GetRequiredService<IChatListener>().InitializeAndRun("[TTT]");
+        serviceProvider.GetRequiredService<IChatListener>().InitializeAndRun(WaterMark);
+        serviceProvider.GetRequiredService<IChatOutput>().InitializeAndAttachToGameLogicLoop(framework, WaterMark);
         serviceProvider.GetRequiredService<HookManager>();
     }
 

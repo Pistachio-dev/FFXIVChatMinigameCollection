@@ -34,30 +34,38 @@ namespace MinigameCollection.Common.UICommon
         {
             ImGui.TextUnformatted("No game selected");
             const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
-            if (ImGui.BeginTable("##GamePlayerTable", 2, flags))
+            if (ImGui.BeginTable("##GamePlayerTable", 3, flags))
             {
                 ImGui.TableSetupColumn("Player name", ImGuiTableColumnFlags.WidthStretch, 0.7f);
+                ImGui.TableSetupColumn("Status", ImGuiTableColumnFlags.WidthStretch, 0.3f);
                 ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 0.3f);
-            }
-            ImGui.TableHeadersRow();
-            var playerIndex = 0;
-            foreach (var player in gameBoard.Players)
-            {
-                ImGui.TableNextRow();
-                ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ImGui.GetColorU32(defaultColor));
 
-                ImGui.TableNextColumn();
-                ImGui.TextUnformatted(player.FullName);
-
-                ImGui.TableNextColumn();
-                if (ImGui.Button($"##{playerIndex}"))
+                ImGui.TableHeadersRow();
+                var playerIndex = 0;
+                foreach (var player in gameBoard.Players)
                 {
-                    RunAfterDraw(() => gameActions.RemovePlayer(player.FullName));
+                    ImGui.TableNextRow();
+                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ImGui.GetColorU32(defaultColor));
+
+                    // Player Name
+                    ImGui.TableNextColumn();
+                    ImGui.TextUnformatted(player.FullName);
+
+                    // Status
+                    ImGui.TableNextColumn();
+                    (var text, var color) = GetStatusAndColor(player);
+                    ImGui.TextColored(color, text);
+
+                    // Actions
+                    ImGui.TableNextColumn();
+                    if (ImGui.Button($"##{playerIndex}"))
+                    {
+                        RunAfterDraw(() => gameActions.RemovePlayer(player.FullName));
+                    }
+
+                    playerIndex++;
                 }
-
-                playerIndex++;
             }
-
             ImGui.EndTable();
 
             if (ImGui.Button("Add target player"))
@@ -81,6 +89,16 @@ namespace MinigameCollection.Common.UICommon
             }
 
             delayedActions.Clear();
+        }
+
+        protected virtual (string, Vector4) GetStatusAndColor(PlayerInSession player)
+        {
+            if (player.IsAFK)
+            {
+                return ("AFK", Colors.GreyHalf);
+            }
+
+            return ("Ready", Colors.GreenHalf);
         }
     }
 }

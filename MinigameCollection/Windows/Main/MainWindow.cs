@@ -14,9 +14,9 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 
-namespace MinigameCollection.Windows.Name;
+namespace MinigameCollection.Windows.Main;
 
-public class MainWindow : PluginWindowBase, IDisposable
+public partial class MainWindow : PluginWindowBase, IDisposable
 {
     private IDataManager dataManager;
     private IChatOutput chatOutput;
@@ -46,52 +46,26 @@ public class MainWindow : PluginWindowBase, IDisposable
 
     protected override void SafeDraw()
     {
-        gameModeManager.GetGame(GameSelected.None).Draw();
-        if (ImGui.Button("Get lumina sheets"))
+        ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
+        if (ImGui.BeginTabBar("##Main container"))
         {
-            var data = dataManager.GameData.Excel;
-            var sheets = data.SheetNames;
-            chatOutput.WriteChat(sheets.Count.ToString(), Dalamud.Game.Text.XivChatType.Echo);
-            var orderedSheetNames = sheets.OrderBy(sn => sn).ToList();
-            var s = new StringBuilder();
-            foreach (var sheetName in orderedSheetNames)
+            if (ImGui.BeginTabItem("Game"))
             {
-                s.AppendLine(sheetName);
+                gameModeManager.GetGame(GameSelected.None).Draw();
             }
-
-            File.WriteAllText("D:\\Code\\Dalamud\\_ReferencesAndNotes\\LuminaGameDataSheets.txt", s.ToString());
-            chatOutput.WriteChat("done", Dalamud.Game.Text.XivChatType.Echo);
-        }
-        ImGui.InputText("", ref queryedSheetName, 30);
-        ImGui.SameLine();
-        if (ImGui.Button("Read next row"))
-        {
-            var fateSheet = dataManager.GetExcelSheet<Fate>();
-            chatOutput.WriteChat(fateSheet.Count.ToString());
-            for (var i = 1000; i < 1010; i++)
+            if (ImGui.BeginTabItem("Gil & Bank"))
             {
-                chatOutput.WriteChat(fateSheet.GetRowAt(i).Name.ToString());
+
+            }
+            if (ImGui.BeginTabItem("Game select"))
+            {
+
+            }
+            if (ImGui.BeginTabItem("Experimental"))
+            {
+                DrawExperimentalButtons();
             }
         }
-
-        if (ImGui.Button("List entities"))
-        {
-            foreach (var obj in objectTable) {
-                
-                logService.Warning($"Kind: {obj.ObjectKind} Name: {obj.Name})");                
-            }
-        }
-        if (ImGui.Button("Notification"))
-        {
-            var notification = new Notification { Title = "Test notification yay" };
-            notificationManager.AddNotification(notification);
-        }
-
-        if (ImGui.Button("List FATEs"))
-        {
-            ListFates();
-        }
-        
     }
 
     private unsafe void ListFates()

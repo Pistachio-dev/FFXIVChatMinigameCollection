@@ -3,20 +3,19 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Listener;
+using DalamudBasics.Chat.Output;
 using DalamudBasics.Debugging;
 using DalamudBasics.DependencyInjection;
 using DalamudBasics.Interop;
 using DalamudBasics.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using MinigameCollection.Windows;
 using ECommons;
-using PersistentModel.Extensions;
-using DalamudBasics.Chat.Output;
-using MinigameCollection.Windows.Name;
-using MinigameCollection.Games.NoGame;
+using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Common;
-using MinigameCollection.Common.GameBoardCommon;
+using MinigameCollection.Games.NoGame;
+using MinigameCollection.Windows;
+using MinigameCollection.Windows.Main;
+using PersistentModel.Extensions;
+using System;
 
 namespace MinigameCollection;
 

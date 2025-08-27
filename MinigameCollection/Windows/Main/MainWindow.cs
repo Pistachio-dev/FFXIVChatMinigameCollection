@@ -4,7 +4,7 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Common;
@@ -52,19 +52,23 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             if (ImGui.BeginTabItem("Game"))
             {
                 gameModeManager.GetGame(GameSelected.None).Draw();
+                ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Gil & Bank"))
             {
-
+                ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Game select"))
             {
-
+                ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Experimental"))
             {
                 DrawExperimentalButtons();
+                ImGui.EndTabItem();
             }
+
+            ImGui.EndTabBar();
         }
     }
 

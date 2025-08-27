@@ -1,5 +1,5 @@
 using DalamudBasics.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using MinigameCollection.Common.GameBoardCommon;
 using MinigameCollection.Common.UICommon;
 using System.Numerics;

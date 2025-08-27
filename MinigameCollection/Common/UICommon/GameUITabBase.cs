@@ -1,6 +1,6 @@
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using MinigameCollection.Common.GameActionsCommon;
 using MinigameCollection.Common.GameBoardCommon;
 using System;

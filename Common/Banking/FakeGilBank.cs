@@ -5,6 +5,7 @@ using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;
 using PersistentModel.Repository.Interface;
 using Serilog;
+using System;
 using System.Runtime.CompilerServices;
 
 
@@ -52,6 +53,8 @@ namespace Common.Banking
             var dealer = playerManager.GetDealer();
             var transaction = new GilTransaction(dealer, player, false, amount);
             transactionRepo.Add(transaction);
+
+            return true;
         }
 
         public long GetPlayerInUseFunds(string fullPlayerName)
@@ -104,7 +107,7 @@ namespace Common.Banking
 
             var transaction = new GilTransaction(playerManager.GetDealer(), player, false, amount);
 
-            return newFunds;
+            return amount;
         }
 
         public void StartBuyIn(string playerName, string playerWorld)

@@ -24,6 +24,6 @@ namespace PersistentModel.Model.PlayerManagement
         public List<PlayerIdentifierEntity> PreviousIdentities { get; set; } = new();
 
         [Required]
-        public PlayerCashRecordEntity CashRecord { get; set; } = new();
+        public PlayerCashRecordEntity CashRecord { get; set; }
     }
 }

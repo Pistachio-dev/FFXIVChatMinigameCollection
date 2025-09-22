@@ -4,7 +4,7 @@ using PersistentModel.Repository.Interface;
 
 namespace PersistentModel.Repository
 {
-    public class GilTransactionRepository : Repository<GilTransaction>, IGilTransactionRepository
+    public class GilTransactionRepository : Repository<GilTransactionEntity>, IGilTransactionRepository
     {
         public GilTransactionRepository(MinigameCollectionDbContext minigameCollectionDbContext) : base(minigameCollectionDbContext)
         {

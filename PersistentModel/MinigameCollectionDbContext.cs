@@ -11,13 +11,13 @@ namespace PersistentModel
 {
     public class MinigameCollectionDbContext : DbContext
     {
-        public DbSet<GilTransaction> GilTransactions { get; set; }
+        public DbSet<GilTransactionEntity> GilTransactions { get; set; }
 
-        public DbSet<PlayerCashRecord> PlayerCashRecords { get; set; }
+        public DbSet<PlayerCashRecordEntity> PlayerCashRecords { get; set; }
 
-        public DbSet<PlayerIdentifier> PlayerIdentifiers { get; set; }
+        public DbSet<PlayerIdentifierEntity> PlayerIdentifiers { get; set; }
 
-        public DbSet<PlayerOOGData> PlayerOOGData { get; set; }
+        public DbSet<PlayerOOGDataEntity> PlayerOOGData { get; set; }
 
         public string DbPath { get; private set; }
 
@@ -39,16 +39,16 @@ namespace PersistentModel
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<PlayerOOGData>()
+            modelBuilder.Entity<PlayerOOGDataEntity>()
                 .HasKey(p => p.Id);
 
-            modelBuilder.Entity<PlayerCashRecord>()
+            modelBuilder.Entity<PlayerCashRecordEntity>()
                 .HasKey(c => c.Id);
 
-            modelBuilder.Entity<GilTransaction>()
+            modelBuilder.Entity<GilTransactionEntity>()
                 .HasKey(x => x.Id);
 
-            modelBuilder.Entity<PlayerIdentifier>()
+            modelBuilder.Entity<PlayerIdentifierEntity>()
                 .HasKey(i => i.Id);
         }
         private string GetPath()

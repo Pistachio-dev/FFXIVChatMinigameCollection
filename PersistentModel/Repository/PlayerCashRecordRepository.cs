@@ -4,7 +4,7 @@ using PersistentModel.Repository.Interface;
 
 namespace PersistentModel.Repository
 {
-    public class PlayerCashRecordRepository : Repository<PlayerCashRecord>, IPlayerCashRecordRepository
+    public class PlayerCashRecordRepository : Repository<PlayerCashRecordEntity>, IPlayerCashRecordRepository
     {
         public PlayerCashRecordRepository(MinigameCollectionDbContext minigameCollectionDbContext) : base(minigameCollectionDbContext)
         {

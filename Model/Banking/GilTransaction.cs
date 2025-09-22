@@ -1,20 +1,10 @@
-using PersistentModel.Model.PlayerManagement;
-using System;
-using System.Collections.Generic;
+using Model.PlayerManagement;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PersistentModel.Model.Banking
+namespace Model.Banking
 {
     public class GilTransaction
-    {
-        [Key]
-        public uint Id { get; }
-
-        public uint HostPlayerId { get; }
-        
+    {        
         [Required]
         public PlayerOOGData HostPlayer { get; set; }
 

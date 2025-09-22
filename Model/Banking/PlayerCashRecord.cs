@@ -1,15 +1,10 @@
-using PersistentModel.Model.PlayerManagement;
+using Model.PlayerManagement;
 using System.ComponentModel.DataAnnotations;
 
-namespace PersistentModel.Model.Banking
+namespace Model.Banking
 {
     public class PlayerCashRecord
     {
-        [Key]
-        public uint Id { get; set; }
-
-        public uint PlayerOOGDataID { get; set; }
-
         public PlayerOOGData PlayerOOGData { get; set; }
 
         [Required]
@@ -27,8 +22,9 @@ namespace PersistentModel.Model.Banking
         [Required]
         public List<GilTransaction> History { get; set; } = new();
 
-        public PlayerCashRecord()
+        public PlayerCashRecord(PlayerOOGData owner)
         {
+            PlayerOOGData = owner;
             StoredReal = 0;
             StoredFake = 0;
             History = new();

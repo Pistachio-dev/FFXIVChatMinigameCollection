@@ -3,7 +3,7 @@ using PersistentModel.Repository.Generic;
 
 namespace PersistentModel.Repository.Interface
 {
-    public interface IPlayerCashRecordRepository : IRepository<PlayerCashRecord>
+    public interface IPlayerCashRecordRepository : IRepository<PlayerCashRecordEntity>
     {
     }
 }

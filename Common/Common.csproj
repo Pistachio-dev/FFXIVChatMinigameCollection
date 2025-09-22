@@ -17,6 +17,7 @@
     </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DalamudBasics\DalamudBasics\DalamudBasics.csproj" />
+    <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\PersistentModel\PersistentModel.csproj" />
   </ItemGroup>
     <PropertyGroup>

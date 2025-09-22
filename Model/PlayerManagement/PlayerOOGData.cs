@@ -1,16 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using PersistentModel.Model.Banking;
+using Model.Banking;
 using System.ComponentModel.DataAnnotations;
 
-namespace PersistentModel.Model.PlayerManagement
+namespace Model.PlayerManagement
 {
     // Data for a player unrelated to the current game
-    [Index(nameof(Name))]
     public class PlayerOOGData
     {
-        [Key]
-        public uint Id { get; set; }
-
         [Required]
         public string Name { get; set; }
 
@@ -24,7 +19,7 @@ namespace PersistentModel.Model.PlayerManagement
         public List<PlayerIdentifier> PreviousIdentities { get; set; }
 
         [Required]
-        public PlayerCashRecord CashRecord { get; set; } = new();
+        public PlayerCashRecord CashRecord { get; set; }
 
         public PlayerOOGData(string name, string world)
         {
@@ -32,7 +27,7 @@ namespace PersistentModel.Model.PlayerManagement
             World = world;
             CreatedAtUtc = DateTime.UtcNow;
             PreviousIdentities = new();
-            CashRecord = new PlayerCashRecord();
+            CashRecord = new PlayerCashRecord(this);
         }
 
         public string FullName  => $"{Name}@{World}";        

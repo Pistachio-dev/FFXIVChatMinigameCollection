@@ -4,7 +4,7 @@ using PersistentModel.Repository.Interface;
 
 namespace PersistentModel.Repository
 {
-    public class PlayerIdentifierRepository : Repository<PlayerIdentifier>, IPlayerIdentifierRepository
+    public class PlayerIdentifierRepository : Repository<PlayerIdentifierEntity>, IPlayerIdentifierRepository
     {
         public PlayerIdentifierRepository(MinigameCollectionDbContext minigameCollectionDbContext) : base(minigameCollectionDbContext)
         {

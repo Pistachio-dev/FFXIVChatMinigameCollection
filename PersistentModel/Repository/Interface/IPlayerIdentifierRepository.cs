@@ -3,7 +3,7 @@ using PersistentModel.Repository.Generic;
 
 namespace PersistentModel.Repository.Interface
 {
-    public interface IPlayerIdentifierRepository : IRepository<PlayerIdentifier>
+    public interface IPlayerIdentifierRepository : IRepository<PlayerIdentifierEntity>
     {
     }
 }

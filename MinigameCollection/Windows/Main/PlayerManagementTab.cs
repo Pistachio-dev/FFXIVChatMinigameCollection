@@ -16,48 +16,48 @@ namespace MinigameCollection.Windows.Main
         // Handle the common handling of players
         private void DrawPlayerManagementTab()
         {
-            ImGui.TextUnformatted("No game selected");
-            const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
-            if (ImGui.BeginTable("##GamePlayerTable", 3, flags))
-            {
-                ImGui.TableSetupColumn("Player name", ImGuiTableColumnFlags.WidthStretch, 0.7f);
-                ImGui.TableSetupColumn("Status", ImGuiTableColumnFlags.WidthStretch, 0.3f);
-                ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 0.3f);
+            //ImGui.TextUnformatted("No game selected");
+            //const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
+            //if (ImGui.BeginTable("##GamePlayerTable", 3, flags))
+            //{
+            //    ImGui.TableSetupColumn("Player name", ImGuiTableColumnFlags.WidthStretch, 0.7f);
+            //    ImGui.TableSetupColumn("Status", ImGuiTableColumnFlags.WidthStretch, 0.3f);
+            //    ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 0.3f);
 
-                ImGui.TableHeadersRow();
-                var playerIndex = 0;
-                foreach (var player in playersInSessionManager.InGame)
-                {
-                    ImGui.TableNextRow();
-                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ImGui.GetColorU32(defaultColor));
+            //    ImGui.TableHeadersRow();
+            //    var playerIndex = 0;
+            //    foreach (var player in playersInSessionManager.InGame)
+            //    {
+            //        ImGui.TableNextRow();
+            //        ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ImGui.GetColorU32(defaultColor));
 
-                    // Player Name
-                    ImGui.TableNextColumn();
-                    ImGui.TextUnformatted(player.FullName);
+            //        // Player Name
+            //        ImGui.TableNextColumn();
+            //        ImGui.TextUnformatted(player.FullName);
 
-                    // Status
-                    ImGui.TableNextColumn();
-                    (var text, var color) = GetStatusAndColor(player);
-                    ImGui.TextColored(color, text);
+            //        // Status
+            //        ImGui.TableNextColumn();
+            //        (var text, var color) = GetStatusAndColor(player);
+            //        ImGui.TextColored(color, text);
 
-                    // Actions
-                    ImGui.TableNextColumn();
-                    if (ImGui.Button($"##{playerIndex}"))
-                    {
-                        RunAfterDraw(() => playersInSessionManager.RemovePlayer(player.FullName));
-                    }
+            //        // Actions
+            //        ImGui.TableNextColumn();
+            //        if (ImGui.Button($"##{playerIndex}"))
+            //        {
+            //            RunAfterDraw(() => playersInSessionManager.RemovePlayer(player.FullName));
+            //        }
 
-                    playerIndex++;
-                }
-            }
-            ImGui.EndTable();
+            //        playerIndex++;
+            //    }
+            //}
+            //ImGui.EndTable();
 
-            if (ImGui.Button("Add target player"))
-            {
-                playersInSessionManager.AddTargetPlayer();
-            }
+            //if (ImGui.Button("Add target player"))
+            //{
+            //    playersInSessionManager.AddTargetPlayer();
+            //}
 
-            RunDelayedActions();
+            //RunDelayedActions();
         }
 
         protected void RunAfterDraw(Action action)

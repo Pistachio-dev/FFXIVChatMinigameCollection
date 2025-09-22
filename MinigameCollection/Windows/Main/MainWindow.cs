@@ -27,8 +27,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private IChatOutput chatOutput;
     private IObjectTable objectTable;
     private INotificationManager notificationManager;
-    private GameModeManager gameModeManager;
-    private PlayersInSessionManager playersInSessionManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
 
 
@@ -45,8 +43,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         chatOutput = serviceProvider.GetRequiredService<IChatOutput>();
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
-        gameModeManager = serviceProvider.GetRequiredService<GameModeManager>();
-        playersInSessionManager = serviceProvider.GetRequiredService<PlayersInSessionManager>();
     }
 
     public void Dispose() { }
@@ -60,7 +56,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         {
             if (ImGui.BeginTabItem("Game"))
             {
-                gameModeManager.GetGame(GameSelected.None).Draw();
+                //gameModeManager.GetGame(GameSelected.None).Draw();
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Players"))

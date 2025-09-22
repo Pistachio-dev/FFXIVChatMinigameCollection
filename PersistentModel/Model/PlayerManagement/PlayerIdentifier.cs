@@ -13,7 +13,7 @@ namespace PersistentModel.Model.PlayerManagement
     public class PlayerIdentifier
     {
         [Key]
-        public Guid Id { get; set; }
+        public uint Id { get; set; }       
 
         [Required]
         public string Name  { get; set; }
@@ -23,6 +23,10 @@ namespace PersistentModel.Model.PlayerManagement
         
         [Required]
         public DateTime DateMetUtc { get; set; }
+
+        public uint PlayerOOGDataId { get; set; }
+
+        public PlayerOOGData PlayerOOGData { get; set; }
 
         public PlayerIdentifier(string name, string world)
         {

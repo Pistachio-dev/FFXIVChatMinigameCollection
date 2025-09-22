@@ -1,8 +1,7 @@
-using DalamudBasics.GUI.Windows;
-using DalamudBasics.Logging;
 using Dalamud.Bindings.ImGui;
-using MinigameCollection.Common.GameActionsCommon;
+using MinigameCollection.Common;
 using MinigameCollection.Common.GameBoardCommon;
+using MinigameCollection.Games.NoGame;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,27 +9,12 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MinigameCollection.Common.UICommon
+namespace MinigameCollection.Windows.Main
 {
-    public class GameUITabBase : PluginWindowBase
+    public partial class MainWindow
     {
-        protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
-        private readonly GameBase gameBoard;
-        private readonly GameActionsBase gameActions;
-        private List<Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
-
-        public GameUITabBase(ILogService logService, GameBase gameBoard, GameActionsBase gameActions) : base(logService, "##DefaultGameUITab")
-        {
-            this.gameBoard = gameBoard;
-            this.gameActions = gameActions;
-        }
-
-        public virtual void Draw()
-        {
-            DrawDefault();
-        }
-
-        protected void DrawDefault()
+        // Handle the common handling of players
+        private void DrawPlayerManagementTab()
         {
             ImGui.TextUnformatted("No game selected");
             const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
@@ -42,7 +26,7 @@ namespace MinigameCollection.Common.UICommon
 
                 ImGui.TableHeadersRow();
                 var playerIndex = 0;
-                foreach (var player in gameBoard.Players)
+                foreach (var player in playersInSessionManager.InGame)
                 {
                     ImGui.TableNextRow();
                     ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ImGui.GetColorU32(defaultColor));
@@ -60,7 +44,7 @@ namespace MinigameCollection.Common.UICommon
                     ImGui.TableNextColumn();
                     if (ImGui.Button($"##{playerIndex}"))
                     {
-                        RunAfterDraw(() => gameActions.RemovePlayer(player.FullName));
+                        RunAfterDraw(() => playersInSessionManager.RemovePlayer(player.FullName));
                     }
 
                     playerIndex++;
@@ -70,7 +54,7 @@ namespace MinigameCollection.Common.UICommon
 
             if (ImGui.Button("Add target player"))
             {
-                gameActions.AddTargetPlayer();
+                playersInSessionManager.AddTargetPlayer();
             }
 
             RunDelayedActions();
@@ -99,6 +83,6 @@ namespace MinigameCollection.Common.UICommon
             }
 
             return ("Ready", Colors.GreenHalf);
-        }
+        }    
     }
 }

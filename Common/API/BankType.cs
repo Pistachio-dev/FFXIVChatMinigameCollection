@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MinigameCollection.Common.Banking.Interface
+namespace Common.API
 {
-    public interface IFakeGilBank : IGilBank
+    public enum BankType
     {
+        FakeGil,
+        RealGil
     }
 }

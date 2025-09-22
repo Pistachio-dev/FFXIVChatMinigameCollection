@@ -1,4 +1,5 @@
 using DalamudBasics.Configuration;
+using MinigameCollection.Common.GameBase;
 using MinigameCollection.Common.GameBoardCommon;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MinigameCollection.Games.NoGame
 {
-    public class NoGameBoard : GameBoardBase
+    public class NoGameBoard : GameBase
     {
         public NoGameBoard(IConfigurationService<Configuration> configurationService, 
            PlayersInSessionManager playerManager) : base(configurationService, playerManager)

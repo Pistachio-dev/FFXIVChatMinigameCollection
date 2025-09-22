@@ -7,6 +7,6 @@ namespace PersistentModel.Repository.Interface
     {
         void AddPlayer(PlayerOOGData player);
         void RemovePlayer(PlayerOOGData player);
-        PlayerOOGData? TryGetPlayer(string name, string world);
+        PlayerOOGData? GetPlayerOrDefault(string name, string world);
     }
 }

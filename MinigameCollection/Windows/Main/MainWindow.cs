@@ -1,14 +1,16 @@
+using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
-using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Common;
+using MinigameCollection.Common.GameBoardCommon;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -18,11 +20,17 @@ namespace MinigameCollection.Windows.Main;
 
 public partial class MainWindow : PluginWindowBase, IDisposable
 {
+    protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
+
+
     private IDataManager dataManager;
     private IChatOutput chatOutput;
     private IObjectTable objectTable;
     private INotificationManager notificationManager;
     private GameModeManager gameModeManager;
+    private PlayersInSessionManager playersInSessionManager;
+    private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
+
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
         : base(logService, "MinigameCollection", ImGuiWindowFlags.AlwaysAutoResize)
@@ -38,6 +46,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
         gameModeManager = serviceProvider.GetRequiredService<GameModeManager>();
+        playersInSessionManager = serviceProvider.GetRequiredService<PlayersInSessionManager>();
     }
 
     public void Dispose() { }
@@ -52,6 +61,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             if (ImGui.BeginTabItem("Game"))
             {
                 gameModeManager.GetGame(GameSelected.None).Draw();
+                ImGui.EndTabItem();
+            }
+            if (ImGui.BeginTabItem("Players"))
+            {
+                DrawPlayerManagementTab();
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Gil & Bank"))

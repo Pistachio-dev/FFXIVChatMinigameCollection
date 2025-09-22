@@ -9,7 +9,7 @@ namespace PersistentModel.Model.PlayerManagement
     public class PlayerOOGData
     {
         [Key]
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public uint Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -22,9 +22,9 @@ namespace PersistentModel.Model.PlayerManagement
         
         [Required]
         public List<PlayerIdentifier> PreviousIdentities { get; set; }
-        
+
         [Required]
-        public PlayerCashRecord CashRecord { get; set; }
+        public PlayerCashRecord CashRecord { get; set; } = new();
 
         public PlayerOOGData(string name, string world)
         {

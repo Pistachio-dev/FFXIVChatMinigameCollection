@@ -19,12 +19,12 @@ namespace PersistentModel.Migrations
 
             modelBuilder.Entity("PersistentModel.Model.Banking.GilTransaction", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("HostPlayerId")
-                        .HasColumnType("TEXT");
+                    b.Property<uint>("HostPlayerId1")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsHouseCut")
                         .HasColumnType("INTEGER");
@@ -32,17 +32,12 @@ namespace PersistentModel.Migrations
                     b.Property<bool>("IsRealGil")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("PatronPlayerId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("PlayerCashRecordId")
-                        .HasColumnType("TEXT");
+                    b.Property<uint>("PlayerCashRecordId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HostPlayerId");
-
-                    b.HasIndex("PatronPlayerId");
+                    b.HasIndex("HostPlayerId1");
 
                     b.HasIndex("PlayerCashRecordId");
 
@@ -51,26 +46,38 @@ namespace PersistentModel.Migrations
 
             modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("FakeGilBalance")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("RealGilBalance")
+                    b.Property<long>("InUseFake")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("InUseReal")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<uint>("PlayerOOGDataID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("StoredFake")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("StoredReal")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlayerOOGDataID")
+                        .IsUnique();
 
                     b.ToTable("PlayerCashRecords");
                 });
 
             modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifier", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("DateMetUtc")
                         .HasColumnType("TEXT");
@@ -79,8 +86,8 @@ namespace PersistentModel.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PlayerOOGDataId")
-                        .HasColumnType("TEXT");
+                    b.Property<uint>("PlayerOOGDataId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("World")
                         .IsRequired()
@@ -97,12 +104,9 @@ namespace PersistentModel.Migrations
 
             modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGData", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("CashRecordId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("TEXT");
@@ -117,52 +121,50 @@ namespace PersistentModel.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CashRecordId");
-
                     b.HasIndex("Name");
 
-                    b.ToTable("PlayerOOGEntries");
+                    b.ToTable("PlayerOOGData");
                 });
 
             modelBuilder.Entity("PersistentModel.Model.Banking.GilTransaction", b =>
                 {
                     b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "HostPlayer")
                         .WithMany()
-                        .HasForeignKey("HostPlayerId")
+                        .HasForeignKey("HostPlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "PatronPlayer")
-                        .WithMany()
-                        .HasForeignKey("PatronPlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PersistentModel.Model.Banking.PlayerCashRecord", null)
+                    b.HasOne("PersistentModel.Model.Banking.PlayerCashRecord", "PlayerCashRecord")
                         .WithMany("History")
-                        .HasForeignKey("PlayerCashRecordId");
+                        .HasForeignKey("PlayerCashRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("HostPlayer");
 
-                    b.Navigation("PatronPlayer");
+                    b.Navigation("PlayerCashRecord");
+                });
+
+            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
+                {
+                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "PlayerOOGData")
+                        .WithOne("CashRecord")
+                        .HasForeignKey("PersistentModel.Model.Banking.PlayerCashRecord", "PlayerOOGDataID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlayerOOGData");
                 });
 
             modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifier", b =>
                 {
-                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", null)
+                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "PlayerOOGData")
                         .WithMany("PreviousIdentities")
-                        .HasForeignKey("PlayerOOGDataId");
-                });
-
-            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGData", b =>
-                {
-                    b.HasOne("PersistentModel.Model.Banking.PlayerCashRecord", "CashRecord")
-                        .WithMany()
-                        .HasForeignKey("CashRecordId")
+                        .HasForeignKey("PlayerOOGDataId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CashRecord");
+                    b.Navigation("PlayerOOGData");
                 });
 
             modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
@@ -172,6 +174,9 @@ namespace PersistentModel.Migrations
 
             modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGData", b =>
                 {
+                    b.Navigation("CashRecord")
+                        .IsRequired();
+
                     b.Navigation("PreviousIdentities");
                 });
 #pragma warning restore 612, 618

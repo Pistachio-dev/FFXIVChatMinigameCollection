@@ -11,13 +11,17 @@ namespace PersistentModel.Model.Banking
     public class GilTransaction
     {
         [Key]
-        public Guid Id { get; } = Guid.NewGuid();
+        public uint Id { get; }
 
+        public uint HostPlayerId { get; }
+        
         [Required]
         public PlayerOOGData HostPlayer { get; set; }
 
+        public uint PlayerCashRecordId { get; set; }
+
         [Required]
-        public PlayerOOGData PatronPlayer { get; set; }
+        public PlayerCashRecord PlayerCashRecord { get; set; }
 
         [Required]
         public bool IsRealGil { get; set; }
@@ -50,7 +54,7 @@ namespace PersistentModel.Model.Banking
         public GilTransaction(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, bool isHouseCut, long amount)
         {
             HostPlayer = hostPlayer;
-            PatronPlayer = patronPlayer;
+            PlayerCashRecord = patronPlayer.CashRecord;
             IsHouseCut = isHouseCut;
             Amount = amount;
             WhenUtc = DateTime.UtcNow;

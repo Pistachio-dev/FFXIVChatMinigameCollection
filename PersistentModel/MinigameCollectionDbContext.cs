@@ -17,7 +17,7 @@ namespace PersistentModel
 
         public DbSet<PlayerIdentifier> PlayerIdentifiers { get; set; }
 
-        public DbSet<PlayerOOGData> PlayerOOGEntries { get; set; }
+        public DbSet<PlayerOOGData> PlayerOOGData { get; set; }
 
         public string DbPath { get; private set; }
 
@@ -58,7 +58,7 @@ namespace PersistentModel
 
             var configDir = fullPath + Path.DirectorySeparatorChar;
 
-            return $"{configDir}MinigameCollection.cs";
+            return $"{configDir}MinigameCollection.db";
         }
 
         internal void ApplyPendingMigrations()

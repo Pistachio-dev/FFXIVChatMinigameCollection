@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PersistentModel.Repository;
 using PersistentModel.Repository.Generic;
@@ -17,6 +18,11 @@ namespace PersistentModel.Extensions
             serviceCollection.AddTransient(typeof(IPlayerOOGDataRepository), typeof(PlayerOOGDataRepository));
 
             return serviceCollection;
+        }
+
+        public static void InitializeDatabaseIfNeeded(this IServiceProvider sp)
+        {
+            sp.GetRequiredService<MinigameCollectionDbContext>().Database.Migrate();
         }
     }
 }

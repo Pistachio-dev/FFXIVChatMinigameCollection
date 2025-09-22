@@ -88,6 +88,7 @@ public sealed class Plugin : IDalamudPlugin
     private void InitializeServices(IServiceProvider serviceProvider)
     {
         IFramework framework = serviceProvider.GetRequiredService<IFramework>();
+        serviceProvider.InitializeDatabaseIfNeeded();
         serviceProvider.GetRequiredService<ILogService>().AttachToGameLogicLoop(framework);
         serviceProvider.GetRequiredService<IChatListener>().InitializeAndRun(WaterMark);
         serviceProvider.GetRequiredService<IChatOutput>().InitializeAndAttachToGameLogicLoop(framework, WaterMark);

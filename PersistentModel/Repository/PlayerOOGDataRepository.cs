@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using PersistentModel.Model.PlayerManagement;
 using PersistentModel.Repository.Generic;
 using PersistentModel.Repository.Interface;
@@ -10,9 +11,9 @@ namespace PersistentModel.Repository
         {
         }
 
-        public PlayerOOGData? TryGetPlayer(string name, string world)
+        public PlayerOOGData? GetPlayerOrDefault(string name, string world)
         {
-            return _ctx.PlayerOOGEntries.FirstOrDefault(p => p.Name == name && p.World == world);
+            return _ctx.PlayerOOGData.Include(r => r.CashRecord).ThenInclude(cashRecord => cashRecord.History).FirstOrDefault(p => p.Name == name && p.World == world);
         }
 
         public void AddPlayer(PlayerOOGData player)

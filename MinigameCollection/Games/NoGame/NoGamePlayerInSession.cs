@@ -1,10 +1,5 @@
 using MinigameCollection.Common.GameBoardCommon;
-using PersistentModel.Model.PlayerManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Model.PlayerManagement;
 
 namespace MinigameCollection.Games.NoGame
 {

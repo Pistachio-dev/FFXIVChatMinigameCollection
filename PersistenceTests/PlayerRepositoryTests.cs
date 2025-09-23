@@ -37,6 +37,10 @@ namespace PersistenceTests
             Assert.Equal(0, players[0].CashRecord.StoredReal);
             Assert.Equal(0, players[0].CashRecord.StoredFake);
 
+            var cashRecord = data.context.PlayerCashRecords.Single();
+            Assert.Equal(players[0], cashRecord.PlayerOOGData);
+            Assert.Equal(players[0].Id, cashRecord.PlayerOOGDataID);
+
         }
     }
 }

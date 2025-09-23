@@ -1,4 +1,4 @@
-using PersistentModel.Model.PlayerManagement;
+using Model.PlayerManagement;
 using System;
 
 namespace MinigameCollection.Common.GameBoardCommon

@@ -6,6 +6,7 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using DalamudBasics.Logging;
 using DalamudBasics.Targeting;
+using Model.PlayerManagement;
 using PersistentModel.Model.PlayerManagement;
 using PersistentModel.Repository.Interface;
 using System;
@@ -47,22 +48,23 @@ namespace MinigameCollection.Common.GameBoardCommon
                 return null;
             }
 
-            string[] splitName = fullName.Split('@');
+            //string[] splitName = fullName.Split('@');
 
-            var existingPlayer = playerOOGRepo.GetPlayerOrDefault(splitName[0], splitName[1]);
-            if (existingPlayer == null)
-            {
-                existingPlayer = new PlayerOOGData(splitName[0], splitName[1]);
-                logService.Info($"No DB info for player {existingPlayer.FullName}. Adding it.");
-                playerOOGRepo.Add(existingPlayer);
-                //TODO: Add a financial record at this point too
-            }
+            //var existingPlayer = playerOOGRepo.GetPlayerOrDefault(splitName[0], splitName[1]);
+            //if (existingPlayer == null)
+            //{
+            //    existingPlayer = new PlayerOOGDataEntity(splitName[0], splitName[1]);
+            //    logService.Info($"No DB info for player {existingPlayer.FullName}. Adding it.");
+            //    playerOOGRepo.Add(existingPlayer);
+            //    //TODO: Add a financial record at this point too
+            //}
 
-            var playerAdded = new PlayerInSession(existingPlayer);
-            InGame.Add(playerAdded);
-            chatOutput.WriteChat($"{existingPlayer.FullName} joins the game.");
+            //var playerAdded = new PlayerInSession(existingPlayer);
+            //InGame.Add(playerAdded);
+            //chatOutput.WriteChat($"{existingPlayer.FullName} joins the game.");
 
-            return playerAdded;
+            //return playerAdded;
+            throw new NotImplementedException();
         }
 
         public PlayerInSession? AddTargetPlayer()
@@ -134,39 +136,41 @@ namespace MinigameCollection.Common.GameBoardCommon
 
         public PlayerOOGData? GetPlayer(string fullName)
         {
-            string[] split = fullName.Split('@');
-            if (split.Length < 2)
-            {
-                return null;
-            }
-            return playerOOGRepo.GetPlayerOrDefault(split[0], split[1]);
+            throw new NotImplementedException();
+            //string[] split = fullName.Split('@');
+            //if (split.Length < 2)
+            //{
+            //    return null;
+            //}
+            //return playerOOGRepo.GetPlayerOrDefault(split[0], split[1]);
         }
 
         private PlayerOOGData dealer;
         public PlayerOOGData GetDealer()
         {
-            var localPlayer = clientState.LocalPlayer;
-            if (localPlayer == null)
-            {
-                chatGui.PrintError("No local player");
-                throw new Exception("No local player");
-            }
+            throw new NotImplementedException();
+            //var localPlayer = clientState.LocalPlayer;
+            //if (localPlayer == null)
+            //{
+            //    chatGui.PrintError("No local player");
+            //    throw new Exception("No local player");
+            //}
 
-            var name = localPlayer.GetFullName();
-            if (dealer == null || dealer.Name != name)
-            {
-                var split = name.Split('@');
-                var dealerInDB = playerOOGRepo.GetPlayerOrDefault(split[0], split[1]);
-                if (dealerInDB == null)
-                {
-                    dealerInDB = new PlayerOOGData(split[0], split[1]);
-                    playerOOGRepo.Add(dealerInDB);
-                }
+            //var name = localPlayer.GetFullName();
+            //if (dealer == null || dealer.Name != name)
+            //{
+            //    var split = name.Split('@');
+            //    var dealerInDB = playerOOGRepo.GetPlayerOrDefault(split[0], split[1]);
+            //    if (dealerInDB == null)
+            //    {
+            //        dealerInDB = new PlayerOOGData(split[0], split[1]);
+            //        playerOOGRepo.Add(dealerInDB);
+            //    }
 
-                dealer = dealerInDB;
-            }
+            //    dealer = dealerInDB;
+            //}
 
-            return dealer;
+            //return dealer;
         }
     }
 }

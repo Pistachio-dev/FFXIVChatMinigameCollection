@@ -1,5 +1,5 @@
 using MinigameCollection.Common.GameBoardCommon;
-using PersistentModel.Model.PlayerManagement;
+using Model.PlayerManagement;
 using System.Collections.Generic;
 
 namespace Common.PlayerManagement.Interface

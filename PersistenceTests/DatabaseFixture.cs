@@ -19,6 +19,7 @@ namespace PersistenceTests
         {
             options = new DbContextOptionsBuilder<MinigameCollectionDbContext>().UseInMemoryDatabase(databaseName: "Minigame Collection").Options;
             context = new MinigameCollectionDbContext(options);
+            context.Database.Migrate();
         }
 
         public Task DisposeAsync()
@@ -28,6 +29,7 @@ namespace PersistenceTests
 
         public void Dispose()
         {
+            this.context.Database.EnsureDeleted();
             this.context.Dispose();
         }
     }

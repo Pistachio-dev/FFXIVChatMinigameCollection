@@ -24,6 +24,11 @@ namespace PersistentModel.Repository
         }
         public bool CreatePlayer(PlayerOOGData playerData)
         {
+            var existing = context.PlayerOOGData.FirstOrDefault(p => p.Name == playerData.Name && p.World == playerData.World);
+            if (existing != null)
+            {
+                return false;
+            }
             var entity = EntityMapper.Mapper.Map<PlayerOOGDataEntity>(playerData);
             var cashRecord = new PlayerCashRecordEntity();
             entity.CashRecord = cashRecord;

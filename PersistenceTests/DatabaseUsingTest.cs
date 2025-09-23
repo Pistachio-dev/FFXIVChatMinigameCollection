@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace PersistenceTests
 {
-    public sealed class DatabaseFixture : IDisposable
+    public class DatabaseUsingTest : IDisposable
     {
         internal readonly DbContextOptions<MinigameCollectionDbContext> options;
         internal readonly MinigameCollectionDbContext context;
 
-        public DatabaseFixture()
+        public DatabaseUsingTest()
         {
             options = new DbContextOptionsBuilder<MinigameCollectionDbContext>().UseInMemoryDatabase(databaseName: "Minigame Collection").Options;
             context = new MinigameCollectionDbContext(options);

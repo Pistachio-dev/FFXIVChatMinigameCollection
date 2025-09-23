@@ -3,13 +3,14 @@ using Model.PlayerManagement;
 using PersistentModel.Model;
 using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;
+using PersistentModel.Repository.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PersistentModel.Repository.Interface
+namespace PersistentModel.Repository
 {
     internal class PlayerRepository : IPlayerRepository
     {
@@ -19,12 +20,12 @@ namespace PersistentModel.Repository.Interface
         public PlayerRepository(MinigameCollectionDbContext context)
         {
             this.context = context;
-            this.mapper = new EntityMapper();
+            mapper = new EntityMapper();
         }
         public bool CreatePlayer(PlayerOOGData playerData)
         {
-            PlayerOOGDataEntity entity = EntityMapper.Mapper.Map<PlayerOOGDataEntity>(playerData);
-            PlayerCashRecordEntity cashRecord = new PlayerCashRecordEntity(entity);
+            var entity = EntityMapper.Mapper.Map<PlayerOOGDataEntity>(playerData);
+            var cashRecord = new PlayerCashRecordEntity();
             entity.CashRecord = cashRecord;
             context.PlayerCashRecords.Add(cashRecord);
             context.PlayerOOGData.Add(entity);

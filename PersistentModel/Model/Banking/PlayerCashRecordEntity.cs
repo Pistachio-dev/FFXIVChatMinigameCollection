@@ -27,10 +27,10 @@ namespace PersistentModel.Model.Banking
         [Required]
         public List<GilTransactionEntity> History { get; set; } = new();
 
-        public PlayerCashRecordEntity(PlayerOOGDataEntity playerOOgData)
-        {
-            PlayerOOGData = playerOOgData;
-            PlayerOOGDataID = playerOOgData.Id;
-        }
+        //public PlayerCashRecordEntity(PlayerOOGDataEntity playerOOgData)
+        //{
+        //    PlayerOOGData = playerOOgData;
+        //    PlayerOOGDataID = playerOOgData.Id;
+        //}
     }
 }

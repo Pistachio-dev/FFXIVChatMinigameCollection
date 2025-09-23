@@ -23,7 +23,7 @@ namespace PersistentModel
 
         internal static bool Initialized;
 
-        public MinigameCollectionDbContext()
+        public MinigameCollectionDbContext(DbContextOptions<MinigameCollectionDbContext> options)
         {
             DbPath = GetPath();
         }
@@ -31,9 +31,9 @@ namespace PersistentModel
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite($"Data Source={DbPath}");
-            
+
             base.OnConfiguring(optionsBuilder);
-        }        
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

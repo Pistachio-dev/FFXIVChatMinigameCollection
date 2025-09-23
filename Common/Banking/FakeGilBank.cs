@@ -1,6 +1,7 @@
 using Common.Banking.Interface;
 using Common.PlayerManagement.Interface;
 using DalamudBasics.Logging;
+using Model.Banking;
 using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;
 using PersistentModel.Repository.Interface;
@@ -31,30 +32,31 @@ namespace Common.Banking
 
         public bool DrawFromStored(string fullPlayerName, long amount)
         {
-            var player = playerManager.GetPlayer(fullPlayerName);
-            if (player == null)
-            {
-                logService.Warning($"Could not draw {amount} from {fullPlayerName}. Player not found.");
-                return false;
-            }
+            throw new NotImplementedException();
+            //var player = playerManager.GetPlayer(fullPlayerName);
+            //if (player == null)
+            //{
+            //    logService.Warning($"Could not draw {amount} from {fullPlayerName}. Player not found.");
+            //    return false;
+            //}
 
-            if (player.CashRecord == null)
-            {
-                player.CashRecord = new PlayerCashRecord();
-                cashRecordRepository.Add(player.CashRecord);
-            }
+            //if (player.CashRecord == null)
+            //{
+            //    player.CashRecord = new PlayerCashRecord();
+            //    cashRecordRepository.Add(player.CashRecord);
+            //}
 
-            if (player.CashRecord.StoredFake < amount)
-            {
-                logService.Warning($"Could not draw {amount} from {fullPlayerName}. They only have {player.CashRecord.StoredFake}.");
-                return false;
-            }
+            //if (player.CashRecord.StoredFake < amount)
+            //{
+            //    logService.Warning($"Could not draw {amount} from {fullPlayerName}. They only have {player.CashRecord.StoredFake}.");
+            //    return false;
+            //}
 
-            var dealer = playerManager.GetDealer();
-            var transaction = new GilTransaction(dealer, player, false, amount);
-            transactionRepo.Add(transaction);
+            //var dealer = playerManager.GetDealer();
+            //var transaction = new GilTransaction(dealer, player, false, amount);
+            //transactionRepo.Add(transaction);
 
-            return true;
+            //return true;
         }
 
         public long GetPlayerInUseFunds(string fullPlayerName)

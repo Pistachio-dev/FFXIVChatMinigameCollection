@@ -34,5 +34,7 @@ namespace Model.Banking
         {
             History.Add(transaction);
         }
+
+        internal PlayerCashRecord() { }
     }
 }

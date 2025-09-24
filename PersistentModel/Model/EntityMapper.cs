@@ -17,28 +17,27 @@ namespace PersistentModel.Model
             {
                 configuration.CreateMap<PlayerOOGData, PlayerOOGDataEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
-                .ForMember(d => d.CashRecord, opt => opt.Ignore())
-                .ForMember(d => d.PreviousIdentities, opt => opt.Ignore());
-                
+                .ReverseMap();
+
                 configuration.CreateMap<PlayerIdentifier, PlayerIdentifierEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.PlayerOOGDataId, opt => opt.Ignore())
                 .ForMember(d => d.PlayerOOGData, opt => opt.Ignore())
                 .ReverseMap();
-                
-                configuration.CreateMap<PlayerCashRecord, PlayerCashRecordEntity>()
-                .ForMember(d => d.Id, opt => opt.Ignore())
-                .ForMember(d => d.PlayerOOGDataID, opt => opt.Ignore())
+
+                configuration.CreateMap<PlayerCashRecordEntity, PlayerCashRecord>()
                 .ForMember(d => d.PlayerOOGData, opt => opt.Ignore())
-                .ForMember(d => d.History, opt => opt.Ignore())
                 .ReverseMap();
+
+
 
                 configuration.CreateMap<GilTransaction, GilTransactionEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.HostPlayerId, opt => opt.Ignore())
                 .ForMember(d => d.HostPlayer, opt => opt.Ignore())
                 .ForMember(d => d.PlayerCashRecordId, opt => opt.Ignore())
-                .ForMember(d => d.PlayerCashRecord, opt => opt.Ignore());
+                .ForMember(d => d.PlayerCashRecord, opt => opt.Ignore())
+                .ReverseMap();
 
             }, loggerFactory);
 

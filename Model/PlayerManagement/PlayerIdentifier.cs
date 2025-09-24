@@ -19,5 +19,7 @@ namespace Model.PlayerManagement
             World = world;
             DateMetUtc = DateTime.UtcNow;
         }
+
+        internal PlayerIdentifier() { }
     }
 }

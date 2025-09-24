@@ -37,5 +37,7 @@ namespace Model.PlayerManagement
             return Name.Equals(name, StringComparison.OrdinalIgnoreCase)
                 && World.Equals(world, StringComparison.OrdinalIgnoreCase);
         }
+
+        internal PlayerOOGData() { }
     }
 }

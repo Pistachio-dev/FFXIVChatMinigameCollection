@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Model.PlayerManagement;
 using PersistentModel.Model;
@@ -76,6 +77,48 @@ namespace PersistenceTests
             Assert.True(result);
             AssertPlayerCreated(2, name, world);
         }
+        [Fact]
+        public void GetPlayer_Existing_ReturnedWithCashRecordButNoHistory()
+        {
+            // Arrange
+            var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(players);
+            context.SaveChanges();
+            var repo = new PlayerRepository(context);
+
+
+            var playerExpected = players[10];
+            playerExpected.CashRecord.History.Clear();
+            playerExpected.PreviousIdentities.Clear();
+
+            //Act
+            var player = repo.GetPlayerWithCashRecord($"{playerExpected.Name}@{playerExpected.World}");
+
+            // Assert
+            player.Should().BeEquivalentTo(EntityMapper.Mapper.Map<PlayerOOGData>(playerExpected));
+        }
+
+        [InlineData("Correct name", "wrong world", true)]
+        [InlineData("Wrong name", "Correct world", false)]
+        [InlineData("", "", false)]
+        [Theory]
+        public void GetPlayer_NotExisting_ReturnedNull(string name, string world, bool nameMatches)
+        {
+            // Arrange
+            var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(players);
+            context.SaveChanges();
+            var repo = new PlayerRepository(context);
+            var playerExpected = players[10];
+            if (nameMatches) { playerExpected.Name = name; }
+            else { playerExpected.World = world; }
+
+            //Act
+            var player = repo.GetPlayerWithCashRecord($"wrongName@{playerExpected.World}");
+
+            // Assert
+            Assert.Null(player);
+        }
 
         [Fact]
         public void CreatePlayer_OnlyNameMatches_Created()
@@ -102,6 +145,7 @@ namespace PersistenceTests
             // Arrange
             var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
             context.AddRange(players);
+            context.SaveChanges();
             int expectedPlayerCount = players.Count;
             int expectedCashRecordCount = players.Count;
             int expectedTransactionCount = players.SelectMany(p => p.CashRecord.History).Count();

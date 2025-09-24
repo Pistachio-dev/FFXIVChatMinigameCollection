@@ -52,7 +52,6 @@ namespace Model.Banking
 
         internal GilTransaction()
         {
-
         }
     }
 }

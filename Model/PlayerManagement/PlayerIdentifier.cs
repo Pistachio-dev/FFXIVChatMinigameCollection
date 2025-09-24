@@ -13,6 +13,9 @@ namespace Model.PlayerManagement
         [Required]
         public DateTime DateMetUtc { get; set; }
 
+        [Required]
+        public PlayerOOGData PlayerOOGData { get; set; }
+
         public PlayerIdentifier(string name, string world)
         {
             Name = name;

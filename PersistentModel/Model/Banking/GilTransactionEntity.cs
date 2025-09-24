@@ -15,7 +15,7 @@ namespace PersistentModel.Model.Banking
         public uint Id { get; }
 
         public uint HostPlayerId { get; }
-        
+
         [Required]
         public PlayerOOGDataEntity HostPlayer { get; set; }
 

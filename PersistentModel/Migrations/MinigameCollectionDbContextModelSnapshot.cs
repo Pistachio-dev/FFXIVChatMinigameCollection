@@ -67,7 +67,7 @@ namespace PersistentModel.Migrations
                     b.Property<long>("InUseReal")
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("PlayerOOGDataID")
+                    b.Property<uint>("PlayerOOGDataId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("StoredFake")
@@ -78,7 +78,7 @@ namespace PersistentModel.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerOOGDataID")
+                    b.HasIndex("PlayerOOGDataId")
                         .IsUnique();
 
                     b.ToTable("PlayerCashRecords");
@@ -142,13 +142,13 @@ namespace PersistentModel.Migrations
                     b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "HostPlayer")
                         .WithMany()
                         .HasForeignKey("HostPlayerId1")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "PatronPlayer")
                         .WithMany()
                         .HasForeignKey("PatronPlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PersistentModel.Model.Banking.PlayerCashRecordEntity", null)
@@ -164,7 +164,7 @@ namespace PersistentModel.Migrations
                 {
                     b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "PlayerOOGData")
                         .WithOne("CashRecord")
-                        .HasForeignKey("PersistentModel.Model.Banking.PlayerCashRecordEntity", "PlayerOOGDataID")
+                        .HasForeignKey("PersistentModel.Model.Banking.PlayerCashRecordEntity", "PlayerOOGDataId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

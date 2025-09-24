@@ -43,6 +43,18 @@ namespace PersistentModel
             modelBuilder.Entity<GilTransactionEntity>()
                 .HasKey(x => x.Id);
 
+            modelBuilder.Entity<GilTransactionEntity>()
+                .HasOne(r => r.PatronPlayer)
+                .WithMany()
+                .HasForeignKey(r => r.PatronPlayerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GilTransactionEntity>()
+                .HasOne(r => r.HostPlayer)
+                .WithMany()
+                .HasForeignKey(r => r.HostPlayerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<PlayerIdentifierEntity>()
                 .HasKey(i => i.Id);
         }

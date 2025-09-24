@@ -1,7 +1,10 @@
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Model.Banking;
 using Model.PlayerManagement;
 using PersistentModel.Model;
+using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;
 using PersistentModel.Repository;
 using System.Linq;
@@ -140,6 +143,40 @@ namespace PersistenceTests
         }
 
         [Fact]
+        public void UpdateCashRecord_PlayerExists_CorrectlyAdded()
+        {
+            // Arrange
+            var randomPlayers = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(randomPlayers);
+            context.SaveChanges();
+            var players = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).ToList();
+            var repo = new PlayerRepository(context);
+            var patronEntityExpected = players[10];
+            var hostEntityExpected = players[12];
+            var hostExpected = EntityMapper.Mapper.Map<PlayerOOGData>(hostEntityExpected);
+            var patronExpected = EntityMapper.Mapper.Map<PlayerOOGData>(patronEntityExpected);
+            int storedRealAmount = 123;
+            int storedFakeAmount = 321;
+            int inUseRealAmount = 998;
+            int inUseFakeAmount = 542;
+            patronExpected.CashRecord.StoredReal = storedRealAmount;
+            patronExpected.CashRecord.StoredFake = storedFakeAmount;
+            patronExpected.CashRecord.InUseReal = inUseRealAmount;
+            patronExpected.CashRecord.InUseFake = inUseFakeAmount;
+            patronEntityExpected.PreviousIdentities.Clear();
+
+            GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
+
+            //Act
+            bool result = repo.UpdateCashRecord(hostExpected, hostExpected.CashRecord, gilTransaction);
+
+            // Assert
+            var cashRecord = context.PlayerCashRecords.First(p => p.PlayerOOGDataId == patronEntityExpected.Id);
+            patronExpected.CashRecord.Should().BeEquivalentTo(EntityMapper.Mapper.Map<PlayerCashRecord>(cashRecord));
+            
+        }
+
+        [Fact]
         public void PopulateTestDb_WithRandomData_DataIsInserted()
         {
             // Arrange
@@ -156,8 +193,7 @@ namespace PersistenceTests
             // Assert
             Assert.Equal(expectedPlayerCount, context.PlayerOOGData.Count());
             Assert.Equal(expectedCashRecordCount, context.PlayerCashRecords.Count());
-            Assert.Equal(expectedTransactionCount, context.GilTransactions.Count());
-            
+            Assert.Equal(expectedTransactionCount, context.GilTransactions.Count());            
         }
 
         private void AssertPlayerCreated(int totalPlayersExpected, string name, string world)

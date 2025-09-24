@@ -83,12 +83,20 @@ namespace PersistentModel.Repository
 
         public bool UpdateCashRecord(PlayerOOGData player, PlayerCashRecord cashRecord, GilTransaction newTransaction)
         {
-            throw new NotImplementedException();
-        }
+            var existing = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).FirstOrDefault(p => p.Name == player.Name && p.World == player.World);
+            if (existing == null)
+            {
+                return false;
+            }
 
-        public bool UpdatePlayer(PlayerOOGData playerData)
-        {
-            throw new NotImplementedException();
+            EntityMapper.Mapper.Map<PlayerCashRecord, PlayerCashRecordEntity>(cashRecord, existing.CashRecord);
+
+            GilTransactionEntity gilTransactionEntity = EntityMapper.Mapper.Map<GilTransactionEntity>(newTransaction);
+            //existing.CashRecord.History.Add(gilTransactionEntity);
+            //context.GilTransactions.Add(gilTransactionEntity);
+            context.SaveChanges();
+
+            return true;
         }
     }
 }

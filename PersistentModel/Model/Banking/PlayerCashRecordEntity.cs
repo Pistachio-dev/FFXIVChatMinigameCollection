@@ -8,7 +8,7 @@ namespace PersistentModel.Model.Banking
         [Key]
         public uint Id { get; set; }
 
-        public uint PlayerOOGDataID { get; set; }
+        public uint PlayerOOGDataId { get; set; }
 
         public PlayerOOGDataEntity PlayerOOGData { get; set; }
 

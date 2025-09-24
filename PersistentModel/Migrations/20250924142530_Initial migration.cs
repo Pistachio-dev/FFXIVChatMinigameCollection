@@ -32,7 +32,7 @@ namespace PersistentModel.Migrations
                 {
                     Id = table.Column<uint>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    PlayerOOGDataID = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PlayerOOGDataId = table.Column<uint>(type: "INTEGER", nullable: false),
                     StoredReal = table.Column<long>(type: "INTEGER", nullable: false),
                     StoredFake = table.Column<long>(type: "INTEGER", nullable: false),
                     InUseReal = table.Column<long>(type: "INTEGER", nullable: false),
@@ -42,8 +42,8 @@ namespace PersistentModel.Migrations
                 {
                     table.PrimaryKey("PK_PlayerCashRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlayerCashRecords_PlayerOOGData_PlayerOOGDataID",
-                        column: x => x.PlayerOOGDataID,
+                        name: "FK_PlayerCashRecords_PlayerOOGData_PlayerOOGDataId",
+                        column: x => x.PlayerOOGDataId,
                         principalTable: "PlayerOOGData",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -78,27 +78,33 @@ namespace PersistentModel.Migrations
                     Id = table.Column<uint>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     HostPlayerId1 = table.Column<uint>(type: "INTEGER", nullable: false),
-                    PlayerCashRecordId = table.Column<uint>(type: "INTEGER", nullable: false),
+                    PatronPlayerId = table.Column<uint>(type: "INTEGER", nullable: false),
                     IsRealGil = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsHouseCut = table.Column<bool>(type: "INTEGER", nullable: false),
                     Amount = table.Column<long>(type: "INTEGER", nullable: false),
-                    WhenUtc = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    WhenUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PlayerCashRecordEntityId = table.Column<uint>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GilTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_GilTransactions_PlayerCashRecords_PlayerCashRecordId",
-                        column: x => x.PlayerCashRecordId,
+                        name: "FK_GilTransactions_PlayerCashRecords_PlayerCashRecordEntityId",
+                        column: x => x.PlayerCashRecordEntityId,
                         principalTable: "PlayerCashRecords",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_GilTransactions_PlayerOOGData_HostPlayerId1",
                         column: x => x.HostPlayerId1,
                         principalTable: "PlayerOOGData",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_GilTransactions_PlayerOOGData_PatronPlayerId",
+                        column: x => x.PatronPlayerId,
+                        principalTable: "PlayerOOGData",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -107,14 +113,19 @@ namespace PersistentModel.Migrations
                 column: "HostPlayerId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GilTransactions_PlayerCashRecordId",
+                name: "IX_GilTransactions_PatronPlayerId",
                 table: "GilTransactions",
-                column: "PlayerCashRecordId");
+                column: "PatronPlayerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlayerCashRecords_PlayerOOGDataID",
+                name: "IX_GilTransactions_PlayerCashRecordEntityId",
+                table: "GilTransactions",
+                column: "PlayerCashRecordEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlayerCashRecords_PlayerOOGDataId",
                 table: "PlayerCashRecords",
-                column: "PlayerOOGDataID",
+                column: "PlayerOOGDataId",
                 unique: true);
 
             migrationBuilder.CreateIndex(

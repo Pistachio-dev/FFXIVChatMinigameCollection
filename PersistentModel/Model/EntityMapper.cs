@@ -25,17 +25,12 @@ namespace PersistentModel.Model
                 .ReverseMap();
 
                 configuration.CreateMap<PlayerCashRecordEntity, PlayerCashRecord>()
-                .ForMember(d => d.PlayerOOGData, opt => opt.Ignore())
                 .ReverseMap();
-
-
 
                 configuration.CreateMap<GilTransaction, GilTransactionEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
-                .ForMember(d => d.HostPlayerId, opt => opt.Ignore())
-                .ForMember(d => d.HostPlayer, opt => opt.Ignore())
+                //.ForMember(d => d.HostPlayerId, opt => opt.Ignore())
                 .ForMember(d => d.PatronPlayerId, opt => opt.Ignore())
-                .ForMember(d => d.PatronPlayer, opt => opt.Ignore())
                 .ReverseMap();
 
             }, loggerFactory);

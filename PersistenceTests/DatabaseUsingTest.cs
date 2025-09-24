@@ -1,3 +1,4 @@
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using PersistentModel;
 using PersistentModel.Model.Banking;
@@ -14,12 +15,16 @@ namespace PersistenceTests
     {
         internal readonly DbContextOptions<MinigameCollectionDbContext> options;
         internal readonly MinigameCollectionDbContext context;
-
+        internal readonly SqliteConnection connection;
         public DatabaseUsingTest()
         {
-            options = new DbContextOptionsBuilder<MinigameCollectionDbContext>().UseInMemoryDatabase(databaseName: "Minigame Collection").Options;
+            //options = new DbContextOptionsBuilder<MinigameCollectionDbContext>().UseInMemoryDatabase(databaseName: "Minigame Collection").Options;
+            connection = new SqliteConnection("DataSource=:memory:");
+            connection.Open();
+
+            options = new DbContextOptionsBuilder<MinigameCollectionDbContext>().UseSqlite(connection).Options;
             context = new MinigameCollectionDbContext(options);
-            context.Database.Migrate();
+            context.Database.EnsureCreated();
         }
 
         public Task DisposeAsync()
@@ -29,6 +34,8 @@ namespace PersistenceTests
 
         public void Dispose()
         {
+            connection.Close();
+            connection.Dispose();
             this.context.Database.EnsureDeleted();
             this.context.Dispose();
         }

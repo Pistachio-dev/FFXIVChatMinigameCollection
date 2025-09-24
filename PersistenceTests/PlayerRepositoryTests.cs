@@ -96,6 +96,26 @@ namespace PersistenceTests
             AssertPlayerCreated(2, name, world);
         }
 
+        [Fact]
+        public void PopulateTestDb_WithRandomData_DataIsInserted()
+        {
+            // Arrange
+            var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(players);
+            int expectedPlayerCount = players.Count;
+            int expectedCashRecordCount = players.Count;
+            int expectedTransactionCount = players.SelectMany(p => p.CashRecord.History).Count();
+
+            // Act
+            context.AddRange(players);
+
+            // Assert
+            Assert.Equal(expectedPlayerCount, context.PlayerOOGData.Count());
+            Assert.Equal(expectedCashRecordCount, context.PlayerCashRecords.Count());
+            Assert.Equal(expectedTransactionCount, context.GilTransactions.Count());
+            
+        }
+
         private void AssertPlayerCreated(int totalPlayersExpected, string name, string world)
         {
             var players = context.PlayerOOGData.ToList();

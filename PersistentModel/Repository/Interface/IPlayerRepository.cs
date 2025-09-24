@@ -7,7 +7,7 @@ namespace PersistentModel.Repository.Interface
 {
     public interface IPlayerRepository
     {
-        public bool GetPlayerWithCashRecord(string playerFullName);
+        public PlayerOOGData? GetPlayerWithCashRecord(string playerFullName);
         public bool CreatePlayer(PlayerOOGData playerData);
         public bool UpdatePlayer(PlayerOOGData playerData);
         public bool UpdateAlias(PlayerIdentifier newAlias);

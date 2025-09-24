@@ -30,9 +30,9 @@ namespace PersistentModel.Model.Banking
         public bool IsHouseCut { get; set; }
 
         [Required]
-        public long Amount { get; } // Positive amounts means the banked amount for the player increases
+        public long Amount { get; set;  } // Positive amounts means the banked amount for the player increases
         
         [Required]
-        public DateTime WhenUtc {  get; }
+        public DateTime WhenUtc { get; set; }
     }
 }

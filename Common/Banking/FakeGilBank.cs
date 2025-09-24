@@ -14,18 +14,13 @@ namespace Common.Banking
 {
     internal class FakeGilBank : IGilBank
     {
-        private readonly IGilTransactionRepository transactionRepo;
-        private readonly IPlayerCashRecordRepository cashRecordRepository;
         private readonly IPlayerManager playerManager;
         private readonly ILogService logService;
 
-        public FakeGilBank(IGilTransactionRepository transactionRepo,
-                            IPlayerCashRecordRepository cashRecordRepository,
+        public FakeGilBank(
                             IPlayerManager playerManager,
                             ILogService logService)
         {
-            this.transactionRepo = transactionRepo;
-            this.cashRecordRepository = cashRecordRepository;
             this.playerManager = playerManager;
             this.logService = logService;
         }

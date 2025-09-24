@@ -19,19 +19,14 @@ namespace PersistentModel
 
         public DbSet<PlayerOOGDataEntity> PlayerOOGData { get; set; }
 
-        public string DbPath { get; private set; }
-
         internal static bool Initialized;
 
-        public MinigameCollectionDbContext(DbContextOptions<MinigameCollectionDbContext> options)
+        public MinigameCollectionDbContext(DbContextOptions<MinigameCollectionDbContext> options) : base(options)
         {
-            DbPath = GetPath();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={DbPath}");
-
             base.OnConfiguring(optionsBuilder);
         }
 
@@ -50,15 +45,6 @@ namespace PersistentModel
 
             modelBuilder.Entity<PlayerIdentifierEntity>()
                 .HasKey(i => i.Id);
-        }
-        private string GetPath()
-        {
-            var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var fullPath = Path.Combine(appDataPath, "XIVLauncher", "pluginConfigs", "MinigameCollection");
-
-            var configDir = fullPath + Path.DirectorySeparatorChar;
-
-            return $"{configDir}MinigameCollection.db";
         }
 
         internal void ApplyPendingMigrations()

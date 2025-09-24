@@ -9,7 +9,8 @@ namespace PersistentModel.Extensions
     {
         public static IServiceCollection AddRepositories(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddDbContext<MinigameCollectionDbContext>();
+            serviceCollection.AddDbContext<MinigameCollectionDbContext, MinigameCollectionDbContext>(options =>
+                options.UseSqlite(MinigameCollectionDbContextFactory.GetConnectionString()));
             serviceCollection.AddTransient(typeof(IPlayerRepository), typeof(PlayerRepository));
 
             return serviceCollection;

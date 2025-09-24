@@ -23,19 +23,17 @@ namespace MinigameCollection.Common.GameBoardCommon
         private readonly ILogService logService;
         private readonly IClientChatGui chatGui;
         private readonly IClientState clientState;
-        private readonly IPlayerOOGDataRepository playerOOGRepo;
-        private readonly IPlayerIdentifierRepository playerIdentifierRepo;
+
         private readonly IChatOutput chatOutput;
 
         public PlayerManager(ITargetingService targeting, ILogService logService, IClientChatGui chatGui,IClientState clientState,
-            IPlayerOOGDataRepository playerOOGRepo, IPlayerIdentifierRepository playerIdentifierRepo, IChatOutput chatOutput)
+            IChatOutput chatOutput)
         {
             this.targeting = targeting;
             this.logService = logService;
             this.chatGui = chatGui;
             this.clientState = clientState;
-            this.playerOOGRepo = playerOOGRepo;
-            this.playerIdentifierRepo = playerIdentifierRepo;
+
             this.chatOutput = chatOutput;
         }
 

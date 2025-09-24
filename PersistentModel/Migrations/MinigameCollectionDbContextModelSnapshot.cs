@@ -15,12 +15,15 @@ namespace PersistentModel.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
 
-            modelBuilder.Entity("PersistentModel.Model.Banking.GilTransaction", b =>
+            modelBuilder.Entity("PersistentModel.Model.Banking.GilTransactionEntity", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("Amount")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("HostPlayerId1")
@@ -35,6 +38,9 @@ namespace PersistentModel.Migrations
                     b.Property<uint>("PlayerCashRecordId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("WhenUtc")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.HasIndex("HostPlayerId1");
@@ -44,7 +50,7 @@ namespace PersistentModel.Migrations
                     b.ToTable("GilTransactions");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
+            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecordEntity", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +79,7 @@ namespace PersistentModel.Migrations
                     b.ToTable("PlayerCashRecords");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifier", b =>
+            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifierEntity", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +108,7 @@ namespace PersistentModel.Migrations
                     b.ToTable("PlayerIdentifiers");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGData", b =>
+            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", b =>
                 {
                     b.Property<uint>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,15 +132,15 @@ namespace PersistentModel.Migrations
                     b.ToTable("PlayerOOGData");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.Banking.GilTransaction", b =>
+            modelBuilder.Entity("PersistentModel.Model.Banking.GilTransactionEntity", b =>
                 {
-                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "HostPlayer")
+                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "HostPlayer")
                         .WithMany()
                         .HasForeignKey("HostPlayerId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PersistentModel.Model.Banking.PlayerCashRecord", "PlayerCashRecord")
+                    b.HasOne("PersistentModel.Model.Banking.PlayerCashRecordEntity", "PlayerCashRecord")
                         .WithMany("History")
                         .HasForeignKey("PlayerCashRecordId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -145,20 +151,20 @@ namespace PersistentModel.Migrations
                     b.Navigation("PlayerCashRecord");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
+            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecordEntity", b =>
                 {
-                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "PlayerOOGData")
+                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "PlayerOOGData")
                         .WithOne("CashRecord")
-                        .HasForeignKey("PersistentModel.Model.Banking.PlayerCashRecord", "PlayerOOGDataID")
+                        .HasForeignKey("PersistentModel.Model.Banking.PlayerCashRecordEntity", "PlayerOOGDataID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("PlayerOOGData");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifier", b =>
+            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerIdentifierEntity", b =>
                 {
-                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGData", "PlayerOOGData")
+                    b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "PlayerOOGData")
                         .WithMany("PreviousIdentities")
                         .HasForeignKey("PlayerOOGDataId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -167,12 +173,12 @@ namespace PersistentModel.Migrations
                     b.Navigation("PlayerOOGData");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecord", b =>
+            modelBuilder.Entity("PersistentModel.Model.Banking.PlayerCashRecordEntity", b =>
                 {
                     b.Navigation("History");
                 });
 
-            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGData", b =>
+            modelBuilder.Entity("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", b =>
                 {
                     b.Navigation("CashRecord")
                         .IsRequired();

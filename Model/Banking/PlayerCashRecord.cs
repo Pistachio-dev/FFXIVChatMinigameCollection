@@ -6,13 +6,6 @@ namespace Model.Banking
     public class PlayerCashRecord
     {
         [Required]
-
-        public int PlayerOOGDataId { get; set; }
-        [Required]
-
-        public PlayerOOGData PlayerOOGData { get; set; }
-
-        [Required]
         public long StoredReal { get; set; }
 
         [Required]
@@ -27,9 +20,8 @@ namespace Model.Banking
         [Required]
         public List<GilTransaction> History { get; set; } = new();
 
-        public PlayerCashRecord(PlayerOOGData owner)
+        public PlayerCashRecord()
         {
-            PlayerOOGData = owner;
             StoredReal = 0;
             StoredFake = 0;
             History = new();
@@ -39,7 +31,5 @@ namespace Model.Banking
         {
             History.Add(transaction);
         }
-
-        internal PlayerCashRecord() { }
     }
 }

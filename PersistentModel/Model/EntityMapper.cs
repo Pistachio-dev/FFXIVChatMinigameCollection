@@ -22,14 +22,18 @@ namespace PersistentModel.Model
                 configuration.CreateMap<PlayerIdentifier, PlayerIdentifierEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.PlayerOOGDataId, opt => opt.Ignore())
+                .ForMember(d => d.PlayerOOGData, opt => opt.Ignore())
                 .ReverseMap();
 
-                configuration.CreateMap<PlayerCashRecordEntity, PlayerCashRecord>()
+                configuration.CreateMap<PlayerCashRecord, PlayerCashRecordEntity>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.PlayerOOGDataId, opt => opt.Ignore())
+                .ForMember(d => d.PlayerOOGData, opt => opt.Ignore())
                 .ReverseMap();
 
                 configuration.CreateMap<GilTransaction, GilTransactionEntity>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
-                //.ForMember(d => d.HostPlayerId, opt => opt.Ignore())
+                .ForMember(d => d.HostPlayerId, opt => opt.Ignore())
                 .ForMember(d => d.PatronPlayerId, opt => opt.Ignore())
                 .ReverseMap();
 

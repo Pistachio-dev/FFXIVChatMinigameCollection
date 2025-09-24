@@ -46,7 +46,7 @@ namespace PersistenceTests
                     var transaction = new GilTransactionEntity
                     {
                         HostPlayer = entities.ElementAt(rng.Next(entities.Count)),
-                        PlayerCashRecord = entities.ElementAt(rng.Next(entities.Count)).CashRecord,
+                        PatronPlayer = entities.ElementAt(rng.Next(entities.Count)),
                         IsRealGil = rng.Next(2) % 2 == 0,
                         IsHouseCut = rng.Next(2) % 2 == 0,
                         Amount = rng.Next(1000000),

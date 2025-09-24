@@ -1,3 +1,4 @@
+using Model.PlayerManagement;
 using PersistentModel.Model.PlayerManagement;
 using System;
 using System.Collections.Generic;
@@ -18,10 +19,10 @@ namespace PersistentModel.Model.Banking
         [Required]
         public PlayerOOGDataEntity HostPlayer { get; set; }
 
-        public uint PlayerCashRecordId { get; set; }
+        public uint PatronPlayerId { get; set; }
 
         [Required]
-        public PlayerCashRecordEntity PlayerCashRecord { get; set; }
+        public PlayerOOGDataEntity PatronPlayer { get; set; }
 
         [Required]
         public bool IsRealGil { get; set; }

@@ -5,6 +5,11 @@ namespace Model.Banking
 {
     public class PlayerCashRecord
     {
+        [Required]
+
+        public int PlayerOOGDataId { get; set; }
+        [Required]
+
         public PlayerOOGData PlayerOOGData { get; set; }
 
         [Required]

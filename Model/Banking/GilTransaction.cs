@@ -8,10 +8,8 @@ namespace Model.Banking
         [Required]
         public PlayerOOGData HostPlayer { get; set; }
 
-        public uint PlayerCashRecordId { get; set; }
-
         [Required]
-        public PlayerCashRecord PlayerCashRecord { get; set; }
+        public PlayerOOGData PatronPlayer { get; set; }
 
         [Required]
         public bool IsRealGil { get; set; }
@@ -44,7 +42,7 @@ namespace Model.Banking
         public GilTransaction(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, bool isHouseCut, long amount)
         {
             HostPlayer = hostPlayer;
-            PlayerCashRecord = patronPlayer.CashRecord;
+            PatronPlayer = patronPlayer;
             IsHouseCut = isHouseCut;
             Amount = amount;
             WhenUtc = DateTime.UtcNow;

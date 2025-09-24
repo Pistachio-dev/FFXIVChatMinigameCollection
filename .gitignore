@@ -2,3 +2,6 @@
 obj/
 bin/
 *.user
+/PersistentModel/database.db
+/PersistentModel/database.db-shm
+/PersistentModel/database.db-wal

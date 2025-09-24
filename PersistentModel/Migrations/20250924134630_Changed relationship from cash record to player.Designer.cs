@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersistentModel;
 
@@ -10,9 +11,11 @@ using PersistentModel;
 namespace PersistentModel.Migrations
 {
     [DbContext(typeof(MinigameCollectionDbContext))]
-    partial class MinigameCollectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250924134630_Changed relationship from cash record to player")]
+    partial class Changedrelationshipfromcashrecordtoplayer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");

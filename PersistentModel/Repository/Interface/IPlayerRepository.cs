@@ -10,7 +10,7 @@ namespace PersistentModel.Repository.Interface
         public PlayerOOGData? GetPlayerWithCashRecord(string playerFullName);
         public bool CreatePlayer(PlayerOOGData playerData);
         public bool UpdateAlias(PlayerIdentifier newAlias);
-        public bool UpdateCashRecord(PlayerOOGData player, PlayerCashRecord cashRecord, GilTransaction newTransaction);
+        public bool UpdateCashRecord(PlayerOOGData player, GilTransaction newTransaction);
         public bool RemovePlayer(string playerFullName);
     }
 }

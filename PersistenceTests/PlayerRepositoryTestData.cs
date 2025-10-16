@@ -40,7 +40,7 @@ namespace PersistenceTests
 
             for (int i = 0; i < amount; i++)
             {
-                int transactionCount = rng.Next(10);
+                int transactionCount = rng.Next(1, 10);
                 for (int j = 0; j < transactionCount; j++)
                 {
                     var transaction = new GilTransactionEntity

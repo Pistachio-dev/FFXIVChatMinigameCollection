@@ -1,8 +1,10 @@
 using FluentAssertions;
+using FluentAssertions.Equivalency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Model.Banking;
 using Model.PlayerManagement;
+using PersistenceTests.Comparers;
 using PersistentModel.Model;
 using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;
@@ -23,6 +25,27 @@ namespace PersistenceTests
             context.Database.EnsureDeleted();
         }
 
+        [Fact]
+        public void PopulateTestDb_WithRandomData_DataIsInserted()
+        {
+            // Arrange
+            var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(players);
+            context.SaveChanges();
+            int expectedPlayerCount = players.Count;
+            int expectedCashRecordCount = players.Count;
+            int expectedTransactionCount = players.SelectMany(p => p.CashRecord.History).Count();
+
+            // Act
+            context.AddRange(players);
+
+            // Assert
+            Assert.Equal(expectedPlayerCount, context.PlayerOOGData.Count());
+            Assert.Equal(expectedCashRecordCount, context.PlayerCashRecords.Count());
+            Assert.Equal(expectedTransactionCount, context.GilTransactions.Count());
+        }
+
+        #region Create Player
         [Fact]
         public void CreatePlayer_NonExisting_IsCreated()
         {
@@ -63,6 +86,25 @@ namespace PersistenceTests
         }
 
         [Fact]
+        public void CreatePlayer_OnlyNameMatches_Created()
+        {
+            // Arrange
+            string name = "John Frusciante";
+            string world = "California";
+            var player = new PlayerOOGData(name, world);
+            var repo = new PlayerRepository(context);
+            repo.CreatePlayer(new PlayerOOGData(name, "OtherWorld"));
+            context.SaveChanges();
+
+            // Act
+            var result = repo.CreatePlayer(player);
+
+            // Assert
+            Assert.True(result);
+            AssertPlayerCreated(2, name, world);
+        }
+
+        [Fact]
         public void CreatePlayer_OnlyWorldMatches_Created()
         {
             // Arrange
@@ -80,6 +122,8 @@ namespace PersistenceTests
             Assert.True(result);
             AssertPlayerCreated(2, name, world);
         }
+        #endregion
+        #region Get Player
         [Fact]
         public void GetPlayer_Existing_ReturnedWithCashRecordButNoHistory()
         {
@@ -123,24 +167,8 @@ namespace PersistenceTests
             Assert.Null(player);
         }
 
-        [Fact]
-        public void CreatePlayer_OnlyNameMatches_Created()
-        {
-            // Arrange
-            string name = "John Frusciante";
-            string world = "California";
-            var player = new PlayerOOGData(name, world);
-            var repo = new PlayerRepository(context);
-            repo.CreatePlayer(new PlayerOOGData(name, "OtherWorld"));
-            context.SaveChanges();
-
-            // Act
-            var result = repo.CreatePlayer(player);
-
-            // Assert
-            Assert.True(result);
-            AssertPlayerCreated(2, name, world);
-        }
+        #endregion
+        #region Update Cash Record
 
         [Fact]
         public void UpdateCashRecord_PlayerExists_CorrectlyAdded()
@@ -166,35 +194,21 @@ namespace PersistenceTests
             patronEntityExpected.PreviousIdentities.Clear();
 
             GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
+            patronEntityExpected.CashRecord.History.Add(EntityMapper.Mapper.Map<GilTransactionEntity>(gilTransaction));
 
             //Act
-            bool result = repo.UpdateCashRecord(hostExpected, hostExpected.CashRecord, gilTransaction);
+            bool result = repo.UpdateCashRecord(patronExpected, gilTransaction);
 
             // Assert
-            var cashRecord = context.PlayerCashRecords.First(p => p.PlayerOOGDataId == patronEntityExpected.Id);
-            patronExpected.CashRecord.Should().BeEquivalentTo(EntityMapper.Mapper.Map<PlayerCashRecord>(cashRecord));
-            
+            var updatedPatron = context.PlayerOOGData.Include(c => c.CashRecord).ThenInclude(c => c.History)
+                .First(p => p.Name == patronEntityExpected.Name && p.World == patronEntityExpected.World);
+            var updatedCashRecord = EntityMapper.Mapper.Map<PlayerCashRecord>(updatedPatron.CashRecord);
+
+            updatedCashRecord.Should()
+                .BeEquivalentTo(patronExpected.CashRecord, opt => opt.ShallowPlayer().LooseDate());            
         }
 
-        [Fact]
-        public void PopulateTestDb_WithRandomData_DataIsInserted()
-        {
-            // Arrange
-            var players = PlayerRepositoryTestData.CreateRandomPlayers(20);
-            context.AddRange(players);
-            context.SaveChanges();
-            int expectedPlayerCount = players.Count;
-            int expectedCashRecordCount = players.Count;
-            int expectedTransactionCount = players.SelectMany(p => p.CashRecord.History).Count();
-
-            // Act
-            context.AddRange(players);
-
-            // Assert
-            Assert.Equal(expectedPlayerCount, context.PlayerOOGData.Count());
-            Assert.Equal(expectedCashRecordCount, context.PlayerCashRecords.Count());
-            Assert.Equal(expectedTransactionCount, context.GilTransactions.Count());            
-        }
+        #endregion
 
         private void AssertPlayerCreated(int totalPlayersExpected, string name, string world)
         {

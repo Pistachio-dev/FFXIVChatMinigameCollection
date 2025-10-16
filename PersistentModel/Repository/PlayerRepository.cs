@@ -81,7 +81,7 @@ namespace PersistentModel.Repository
             throw new NotImplementedException();
         }
 
-        public bool UpdateCashRecord(PlayerOOGData player, PlayerCashRecord cashRecord, GilTransaction newTransaction)
+        public bool UpdateCashRecord(PlayerOOGData player, GilTransaction newTransaction)
         {
             var existing = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).FirstOrDefault(p => p.Name == player.Name && p.World == player.World);
             if (existing == null)
@@ -89,13 +89,15 @@ namespace PersistentModel.Repository
                 return false;
             }
 
-            EntityMapper.Mapper.Map<PlayerCashRecord, PlayerCashRecordEntity>(cashRecord, existing.CashRecord);
+
+            var cashRecordEntity = context.PlayerCashRecords.Entry(existing.CashRecord);
+            EntityMapper.Mapper.Map<PlayerCashRecord, PlayerCashRecordEntity>(player.CashRecord, existing.CashRecord);
 
             GilTransactionEntity gilTransactionEntity = EntityMapper.Mapper.Map<GilTransactionEntity>(newTransaction);
-            //existing.CashRecord.History.Add(gilTransactionEntity);
-            //context.GilTransactions.Add(gilTransactionEntity);
+            
+            context.GilTransactions.Add(gilTransactionEntity);
             context.SaveChanges();
-
+            
             return true;
         }
     }

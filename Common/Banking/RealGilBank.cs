@@ -1,5 +1,5 @@
-using Common.API;
 using Common.Banking.Interface;
+using CommonServices.Banking.Enum;
 using System;
 
 namespace Common.Banking

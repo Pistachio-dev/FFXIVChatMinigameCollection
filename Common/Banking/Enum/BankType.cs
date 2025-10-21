@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.API
+namespace CommonServices.Banking.Enum
 {
     public enum BankType
     {

@@ -26,7 +26,7 @@ namespace PersistentModel.Migrations
                     b.Property<long>("Amount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<uint>("HostPlayerId1")
+                    b.Property<uint>("HostPlayerId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsHouseCut")
@@ -46,7 +46,7 @@ namespace PersistentModel.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HostPlayerId1");
+                    b.HasIndex("HostPlayerId");
 
                     b.HasIndex("PatronPlayerId");
 
@@ -90,7 +90,7 @@ namespace PersistentModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DateMetUtc")
+                    b.Property<DateTime>("DateIdentityChanged")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -141,7 +141,7 @@ namespace PersistentModel.Migrations
                 {
                     b.HasOne("PersistentModel.Model.PlayerManagement.PlayerOOGDataEntity", "HostPlayer")
                         .WithMany()
-                        .HasForeignKey("HostPlayerId1")
+                        .HasForeignKey("HostPlayerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

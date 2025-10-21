@@ -66,7 +66,7 @@ namespace PersistenceTests
                         PlayerOOGData = entities.ElementAt(i),
                         Name = Guid.NewGuid().ToString(),
                         World = GetRandomString(SampleWorlds, rng),
-                        DateMetUtc = GetRandomDate(false)
+                        DateIdentityChanged = GetRandomDate(false)
                     };
 
                     entities[i].PreviousIdentities.Add(newIdentity);

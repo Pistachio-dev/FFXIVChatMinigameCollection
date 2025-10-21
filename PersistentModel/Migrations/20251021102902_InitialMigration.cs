@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PersistentModel.Migrations
 {
     /// <inheritdoc />
-    public partial class Initialmigration : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -57,7 +57,7 @@ namespace PersistentModel.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     World = table.Column<string>(type: "TEXT", nullable: false),
-                    DateMetUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateIdentityChanged = table.Column<DateTime>(type: "TEXT", nullable: false),
                     PlayerOOGDataId = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -77,7 +77,7 @@ namespace PersistentModel.Migrations
                 {
                     Id = table.Column<uint>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    HostPlayerId1 = table.Column<uint>(type: "INTEGER", nullable: false),
+                    HostPlayerId = table.Column<uint>(type: "INTEGER", nullable: false),
                     PatronPlayerId = table.Column<uint>(type: "INTEGER", nullable: false),
                     IsRealGil = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsHouseCut = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -94,8 +94,8 @@ namespace PersistentModel.Migrations
                         principalTable: "PlayerCashRecords",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_GilTransactions_PlayerOOGData_HostPlayerId1",
-                        column: x => x.HostPlayerId1,
+                        name: "FK_GilTransactions_PlayerOOGData_HostPlayerId",
+                        column: x => x.HostPlayerId,
                         principalTable: "PlayerOOGData",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -108,9 +108,9 @@ namespace PersistentModel.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_GilTransactions_HostPlayerId1",
+                name: "IX_GilTransactions_HostPlayerId",
                 table: "GilTransactions",
-                column: "HostPlayerId1");
+                column: "HostPlayerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_GilTransactions_PatronPlayerId",

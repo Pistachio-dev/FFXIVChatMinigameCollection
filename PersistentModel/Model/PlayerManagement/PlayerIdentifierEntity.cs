@@ -16,7 +16,7 @@ namespace PersistentModel.Model.PlayerManagement
         public string World { get; set; }
         
         [Required]
-        public DateTime DateMetUtc { get; set; }
+        public DateTime DateIdentityChanged { get; set; }
 
         public uint PlayerOOGDataId { get; set; }
 

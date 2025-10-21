@@ -171,7 +171,7 @@ namespace PersistenceTests
         #region Update Cash Record
 
         [Fact]
-        public void UpdateCashRecord_PlayerExists_CorrectlyAdded()
+        public void UpdateCashRecord_PlayerExists_CorrectlyUpdated()
         {
             // Arrange
             var randomPlayers = PlayerRepositoryTestData.CreateRandomPlayers(20);
@@ -193,6 +193,9 @@ namespace PersistenceTests
             patronExpected.CashRecord.InUseFake = inUseFakeAmount;
             patronEntityExpected.PreviousIdentities.Clear();
 
+            DateTime replacementDate = new DateTime(2001, 1, 1);
+            patronExpected.CreatedAtUtc = replacementDate;
+
             GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
             patronEntityExpected.CashRecord.History.Add(EntityMapper.Mapper.Map<GilTransactionEntity>(gilTransaction));
 
@@ -202,11 +205,56 @@ namespace PersistenceTests
             // Assert
             var updatedPatron = context.PlayerOOGData.Include(c => c.CashRecord).ThenInclude(c => c.History)
                 .First(p => p.Name == patronEntityExpected.Name && p.World == patronEntityExpected.World);
+            updatedPatron.CreatedAtUtc.Should().NotBe(replacementDate);
             var updatedCashRecord = EntityMapper.Mapper.Map<PlayerCashRecord>(updatedPatron.CashRecord);
 
             updatedCashRecord.Should()
                 .BeEquivalentTo(patronExpected.CashRecord, opt => opt.ShallowPlayer().LooseDate());            
         }
+
+
+        [Fact]
+        public void UpdateCashRecord_PlayerDoesNotExist_UpdateCancelled()
+        {
+            // Arrange
+            var randomPlayers = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(randomPlayers);
+            context.SaveChanges();
+            var players = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).ToList();
+            var repo = new PlayerRepository(context);
+            var patronEntityExpected = players[10];
+            var hostEntityExpected = players[12];
+            var hostExpected = EntityMapper.Mapper.Map<PlayerOOGData>(hostEntityExpected);
+            var patronExpected = EntityMapper.Mapper.Map<PlayerOOGData>(patronEntityExpected);
+            int storedRealAmount = 123;
+            int storedFakeAmount = 321;
+            int inUseRealAmount = 998;
+            int inUseFakeAmount = 542;
+            patronExpected.CashRecord.StoredReal = storedRealAmount;
+            patronExpected.CashRecord.StoredFake = storedFakeAmount;
+            patronExpected.CashRecord.InUseReal = inUseRealAmount;
+            patronExpected.CashRecord.InUseFake = inUseFakeAmount;
+            patronEntityExpected.PreviousIdentities.Clear();
+
+            string replacementName = "this should break the search";
+            string previousName = patronEntityExpected.Name;
+            patronExpected.Name = replacementName;
+
+            GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
+            patronEntityExpected.CashRecord.History.Add(EntityMapper.Mapper.Map<GilTransactionEntity>(gilTransaction));
+            var previousTransactionCount = context.GilTransactions.Count();
+
+            //Act
+            bool result = repo.UpdateCashRecord(patronExpected, gilTransaction);
+
+            // Assert
+            result.Should().BeFalse();
+            var updatedPatron = context.PlayerOOGData.Include(c => c.CashRecord).ThenInclude(c => c.History)
+                .Count(p => p.Name == patronEntityExpected.Name && p.World == patronEntityExpected.World).Should().Be(1);
+
+            context.GilTransactions.Count().Should().Be(previousTransactionCount);            
+        }
+
 
         #endregion
 

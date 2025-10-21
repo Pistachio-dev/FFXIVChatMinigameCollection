@@ -56,6 +56,24 @@ namespace PersistenceTests
                 }
             }
 
+            for (int i = 0; i < amount; i++)
+            {
+                int pastEntityCount = rng.Next(1, 5);
+                for (int j = 0; j < pastEntityCount; j++)
+                {
+                    var newIdentity = new PlayerIdentifierEntity
+                    {
+                        PlayerOOGData = entities.ElementAt(i),
+                        Name = Guid.NewGuid().ToString(),
+                        World = GetRandomString(SampleWorlds, rng),
+                        DateMetUtc = GetRandomDate(false)
+                    };
+
+                    entities[i].PreviousIdentities.Add(newIdentity);
+                }
+            }
+
+
             return entities;
         }
 
@@ -64,6 +82,13 @@ namespace PersistenceTests
             return samples[rng.Next(samples.Length)];
         }
 
+        public static DateTime GetRandomDate(bool allowFuture)
+        {
+            int randomHours = allowFuture
+                ? new Random().Next(-9999, 9999)
+                : new Random().Next(9999);
+            return DateTime.UtcNow - TimeSpan.FromHours(randomHours);
+        }
         public static string[] SampleWorlds = [
             "Omega",
             "Sagittarius",

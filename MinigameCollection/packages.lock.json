@@ -517,6 +517,15 @@
           "PersistentModel": "[1.0.0, )"
         }
       },
+      "commonservices": {
+        "type": "Project",
+        "dependencies": {
+          "DalamudBasics": "[1.0.0, )",
+          "Microsoft.Extensions.DependencyInjection": "[9.0.9, )",
+          "Model": "[1.0.0, )",
+          "PersistentModel": "[1.0.0, )"
+        }
+      },
       "dalamudbasics": {
         "type": "Project",
         "dependencies": {

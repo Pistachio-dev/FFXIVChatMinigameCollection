@@ -1,3 +1,5 @@
+using CommonServices.Game;
+using CommonServices.Game.Instance;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -79,6 +81,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
         serviceCollection.AddRepositories();
+        serviceCollection.AddSingleton<IGameInstance, GameInstance>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

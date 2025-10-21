@@ -1,28 +1,23 @@
 using Common.Banking.Interface;
-using Common.PlayerManagement.Interface;
+using CommonServices.PlayerManagement.Interface;
 using DalamudBasics.Logging;
 using Model.Banking;
-using PersistentModel.Model.Banking;
-using PersistentModel.Model.PlayerManagement;
-using PersistentModel.Repository.Interface;
-using Serilog;
 using System;
-using System.Runtime.CompilerServices;
 
 
 namespace Common.Banking
 {
     internal class FakeGilBank : IGilBank
     {
-        private readonly IPlayerManager playerManager;
-        private readonly ILogService logService;
+        private readonly ISessionPlayerManager playerManager;
+        private readonly ILogService log;
 
         public FakeGilBank(
-                            IPlayerManager playerManager,
+                            ISessionPlayerManager playerManager,
                             ILogService logService)
         {
             this.playerManager = playerManager;
-            this.logService = logService;
+            this.log = logService;
         }
 
         public bool DrawFromStored(string fullPlayerName, long amount)
@@ -56,53 +51,57 @@ namespace Common.Banking
 
         public long GetPlayerInUseFunds(string fullPlayerName)
         {
-            var player = playerManager.GetPlayer(fullPlayerName);
-            if (player == null)
-            {
-                logService.Info($"Attempted to get funds in use from {fullPlayerName} but the player does not exist");
-                return 0;
-            }
+            throw new NotImplementedException();
+            //var player = playerManager.GetPlayer(fullPlayerName);
+            //if (player == null)
+            //{
+            //    log.Info($"Attempted to get funds in use from {fullPlayerName} but the player does not exist");
+            //    return 0;
+            //}
 
-            return player.CashRecord.InUseFake;
+            //return player.CashRecord.InUseFake;
         }
 
         public long GetPlayerStoredFunds(string fullPlayerName)
         {
-            var player = playerManager.GetPlayer(fullPlayerName);
-            if (player == null)
-            {
-                logService.Info($"Attempted to get funds stored from {fullPlayerName} but the player does not exist");
-                return 0;
-            }
+            throw new NotImplementedException();
+            //var player = playerManager.GetPlayer(fullPlayerName);
+            //if (player == null)
+            //{
+            //    log.Info($"Attempted to get funds stored from {fullPlayerName} but the player does not exist");
+            //    return 0;
+            //}
 
-            return player.CashRecord.StoredFake;
+            //return player.CashRecord.StoredFake;
         }
 
         public long ManuallySetStoredFunds(string fullPlayerName, long newFunds)
         {
-            var player = playerManager.GetPlayer(fullPlayerName);
-            if (player == null)
-            {
-                logService.Info($"Attempted to set stored fake funds from {fullPlayerName} but the player does not exist");
-                return 0;
-            }
-            
-            var transaction = new GilTransaction(playerManager.GetDealer(), player, false, newFunds);
-            player.CashRecord.AddTransaction(transaction);
+            throw new NotImplementedException();
+            //var player = playerManager.GetPlayer(fullPlayerName);
+            //if (player == null)
+            //{
+            //    log.Info($"Attempted to set stored fake funds from {fullPlayerName} but the player does not exist");
+            //    return 0;
+            //}
 
-            return newFunds;
+            //var transaction = new GilTransaction(playerManager.GetDealer(), player, false, newFunds);
+            //player.CashRecord.AddTransaction(transaction);
+
+            //return newFunds;
         }
 
         public long SetInUseFunds(string fullPlayerName, long amount)
         {
-            var player = playerManager.GetPlayer(fullPlayerName);
-            if (player == null)
-            {
-                logService.Info($"Attempted to set in use fake funds from {fullPlayerName} but the player does not exist");
-                return 0;
-            }
+            throw new NotImplementedException();
+            //var player = playerManager.GetPlayer(fullPlayerName);
+            //if (player == null)
+            //{
+            //    log.Info($"Attempted to set in use fake funds from {fullPlayerName} but the player does not exist");
+            //    return 0;
+            //}
 
-            var transaction = new GilTransaction(playerManager.GetDealer(), player, false, amount);
+            //var transaction = new GilTransaction(playerManager.GetDealer(), player, false, amount);
 
             return amount;
         }

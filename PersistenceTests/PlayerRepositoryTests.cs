@@ -292,6 +292,33 @@ namespace PersistenceTests
                   DateMetUtc = DateTime.UtcNow
                 }, opt => opt.LooseDate());
         }
+
+        [Fact]
+        public void UpdateAlias_PlayerDoesNotExist_DoNothing()
+        {
+            // Arrange
+            var randomPlayers = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(randomPlayers);
+            context.SaveChanges();
+            var repo = new PlayerRepository(context);
+            var chosenPlayerEntity = randomPlayers[5];
+            var previousIdentityCount = chosenPlayerEntity.PreviousIdentities.Count;
+            var newIdentity = new PlayerIdentifier("new name", "new world");
+
+            //Act
+            bool result = repo.UpdateAlias("different name", chosenPlayerEntity.World, newIdentity);
+
+            // Assert
+            result.Should().BeFalse();
+            var player = context.PlayerOOGData.Include(p => p.PreviousIdentities)
+                .First(p => p.Id == chosenPlayerEntity.Id);
+
+            player.Name.Should().Be(chosenPlayerEntity.Name);
+            player.World.Should().Be(chosenPlayerEntity.World);
+            var existingIdentityRecords = context.PlayerIdentifiers.Where(id => id.PlayerOOGData.Id == player.Id).ToList();
+            existingIdentityRecords.Count.Should().Be(previousIdentityCount);
+            player.PreviousIdentities.Count.Should().Be(existingIdentityRecords.Count);
+        }
         #endregion
 
         private void AssertPlayerCreated(int totalPlayersExpected, string name, string world)

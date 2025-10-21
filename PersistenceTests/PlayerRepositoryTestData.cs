@@ -73,7 +73,6 @@ namespace PersistenceTests
                 }
             }
 
-
             return entities;
         }
 

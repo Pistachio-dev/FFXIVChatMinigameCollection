@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using Model.Banking;
@@ -57,28 +58,22 @@ namespace PersistentModel.Repository
 
         }        
 
-        public bool RemovePlayer(string playerFullName)
+        public bool UpdateAlias(string name, string world, PlayerIdentifier newAlias)
         {
-            if (!playerFullName.TryGetSplitName(out string name, out string world))
+            var playerEntity = context.PlayerOOGData.FirstOrDefault(p => p.Name == name && p.World == world);
+            if (playerEntity == null)
             {
                 return false;
             }
 
-            var existing = context.PlayerOOGData.Include(p => p.CashRecord).FirstOrDefault(p => p.Name == name && p.World == world);
-            if (existing == null)
-            {
-                return false;
-            }
-
-            context.Remove(existing);
+            playerEntity.Name = newAlias.Name;
+            playerEntity.World = newAlias.World;
+            var aliasEntity = EntityMapper.Mapper.Map<PlayerIdentifierEntity>(newAlias);
+            playerEntity.PreviousIdentities.Add(aliasEntity);
+            context.PlayerIdentifiers.Add(aliasEntity);
+            context.SaveChanges();
 
             return true;
-
-        }
-
-        public bool UpdateAlias(PlayerIdentifier newAlias)
-        {
-            throw new NotImplementedException();
         }
 
         public bool UpdateCashRecord(PlayerOOGData player, GilTransaction newTransaction)

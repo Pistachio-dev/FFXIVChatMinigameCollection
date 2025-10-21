@@ -258,6 +258,42 @@ namespace PersistenceTests
 
         #endregion
 
+        #region UpdateIdentity
+        [Fact]
+        public void UpdateAlias_PlayerExists_NameAndWorldUpdatedAndPreviousStored()
+        {
+            // Arrange
+            var randomPlayers = PlayerRepositoryTestData.CreateRandomPlayers(20);
+            context.AddRange(randomPlayers);
+            context.SaveChanges();
+            var repo = new PlayerRepository(context);
+            var chosenPlayerEntity = randomPlayers[5];
+            var previousIdentityCount = chosenPlayerEntity.PreviousIdentities.Count;
+            var newIdentity = new PlayerIdentifier("new name", "new world");
+
+            //Act
+            bool result = repo.UpdateAlias(chosenPlayerEntity.Name, chosenPlayerEntity.World, newIdentity);
+
+            // Assert
+            result.Should().BeTrue();
+            var player = context.PlayerOOGData.Include(p => p.PreviousIdentities)
+                .First(p => p.Id == chosenPlayerEntity.Id);
+
+            player.Name.Should().Be(newIdentity.Name);
+            player.World.Should().Be(newIdentity.World);
+            var existingIdentityRecords = context.PlayerIdentifiers.Where(id => id.PlayerOOGData.Id == player.Id).ToList();
+            existingIdentityRecords.Count.Should().Be(previousIdentityCount + 1);
+            player.PreviousIdentities.Count.Should().Be(existingIdentityRecords.Count);
+            var newlyCreatedIdentifier = EntityMapper.Mapper.Map<PlayerIdentifier>(player.PreviousIdentities.Last());
+            newlyCreatedIdentifier.Should()
+                .BeEquivalentTo(new PlayerIdentifier
+                { Name = chosenPlayerEntity.Name,
+                  World = chosenPlayerEntity.World,
+                  DateMetUtc = DateTime.UtcNow
+                }, opt => opt.LooseDate());
+        }
+        #endregion
+
         private void AssertPlayerCreated(int totalPlayersExpected, string name, string world)
         {
             var players = context.PlayerOOGData.ToList();

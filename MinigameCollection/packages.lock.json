@@ -527,13 +527,6 @@
         }
       },
       "dalamudbasics": {
-        "type": "Project",
-        "dependencies": {
-          "ECommons": "[3.0.1.9, )",
-          "Microsoft.Extensions.DependencyInjection": "[9.0.5, )"
-        }
-      },
-      "ecommons": {
         "type": "Project"
       },
       "model": {

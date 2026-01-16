@@ -1,7 +1,10 @@
 using Common.Banking.Interface;
+using CommonServices.Game.Instance;
 using CommonServices.PlayerManagement.Interface;
+using Dalamud.Plugin.Services;
 using DalamudBasics.Logging;
 using Model.Banking;
+using PersistentModel.Repository.Interface;
 using System;
 
 
@@ -9,116 +12,114 @@ namespace Common.Banking
 {
     internal class FakeGilBank : IGilBank
     {
-        private readonly ISessionPlayerManager playerManager;
         private readonly ILogService log;
+        private readonly IChatGui chatGui;
+        private readonly ISessionPlayerManager playerManager;
+        private readonly IPlayerRepository playerRepo;
 
         public FakeGilBank(
+                            ILogService logService,
+                            IChatGui chatGui,
                             ISessionPlayerManager playerManager,
-                            ILogService logService)
+                            IPlayerRepository playerRepo)
         {
-            this.playerManager = playerManager;
             this.log = logService;
+            this.chatGui = chatGui;
+            this.playerManager = playerManager;
+            this.playerRepo = playerRepo;
         }
 
-        public bool DrawFromStored(string fullPlayerName, long amount)
+        public bool DrawFromStored(string fullPlayerName, long amount, bool allowDebt)
         {
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null)
+            {
+                return false;
+            }
+
+            if (amount > stored.CashRecord.StoredFake && !allowDebt)
+            {
+                chatGui.PrintError($"Player {fullPlayerName} can't draw {amount} gil: they don't have enough");
+                return false;
+            }
+
+            stored.CashRecord.StoredFake -= amount;
+            stored.CashRecord.InUseFake += amount;
+
+            var host = playerManager.GetOrAddHostPlayer() ?? throw new Exception("Host could not be retrieved");
+            var transaction = GilTransaction.NewFakeGilTransaction(host.PlayerOOGData, stored, false, amount);
+            playerRepo.UpdateCashRecord(stored, transaction);
             throw new NotImplementedException();
-            //var player = playerManager.GetPlayer(fullPlayerName);
-            //if (player == null)
-            //{
-            //    logService.Warning($"Could not draw {amount} from {fullPlayerName}. Player not found.");
-            //    return false;
-            //}
-
-            //if (player.CashRecord == null)
-            //{
-            //    player.CashRecord = new PlayerCashRecord();
-            //    cashRecordRepository.Add(player.CashRecord);
-            //}
-
-            //if (player.CashRecord.StoredFake < amount)
-            //{
-            //    logService.Warning($"Could not draw {amount} from {fullPlayerName}. They only have {player.CashRecord.StoredFake}.");
-            //    return false;
-            //}
-
-            //var dealer = playerManager.GetDealer();
-            //var transaction = new GilTransaction(dealer, player, false, amount);
-            //transactionRepo.Add(transaction);
-
-            //return true;
         }
 
         public long GetPlayerInUseFunds(string fullPlayerName)
         {
-            throw new NotImplementedException();
-            //var player = playerManager.GetPlayer(fullPlayerName);
-            //if (player == null)
-            //{
-            //    log.Info($"Attempted to get funds in use from {fullPlayerName} but the player does not exist");
-            //    return 0;
-            //}
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
 
-            //return player.CashRecord.InUseFake;
+            return stored?.CashRecord.InUseFake ?? 0;
         }
 
         public long GetPlayerStoredFunds(string fullPlayerName)
         {
-            throw new NotImplementedException();
-            //var player = playerManager.GetPlayer(fullPlayerName);
-            //if (player == null)
-            //{
-            //    log.Info($"Attempted to get funds stored from {fullPlayerName} but the player does not exist");
-            //    return 0;
-            //}
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
 
-            //return player.CashRecord.StoredFake;
+            return stored?.CashRecord.StoredFake ?? 0;
         }
 
-        public long ManuallySetStoredFunds(string fullPlayerName, long newFunds)
+        public bool ManuallySetStoredFunds(string fullPlayerName, long newFunds)
         {
-            throw new NotImplementedException();
-            //var player = playerManager.GetPlayer(fullPlayerName);
-            //if (player == null)
-            //{
-            //    log.Info($"Attempted to set stored fake funds from {fullPlayerName} but the player does not exist");
-            //    return 0;
-            //}
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null)
+            {
+                return false;
+            }
 
-            //var transaction = new GilTransaction(playerManager.GetDealer(), player, false, newFunds);
-            //player.CashRecord.AddTransaction(transaction);
+            var host = playerManager.GetOrAddHostPlayer();
+            if (host == null) throw new Exception("Could not retrieve host player");
+            var transaction = GilTransaction.NewFakeGilTransaction(host.PlayerOOGData, stored, false, newFunds -  stored.CashRecord.StoredFake);
 
-            //return newFunds;
+            stored.CashRecord.StoredFake = newFunds;
+
+            playerRepo.UpdateCashRecord(stored, transaction);
+
+            return true;
         }
 
-        public long SetInUseFunds(string fullPlayerName, long amount)
+        // Meant to be used by the game
+        public bool SetInUseFunds(string fullPlayerName, long amount)
         {
-            throw new NotImplementedException();
-            //var player = playerManager.GetPlayer(fullPlayerName);
-            //if (player == null)
-            //{
-            //    log.Info($"Attempted to set in use fake funds from {fullPlayerName} but the player does not exist");
-            //    return 0;
-            //}
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null)
+            {
+                return false;
+            }
 
-            //var transaction = new GilTransaction(playerManager.GetDealer(), player, false, amount);
+            var host = playerManager.GetOrAddHostPlayer();
+            if (host == null) throw new Exception("Could not retrieve host player");
+            var transaction = GilTransaction.NewFakeGilTransaction(host.PlayerOOGData, stored, false, amount - stored.CashRecord.InUseFake);
 
-            return amount;
+            stored.CashRecord.InUseFake = amount;
+
+            playerRepo.UpdateCashRecord(stored, transaction);
+
+            return true;
         }
 
         public void StartBuyIn(string playerName, string playerWorld)
         {
-            throw new NotImplementedException();
+            chatGui.PrintError($"No buy ins with fake cash");
+            log.Info($"Attempted buy in in fake cash mode");
         }
 
         public void StartCashOut(string playerName, string playerWorld)
         {
-            throw new NotImplementedException();
+            chatGui.PrintError($"No cash outs with fake cash");
+            log.Info($"Attempted cash out in fake cash mode");
         }
 
-        public long StoreAllGilInUse(string fullPlayerName)
+        public bool StoreAllGilInUse(string fullPlayerName)
         {
-            throw new NotImplementedException();
+            return DrawFromStored() // You need to rethink what the transactions actuall mean. Can you transact between InUse and Stored?
         }
     }
 }

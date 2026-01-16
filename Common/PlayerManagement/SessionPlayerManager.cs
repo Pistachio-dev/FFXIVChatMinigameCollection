@@ -7,8 +7,10 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using DalamudBasics.Logging;
 using DalamudBasics.Targeting;
+using ECommons.GameHelpers;
 using Model.PlayerManagement;
 using PersistentModel.Repository.Interface;
+using System.Runtime.CompilerServices;
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
@@ -36,7 +38,23 @@ namespace MinigameCollection.Common.GameBoardCommon
             this.playerRepo = playerRepo;
         }
 
-        public PlayerInSession? AddPlayer(string fullName, bool asSpectator = false)
+        public PlayerInSession? GetOrAddHostPlayer()
+        {
+            if (clientState.LocalPlayer == null)
+            {
+                return null;
+            }
+            string hostName = clientState.LocalPlayer.GetFullName();
+            var hostInSession = GetPlayer(hostName);
+            if (hostInSession != null)
+            {
+                return hostInSession;
+            }
+
+            return AddPlayer(hostName, true);
+        }
+
+        public PlayerInSession? AddPlayer(string fullName, bool asCroupier = false)
         {
             if (!ValidateTargetFullName(fullName))
             {
@@ -59,9 +77,18 @@ namespace MinigameCollection.Common.GameBoardCommon
             }
 
             var playerInSession = new PlayerInSession(existingPlayer);
-            gameInstance.Players.Spectating.Add(playerInSession);
-            chatOutput.WriteChat($"{fullName} joins as spectator");
+            if (asCroupier)
+            {
+                gameInstance.Players.Dealer = playerInSession;
+                chatOutput.WriteChat($"{fullName} joins as dealer");
 
+            }
+            else
+            {
+                gameInstance.Players.Spectating.Add(playerInSession);
+                chatOutput.WriteChat($"{fullName} joins as spectator");
+            }
+¡
             return playerInSession;
         }
 
@@ -133,12 +160,12 @@ namespace MinigameCollection.Common.GameBoardCommon
             return true;
         }
 
-        public bool MakeActivePlayer(string fullName)
+        public bool MakePlayerActive(string fullName)
         {
             return gameInstance.Players.MoveToActivePlayer(fullName);
         }
 
-        public bool MakeSpectator(string fullName)
+        public bool MakePlayerSpectator(string fullName)
         {
             return gameInstance.Players.MoveToSpectator(fullName);
         }

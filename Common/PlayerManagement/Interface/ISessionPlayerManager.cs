@@ -7,10 +7,11 @@ namespace CommonServices.PlayerManagement.Interface
         PlayerInSession? AddPlayer(string fullName, bool asSpectator = false);
         PlayerInSession? AddTargetPlayer();
         PlayerInSession? GetDealer();
+        PlayerInSession? GetOrAddHostPlayer();
         PlayerInSession? GetPlayer(string fullName);
         bool IsPlayerInSession(string name, string world);
-        bool MakeActivePlayer(string fullName);
-        bool MakeSpectator(string fullName);
+        bool MakePlayerActive(string fullName);
+        bool MakePlayerSpectator(string fullName);
         void RemovePlayer(string fullName);
         bool TogglePlayerAsAFK(string fullName);
     }

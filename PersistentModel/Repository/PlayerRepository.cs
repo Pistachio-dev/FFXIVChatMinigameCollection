@@ -76,9 +76,10 @@ namespace PersistentModel.Repository
             return true;
         }
 
-        public bool UpdateCashRecord(PlayerOOGData player, GilTransaction newTransaction)
+        // This does NOT do any business logic. Call it with an already changed player
+        public bool UpdateCashRecord(PlayerOOGData updatedPlayer, GilTransaction newTransaction)
         {
-            var existing = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).FirstOrDefault(p => p.Name == player.Name && p.World == player.World);
+            var existing = context.PlayerOOGData.Include(p => p.CashRecord).ThenInclude(c => c.History).FirstOrDefault(p => p.Name == updatedPlayer.Name && p.World == updatedPlayer.World);
             if (existing == null)
             {
                 return false;
@@ -86,7 +87,7 @@ namespace PersistentModel.Repository
 
 
             var cashRecordEntity = context.PlayerCashRecords.Entry(existing.CashRecord);
-            EntityMapper.Mapper.Map<PlayerCashRecord, PlayerCashRecordEntity>(player.CashRecord, existing.CashRecord);
+            EntityMapper.Mapper.Map<PlayerCashRecord, PlayerCashRecordEntity>(updatedPlayer.CashRecord, existing.CashRecord);
 
             GilTransactionEntity gilTransactionEntity = EntityMapper.Mapper.Map<GilTransactionEntity>(newTransaction);
             

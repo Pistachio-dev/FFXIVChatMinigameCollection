@@ -11,13 +11,13 @@ namespace Model.PlayerManagement
         public string World { get; set; }
         
         [Required]
-        public DateTime DateMetUtc { get; set; }
+        public DateTime DateIdentityChanged { get; set; }
 
         public PlayerIdentifier(string name, string world)
         {
             Name = name;
             World = world;
-            DateMetUtc = DateTime.UtcNow;
+            DateIdentityChanged = DateTime.UtcNow;
         }
 
         internal PlayerIdentifier() { }

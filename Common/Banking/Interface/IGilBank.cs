@@ -24,7 +24,7 @@ namespace Common.Banking.Interface
         public abstract long StoreAllGilInUse(string fullPlayerName);
 
         // Manually sets the Stored gil amount
-        public bool ManuallySetStoredFunds(string fullPlayerName, long newFunds);
+        public bool SetStoredFunds(string fullPlayerName, long newFunds);
 
         // Change InUse funds. This is how you reflect wins or losses
         public bool SetInUseFunds(string fullPlayerName, long amount);

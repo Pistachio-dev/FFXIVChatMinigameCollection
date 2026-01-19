@@ -1,4 +1,5 @@
 using Common.Banking.Interface;
+using CommonServices.Banking.Enum;
 using CommonServices.Game.Instance;
 using CommonServices.PlayerManagement.Interface;
 using Dalamud.Plugin.Services;
@@ -28,6 +29,18 @@ namespace Common.Banking
             this.playerManager = playerManager;
             this.playerRepo = playerRepo;
         }
+
+
+        public bool PerformTransaction(string fullPlayerName, long amount, TransactionType type, bool isHouseCut)
+        {
+            throw new NotImplementedException();
+            //var oatron = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            //if (stored == null)
+            //{
+            //    return false;
+            //}
+        }
+
 
         public bool DrawFromStored(string fullPlayerName, long amount, bool allowDebt)
         {
@@ -66,7 +79,7 @@ namespace Common.Banking
             return stored?.CashRecord.StoredFake ?? 0;
         }
 
-        public bool ManuallySetStoredFunds(string fullPlayerName, long newFunds)
+        public bool SetStoredFunds(string fullPlayerName, long newFunds)
         {
             var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
             if (stored == null)
@@ -117,9 +130,27 @@ namespace Common.Banking
             log.Info($"Attempted cash out in fake cash mode");
         }
 
-        public bool StoreAllGilInUse(string fullPlayerName)
+        public long StoreAllGilInUse(string fullPlayerName)
         {
-            return DrawFromStored() // You need to rethink what the transactions actuall mean. Can you transact between InUse and Stored?
+            var player = playerRepo.GetPlayerWithCashRecord(fullPlayerName); // You need to rethink what the transactions actuall mean. Can you transact between InUse and Stored?
+            if (player == null) return 0;
+            var cashInUse = player.CashRecord.InUseFake;
+            player.CashRecord.InUseFake = 0;
+            player.CashRecord.StoredFake += cashInUse;
+            throw new NotImplementedException();
+            //playerRepo.UpdateCashRecord(player, GilTransaction.NewFakeGilTransaction(playerManager.GetOrAddHostPlayer(), false, 0);
+
+            return player.CashRecord.StoredFake;
+        }
+
+        public bool DrawFromStored(string fullPlayerName, long amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        long IGilBank.StoreAllGilInUse(string fullPlayerName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -7,10 +7,7 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using DalamudBasics.Logging;
 using DalamudBasics.Targeting;
-using ECommons.GameHelpers;
-using Model.PlayerManagement;
-using PersistentModel.Repository.Interface;
-using System.Runtime.CompilerServices;
+
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
@@ -23,10 +20,10 @@ namespace MinigameCollection.Common.GameBoardCommon
 
         private readonly IChatOutput chatOutput;
         private readonly IGameInstance gameInstance;
-        private readonly IPlayerRepository playerRepo;
+        private readonly IOOGPlayerManager oogPlayerService;
 
         public SessionPlayerManager(ITargetingService targeting, ILogService logService, IClientChatGui chatGui, IClientState clientState,
-            IChatOutput chatOutput, IGameInstance gameInstance, IPlayerRepository playerRepo)
+            IChatOutput chatOutput, IGameInstance gameInstance, IOOGPlayerManager playerManager)
         {
             this.targeting = targeting;
             this.logService = logService;
@@ -35,7 +32,7 @@ namespace MinigameCollection.Common.GameBoardCommon
 
             this.chatOutput = chatOutput;
             this.gameInstance = gameInstance;
-            this.playerRepo = playerRepo;
+            this.oogPlayerService = playerManager;
         }
 
         public PlayerInSession? GetOrAddHostPlayer()
@@ -61,19 +58,11 @@ namespace MinigameCollection.Common.GameBoardCommon
                 return null;
             }
 
-            var existingPlayer = playerRepo.GetPlayerWithCashRecord(fullName);
+            var existingPlayer = oogPlayerService.GetPlayerWithCashRecord(fullName);
             if (existingPlayer == null)
             {
                 logService.Info($"Player {fullName} is not in database. Creating it.");
-                var player = new PlayerOOGData(fullName.GetWorld(), fullName.GetWorld());
-                if (!playerRepo.CreatePlayer(player))
-                {
-                    logService.Error("Could not create new player and it does not exist. Can't add player to game");
-                    return null;
-                }
-
-                logService.Info($"Player {fullName} created.");
-                existingPlayer = playerRepo.GetPlayerWithCashRecord(fullName);
+                existingPlayer = oogPlayerService.CreatePlayer(fullName.GetNameOnly(), fullName.GetWorld());
             }
 
             var playerInSession = new PlayerInSession(existingPlayer);
@@ -81,14 +70,13 @@ namespace MinigameCollection.Common.GameBoardCommon
             {
                 gameInstance.Players.Dealer = playerInSession;
                 chatOutput.WriteChat($"{fullName} joins as dealer");
-
             }
             else
             {
                 gameInstance.Players.Spectating.Add(playerInSession);
                 chatOutput.WriteChat($"{fullName} joins as spectator");
             }
-¡
+
             return playerInSession;
         }
 
@@ -111,9 +99,9 @@ namespace MinigameCollection.Common.GameBoardCommon
             }
         }
 
-        public bool IsPlayerInSession(string name, string world)
+        public bool IsPlayerInSession(string fullName)
         {
-            return gameInstance.Players.IsPlayerInSession(name, world);
+            return gameInstance.Players.IsPlayerInSession(fullName.GetNameOnly(), fullName.GetWorld());
         }
 
         public bool TogglePlayerAsAFK(string fullName)
@@ -150,7 +138,7 @@ namespace MinigameCollection.Common.GameBoardCommon
             string name = splitName[0];
             string world = splitName[1];
 
-            if (IsPlayerInSession(name, world))
+            if (IsPlayerInSession(nameWithWorld))
             {
                 logService.Warning("Could not add target player: already in session");
                 chatGui.PrintError("Player is already in game");
@@ -178,6 +166,11 @@ namespace MinigameCollection.Common.GameBoardCommon
         public PlayerInSession? GetDealer()
         {
             return gameInstance.Players.Dealer;
+        }
+
+        public bool IsPlayerInSession(string name, string world)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

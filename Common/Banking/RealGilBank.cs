@@ -46,6 +46,11 @@ namespace Common.Banking
             throw new NotImplementedException();
         }
 
+        public bool SetStoredFunds(string fullPlayerName, long newFunds)
+        {
+            throw new NotImplementedException();
+        }
+
         public void StartBuyIn(string playerName, string playerWorld)
         {
             throw new NotImplementedException();
@@ -62,6 +67,11 @@ namespace Common.Banking
         }
 
         bool IGilBank.DrawFromStored(string fullPlayerName, long amount)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGilBank.SetInUseFunds(string fullPlayerName, long amount)
         {
             throw new NotImplementedException();
         }

@@ -289,7 +289,7 @@ namespace PersistenceTests
                 .BeEquivalentTo(new PlayerIdentifier
                 { Name = chosenPlayerEntity.Name,
                   World = chosenPlayerEntity.World,
-                  DateMetUtc = DateTime.UtcNow
+                  DateIdentityChanged = DateTime.UtcNow
                 }, opt => opt.LooseDate());
         }
 

@@ -1,5 +1,6 @@
 using Common.Banking.Interface;
 using CommonServices.Banking.Enum;
+using System;
 
 namespace Common.Banking
 {
@@ -39,13 +40,15 @@ namespace Common.Banking
         /// <inheritdoc/>
         public long ManuallySetStoredFunds(string fullPlayerName, long newFunds)
         {
-            return GetActiveBank().ManuallySetStoredFunds(fullPlayerName, newFunds);
+            throw new NotImplementedException();
+            //return GetActiveBank().SetStoredFunds(fullPlayerName, newFunds);
         }
 
         /// <inheritdoc/>
         public long SetInUseFunds(string fullPlayerName, long amount)
         {
-            return GetActiveBank().SetInUseFunds(fullPlayerName, amount);
+            throw new NotImplementedException();
+            //return GetActiveBank().SetInUseFunds(fullPlayerName, amount);
         }
 
         /// <inheritdoc/>
@@ -77,6 +80,16 @@ namespace Common.Banking
             }
 
             RealGilBank.StartBuyIn(playerName, playerWorld);
+        }
+
+        public bool SetStoredFunds(string fullPlayerName, long newFunds)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IGilBank.SetInUseFunds(string fullPlayerName, long amount)
+        {
+            throw new NotImplementedException();
         }
     }
 }

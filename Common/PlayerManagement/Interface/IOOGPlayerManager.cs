@@ -4,7 +4,8 @@ namespace CommonServices.PlayerManagement.Interface
 {
     public interface IOOGPlayerManager
     {
-        PlayerOOGData? GetPlayer(string fullName);
+        PlayerOOGData? CreatePlayer(string name, string world);
+        PlayerOOGData? GetPlayerWithCashRecord(string fullName);
 
         bool UpdateIdentity(string fullName, string newName, string newWorld);
     }

@@ -1,85 +1,148 @@
 using Common.Banking.Interface;
-using CommonServices.Banking.Enum;
+using CommonServices.Banking.Interface;
+using CommonServices.PlayerManagement.Interface;
+using Dalamud.Plugin.Services;
+using DalamudBasics.Logging;
+using MinigameCollection.Common.GameBoardCommon;
+using Model.Banking;
+using Model.Banking.Transactions;
+using Model.PlayerManagement;
+using PersistentModel.Repository.Interface;
 using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Common.Banking
+namespace CommonServices.Banking
 {
-    internal class GilBank : IGilBanksContainer
+    public abstract class GilBank : IGilBank
     {
-        public GilBank(FakeGilBank fakeGilBank, RealGilBank realGilBank)
+        private readonly ILogService log;
+        private readonly IChatGui chatGui;
+        private readonly ISessionPlayerManager playerManager;
+        private readonly IPlayerRepository playerRepo;
+
+        public GilBank(
+                            ILogService logService,
+                            IChatGui chatGui,
+                            ISessionPlayerManager playerManager,
+                            IPlayerRepository playerRepo)
         {
-            FakeGilBank = fakeGilBank;
-            RealGilBank = realGilBank;
-        }
-        
-        protected BankType _bankType = BankType.RealGil;
-
-        public BankType Type { get => _bankType; set => _bankType = value; }
-
-        private FakeGilBank FakeGilBank { get; set; }
-        private RealGilBank RealGilBank { get; set; }
-
-        /// <inheritdoc/>
-        public bool DrawFromStored(string fullPlayerName, long amount)
-        {
-            return GetActiveBank().DrawFromStored(fullPlayerName, amount);
+            this.log = logService;
+            this.chatGui = chatGui;
+            this.playerManager = playerManager;
+            this.playerRepo = playerRepo;
         }
 
-        /// <inheritdoc/>
+        protected abstract long GetInUseProperty(PlayerCashRecord record);
+
+        protected abstract long GetStoredProperty(PlayerCashRecord record);
+
+        protected abstract void SetInUseProperty(PlayerCashRecord record, long value);
+
+        protected abstract void SetStoredProperty(PlayerCashRecord record, long value);
+        protected abstract bool IsRealGil();
+
         public long GetPlayerInUseFunds(string fullPlayerName)
         {
-            return GetActiveBank().GetPlayerInUseFunds(fullPlayerName);
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null) return 0;
+
+            return GetInUseProperty(stored.CashRecord);
         }
 
-        /// <inheritdoc/>
         public long GetPlayerStoredFunds(string fullPlayerName)
         {
-            return GetActiveBank().GetPlayerStoredFunds(fullPlayerName);
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null) return 0;
+
+           return GetStoredProperty(stored.CashRecord);
         }
 
-        /// <inheritdoc/>
-        public long ManuallySetStoredFunds(string fullPlayerName, long newFunds)
+        public bool DrawFromStored(string fullPlayerName, long amount, bool allowDebt)
         {
-            throw new NotImplementedException();
-            //return GetActiveBank().SetStoredFunds(fullPlayerName, newFunds);
-        }
+            (var stored, var host, var result) = GetPlayers(fullPlayerName);
+            if (result == false) return false;
 
-        /// <inheritdoc/>
-        public long SetInUseFunds(string fullPlayerName, long amount)
-        {
-            throw new NotImplementedException();
-            //return GetActiveBank().SetInUseFunds(fullPlayerName, amount);
-        }
-
-        /// <inheritdoc/>
-        public long StoreAllGilInUse(string fullPlayerName)
-        {
-            return GetActiveBank().StoreAllGilInUse(fullPlayerName);
-        }
-
-        public IGilBank GetActiveBank()
-        {
-            return BankType.FakeGil == Type ? FakeGilBank : RealGilBank;
-        }
-
-        public void StartCashOut(string playerName, string playerWorld)
-        {
-            if (Type == BankType.FakeGil)
+            if (amount > stored.CashRecord.StoredFake && !allowDebt)
             {
-                return;
+                chatGui.PrintError($"Player {fullPlayerName} can't draw {amount} gil: they don't have enough");
+                return false;
             }
 
-            RealGilBank.StartCashOut(playerName, playerWorld);
+            SetInUseProperty(stored.CashRecord, GetInUseProperty(stored.CashRecord) + amount);
+            SetStoredProperty(stored.CashRecord, GetStoredProperty(stored.CashRecord) - amount);
+
+            var transaction = GilTransaction.FromIntoPlay(host.PlayerOOGData, stored, amount, IsRealGil());
+            playerRepo.UpdateCashRecord(stored, transaction);
+
+            return true;
         }
 
-        public void StartBuyIn(string playerName, string playerWorld)
+        public bool StoreFunds(string fullPlayerName, long amount)
         {
-            if (Type == BankType.FakeGil)
+            (var stored, var host, var result) = GetPlayers(fullPlayerName);
+            if (result == false) return false;
+
+            SetInUseProperty(stored.CashRecord, GetInUseProperty(stored.CashRecord) - amount);
+            SetStoredProperty(stored.CashRecord, GetStoredProperty(stored.CashRecord) + amount);
+
+            var transaction = GilTransaction.FromIntoPlay(host.PlayerOOGData, stored, amount, IsRealGil());
+            playerRepo.UpdateCashRecord(stored, transaction);
+
+            return true;
+        }
+
+        public bool ManuallySetStoredFunds(string fullPlayerName, long newFunds)
+        {
+            (var storedPlayer, var host, var result) = GetPlayers(fullPlayerName);
+            if (result == false) return false;
+
+            var transaction = GilTransaction.FromManualSet(host.PlayerOOGData, storedPlayer, newFunds - storedPlayer.CashRecord.StoredFake, IsRealGil());
+
+            SetStoredProperty(storedPlayer.CashRecord, newFunds);
+
+            playerRepo.UpdateCashRecord(storedPlayer, transaction);
+
+            return true;
+        }
+
+        // Meant to be used by the game
+        public bool ChangeInUseFunds(string fullPlayerName, long newAmount)
+        {
+            var stored = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (stored == null)
             {
-                return;
+                return false;
             }
 
-            RealGilBank.StartBuyIn(playerName, playerWorld);
+            var host = playerManager.GetOrAddHostPlayer();
+            if (host == null) throw new Exception("Could not retrieve host player");
+            var transaction = GilTransaction.FromChangeInGame(host.PlayerOOGData, stored, newAmount - stored.CashRecord.InUseFake, false);
+
+            SetInUseProperty(stored.CashRecord, newAmount);
+
+            playerRepo.UpdateCashRecord(stored, transaction);
+
+            return true;
+        }
+
+        public abstract void StartBuyIn(string playerName, string playerWorld);
+        public abstract void StartCashOut(string playerName, string playerWorld);
+
+        private (PlayerOOGData? storedPlayer, PlayerInSession? host, bool result) GetPlayers(string fullPlayerName)
+        {            
+            var storedPlayer = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
+            if (storedPlayer == null)
+            {
+                throw new Exception($"Could not get player {fullPlayerName}'s cash record");
+            }
+
+            var host = playerManager.GetOrAddHostPlayer();
+            if (host == null) {
+                throw new Exception("Could not retrieve host player");
+            }
+
+            return (storedPlayer, host, true);
         }
 
         public bool SetStoredFunds(string fullPlayerName, long newFunds)
@@ -87,7 +150,7 @@ namespace Common.Banking
             throw new NotImplementedException();
         }
 
-        bool IGilBank.SetInUseFunds(string fullPlayerName, long amount)
+        public long StoreAllGilInUse(string fullPlayerName)
         {
             throw new NotImplementedException();
         }

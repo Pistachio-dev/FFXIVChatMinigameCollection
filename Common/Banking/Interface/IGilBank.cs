@@ -1,32 +1,27 @@
+using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.LayoutEngine.Layer;
+using Model.Banking.Transactions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Common.Banking.Interface
+namespace CommonServices.Banking.Interface
 {
     public interface IGilBank
     {
-        // Returns the TOTAL amount of funds
-        public long GetPlayerTotalFunds(string fullPlayerName) => GetPlayerInUseFunds(fullPlayerName) + GetPlayerStoredFunds(fullPlayerName);
-        
-        // Returns the funds currently tied to a game
-        public abstract long GetPlayerInUseFunds(string fullPlayerName);
+        public long GetPlayerInUseFunds(string fullPlayerName);
 
-        // Returns the funds currently not tied to a game
-        public abstract long GetPlayerStoredFunds(string fullPlayerName);
+        public long GetPlayerStoredFunds(string fullPlayerName);
 
-        // Moves funds from Stored to InUse
-        public abstract bool DrawFromStored(string fullPlayerName, long amount);
+        public bool DrawFromStored(string fullPlayerName, long amount, bool allowDebt);
 
-        // Merge InUse back into Stored. If you need to push a bet, just Store then Draw
-        public abstract long StoreAllGilInUse(string fullPlayerName);
+        public bool StoreFunds(string fullPlayerName, long amount);
 
-        // Manually sets the Stored gil amount
-        public bool SetStoredFunds(string fullPlayerName, long newFunds);
+        public bool ManuallySetStoredFunds(string fullPlayerName, long newFunds);
 
-        // Change InUse funds. This is how you reflect wins or losses
-        public bool SetInUseFunds(string fullPlayerName, long amount);
+        // Meant to be used by the game
+        public bool ChangeInUseFunds(string fullPlayerName, long newAmount);
+
+        public abstract void StartBuyIn(string playerName, string playerWorld);
+
+        public abstract void StartCashOut(string playerName, string playerWorld);
     }
 }

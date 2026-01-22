@@ -1,77 +1,59 @@
 using Common.Banking.Interface;
+using CommonServices.Banking;
 using CommonServices.Banking.Enum;
+using CommonServices.PlayerManagement.Interface;
+using Dalamud.Plugin.Services;
+using DalamudBasics.Logging;
+using FFXIVClientStructs.FFXIV.Client.LayoutEngine.Layer;
+using Model.Banking;
 using PersistentModel.Repository.Interface;
 using System;
 
 namespace Common.Banking
 {
-    internal class RealGilBank : IGilBank
+    internal class RealGilBank : GilBank
     {
         private IPlayerRepository playerRepo;
 
-        public RealGilBank(IPlayerRepository playerRepository)
+        public RealGilBank(ILogService logService,
+                            IChatGui chatGui,
+                            ISessionPlayerManager playerManager,
+                            IPlayerRepository playerRepo): base(logService, chatGui, playerManager, playerRepo)
         {
-            playerRepo = playerRepository;
+            playerRepo = playerRepo;
         }
 
-        public BankType Type { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        public long DrawFromStored(string fullPlayerName, long amount)
-        {
-            throw new NotImplementedException();
-            var player = playerRepo.GetPlayerWithCashRecord(fullPlayerName);
-            if (player != null)
-            {
-
-            }
-        }
-
-        public long GetPlayerInUseFunds(string fullPlayerName)
+        public override void StartBuyIn(string playerName, string playerWorld)
         {
             throw new NotImplementedException();
         }
 
-        public long GetPlayerStoredFunds(string fullPlayerName)
+        public override void StartCashOut(string playerName, string playerWorld)
         {
             throw new NotImplementedException();
         }
 
-        public long ManuallySetStoredFunds(string fullPlayerName, long newFunds)
+        protected override long GetInUseProperty(PlayerCashRecord record)
         {
             throw new NotImplementedException();
         }
 
-        public long SetInUseFunds(string fullPlayerName, long amount)
+        protected override long GetStoredProperty(PlayerCashRecord record)
         {
             throw new NotImplementedException();
         }
 
-        public bool SetStoredFunds(string fullPlayerName, long newFunds)
+        protected override bool IsRealGil()
         {
             throw new NotImplementedException();
         }
 
-        public void StartBuyIn(string playerName, string playerWorld)
+        protected override void SetInUseProperty(PlayerCashRecord record, long value)
         {
             throw new NotImplementedException();
         }
 
-        public void StartCashOut(string playerName, string playerWorld)
-        {
-            throw new NotImplementedException();
-        }
-
-        public long StoreAllGilInUse(string fullPlayerName)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IGilBank.DrawFromStored(string fullPlayerName, long amount)
-        {
-            throw new NotImplementedException();
-        }
-
-        bool IGilBank.SetInUseFunds(string fullPlayerName, long amount)
+        protected override void SetStoredProperty(PlayerCashRecord record, long value)
         {
             throw new NotImplementedException();
         }

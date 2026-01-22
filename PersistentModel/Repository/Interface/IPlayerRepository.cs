@@ -1,4 +1,4 @@
-using Model.Banking;
+using Model.Banking.Transactions;
 using Model.PlayerManagement;
 using PersistentModel.Model.PlayerManagement;
 

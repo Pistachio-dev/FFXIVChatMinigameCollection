@@ -1,3 +1,4 @@
+using Model.Banking.Transactions;
 using Model.PlayerManagement;
 using System.ComponentModel.DataAnnotations;
 

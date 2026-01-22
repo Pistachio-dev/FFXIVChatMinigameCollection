@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Model.Banking;
+using Model.Banking.Transactions;
 using Model.PlayerManagement;
 using PersistentModel.Model.Banking;
 using PersistentModel.Model.PlayerManagement;

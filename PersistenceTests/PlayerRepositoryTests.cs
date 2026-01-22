@@ -3,6 +3,7 @@ using FluentAssertions.Equivalency;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Model.Banking;
+using Model.Banking.Transactions;
 using Model.PlayerManagement;
 using PersistenceTests.Comparers;
 using PersistentModel.Model;

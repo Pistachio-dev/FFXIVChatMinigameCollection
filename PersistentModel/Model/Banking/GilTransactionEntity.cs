@@ -1,3 +1,4 @@
+using Model.Banking.Transactions;
 using Model.PlayerManagement;
 using PersistentModel.Model.PlayerManagement;
 using System;
@@ -23,7 +24,7 @@ namespace PersistentModel.Model.Banking
 
         [Required]
         public PlayerOOGDataEntity PatronPlayer { get; set; }
-
+        
         [Required]
         public bool IsRealGil { get; set; }
 

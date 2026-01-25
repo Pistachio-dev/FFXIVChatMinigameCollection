@@ -75,14 +75,14 @@ namespace MinigameCollection.Windows.Main
             delayedActions.Clear();
         }
 
-        protected virtual (string, Vector4) GetStatusAndColor(PlayerInSession player)
-        {
-            if (player.IsAFK)
-            {
-                return ("AFK", Colors.GreyHalf);
-            }
+        //protected virtual (string, Vector4) GetStatusAndColor(PlayerInSession player)
+        //{
+        //    if (player.IsAFK)
+        //    {
+        //        return ("AFK", Colors.GreyHalf);
+        //    }
 
-            return ("Ready", Colors.GreenHalf);
-        }    
+        //    return ("Ready", Colors.GreenHalf);
+        //}    
     }
 }

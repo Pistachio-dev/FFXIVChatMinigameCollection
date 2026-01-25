@@ -197,7 +197,8 @@ namespace PersistenceTests
             DateTime replacementDate = new DateTime(2001, 1, 1);
             patronExpected.CreatedAtUtc = replacementDate;
 
-            GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
+            GilTransaction gilTransaction = GilTransaction.FromCashIn(patronExpected, hostExpected, 10);
+
             patronEntityExpected.CashRecord.History.Add(EntityMapper.Mapper.Map<GilTransactionEntity>(gilTransaction));
 
             //Act
@@ -241,7 +242,8 @@ namespace PersistenceTests
             string previousName = patronEntityExpected.Name;
             patronExpected.Name = replacementName;
 
-            GilTransaction gilTransaction = new GilTransaction(hostExpected, patronExpected, true, 888);
+            GilTransaction gilTransaction = GilTransaction.FromCashIn(patronExpected, hostExpected, 10);
+
             patronEntityExpected.CashRecord.History.Add(EntityMapper.Mapper.Map<GilTransactionEntity>(gilTransaction));
             var previousTransactionCount = context.GilTransactions.Count();
 

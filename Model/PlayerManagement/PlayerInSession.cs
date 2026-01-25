@@ -1,9 +1,10 @@
+using CommonServices.PlayerManagement.Interface;
 using Model.PlayerManagement;
 using System;
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
-    public class PlayerInSession
+    public class PlayerInSession<T> where T: IGameSpecificPlayerData
     {
         public PlayerInSession(PlayerOOGData player)
         {

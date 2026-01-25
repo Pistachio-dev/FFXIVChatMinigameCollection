@@ -12,9 +12,6 @@ namespace Model.Banking.Transactions
         public PlayerOOGData TargetPlayer { get; set; }
 
         [Required]
-        public PlayerOOGData? SourcePlayer { get; set; }
-
-        [Required]
         public bool IsRealGil { get; set; }
 
         [Required]
@@ -56,20 +53,21 @@ namespace Model.Banking.Transactions
             };
         }
 
-        public static GilTransaction FromManualSet(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountAdded, bool isRealGil)
+        public static GilTransaction FromManuallySettingStored(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long newAmount, bool isRealGil)
         {
+            var existingAmount = isRealGil ? patronPlayer.CashRecord.StoredReal : patronPlayer.CashRecord.StoredFake;
             return new GilTransaction
             {
                 HostPlayer = hostPlayer,
                 TargetPlayer = patronPlayer,
                 IsRealGil = isRealGil,
                 InUseDiff = 0,
-                StoredDiff = amountAdded * -1,
+                StoredDiff = existingAmount,
                 Cause = TransactionType.ManuallySetStored
             };
         }
 
-        public static GilTransaction FromIntoPlay(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountMoved, bool isRealGil)
+        public static GilTransaction FromStoredToInUse(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountMoved, bool isRealGil)
         {
             return new GilTransaction
             {
@@ -82,7 +80,7 @@ namespace Model.Banking.Transactions
             };
         }
 
-        public static GilTransaction FromIntoBank(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountMoved, bool isRealGil)
+        public static GilTransaction FromInUseToStored(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountMoved, bool isRealGil)
         {
             return new GilTransaction
             {
@@ -95,14 +93,17 @@ namespace Model.Banking.Transactions
             };
         }
 
-        public static GilTransaction FromChangeInGame(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountChanged, bool isRealGil)
+
+        public static GilTransaction FromManuallySettingInUse(PlayerOOGData hostPlayer, PlayerOOGData patronPlayer, long amountChanged, bool isRealGil)
         {
+            var existingAmount = isRealGil ? patronPlayer.CashRecord.InUseReal : patronPlayer.CashRecord.InUseFake;
+
             return new GilTransaction
             {
                 HostPlayer = hostPlayer,
                 TargetPlayer = patronPlayer,
                 IsRealGil = isRealGil,
-                InUseDiff = amountChanged,
+                InUseDiff = existingAmount,
                 StoredDiff = 0,
                 Cause = TransactionType.Bank,
             };

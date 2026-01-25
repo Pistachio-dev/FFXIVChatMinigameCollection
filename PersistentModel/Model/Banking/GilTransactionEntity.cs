@@ -29,11 +29,15 @@ namespace PersistentModel.Model.Banking
         public bool IsRealGil { get; set; }
 
         [Required]
-        public bool IsHouseCut { get; set; }
+        public TransactionType Cause { get; set; }
+
+        // Positive quantities = adding to the account
+        [Required]
+        public long InUseDiff { get; set; }
 
         [Required]
-        public long Amount { get; set;  } // Positive amounts means the banked amount for the player increases
-        
+        public long StoredDiff { get; set; }
+
         [Required]
         public DateTime WhenUtc { get; set; }
     }

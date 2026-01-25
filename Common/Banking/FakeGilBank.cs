@@ -17,18 +17,15 @@ namespace Common.Banking
     {
         private readonly ILogService log;
         private readonly IChatGui chatGui;
-        private readonly ISessionPlayerManager playerManager;
-        private readonly IPlayerRepository playerRepo;
+        private readonly IOOGPlayerManager playerMng;
 
         public FakeGilBank(ILogService logService,
                             IChatGui chatGui,
-                            ISessionPlayerManager playerManager,
-                            IPlayerRepository playerRepo): base(logService, chatGui, playerManager, playerRepo)
+                            IOOGPlayerManager playerMng): base(logService, chatGui, playerMng)
         {
             this.log = logService;
             this.chatGui = chatGui;
-            this.playerManager = playerManager;
-            this.playerRepo = playerRepo;
+            this.playerMng = playerMng;
         }
 
         // Property accessor, no business logic

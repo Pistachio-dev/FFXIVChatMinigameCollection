@@ -1,9 +1,10 @@
+using CommonServices.PlayerManagement.Interface;
 using MinigameCollection.Common.GameBoardCommon;
 using Model.PlayerManagement;
 
 namespace MinigameCollection.Games.NoGame
 {
-    internal class NoGamePlayerInSession : PlayerInSession
+    internal class NoGamePlayerInSession : PlayerInSession<IGameSpecificPlayerData>
     {
         public NoGamePlayerInSession(PlayerOOGData player) : base(player)
         {

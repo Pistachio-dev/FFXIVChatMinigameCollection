@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PersistentModel;
 
@@ -10,9 +11,11 @@ using PersistentModel;
 namespace PersistentModel.Migrations
 {
     [DbContext(typeof(MinigameCollectionDbContext))]
-    partial class MinigameCollectionDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260122190547_TransactionRefactor2")]
+    partial class TransactionRefactor2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");

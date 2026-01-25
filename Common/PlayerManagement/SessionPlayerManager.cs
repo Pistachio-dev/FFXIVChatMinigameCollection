@@ -7,11 +7,13 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using DalamudBasics.Logging;
 using DalamudBasics.Targeting;
+using Model.PlayerManagement;
+using System;
 
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
-    public class SessionPlayerManager : ISessionPlayerManager
+    public class SessionPlayerManager<T> : ISessionPlayerManager<T> where T: IGameSpecificPlayerData
     {
         private readonly ITargetingService targeting;
         private readonly ILogService logService;
@@ -19,11 +21,11 @@ namespace MinigameCollection.Common.GameBoardCommon
         private readonly IClientState clientState;
 
         private readonly IChatOutput chatOutput;
-        private readonly IGameInstance gameInstance;
+        private readonly SessionPlayers<T> players;
         private readonly IOOGPlayerManager oogPlayerService;
 
         public SessionPlayerManager(ITargetingService targeting, ILogService logService, IClientChatGui chatGui, IClientState clientState,
-            IChatOutput chatOutput, IGameInstance gameInstance, IOOGPlayerManager playerManager)
+            IChatOutput chatOutput, IGameInstance<T> gameInstance, IOOGPlayerManager playerManager)
         {
             this.targeting = targeting;
             this.logService = logService;
@@ -31,13 +33,13 @@ namespace MinigameCollection.Common.GameBoardCommon
             this.clientState = clientState;
 
             this.chatOutput = chatOutput;
-            this.gameInstance = gameInstance;
+            this.players = gameInstance.Players;
             this.oogPlayerService = playerManager;
         }
 
-        public PlayerInSession? GetOrAddHostPlayer()
+        public PlayerInSession<T>? GetOrAddHostPlayer()
         {
-            if (clientState.LocalPlayer == null)
+            if (clientState?.LocalPlayer == null)
             {
                 return null;
             }
@@ -51,7 +53,7 @@ namespace MinigameCollection.Common.GameBoardCommon
             return AddPlayer(hostName, true);
         }
 
-        public PlayerInSession? AddPlayer(string fullName, bool asCroupier = false)
+        public PlayerInSession<T>? AddPlayer(string fullName, bool asCroupier = false)
         {
             if (!ValidateTargetFullName(fullName))
             {
@@ -63,17 +65,18 @@ namespace MinigameCollection.Common.GameBoardCommon
             {
                 logService.Info($"Player {fullName} is not in database. Creating it.");
                 existingPlayer = oogPlayerService.CreatePlayer(fullName.GetNameOnly(), fullName.GetWorld());
+                return null;
             }
 
-            var playerInSession = new PlayerInSession(existingPlayer);
+            PlayerInSession<T> playerInSession = new PlayerInSession<T>(existingPlayer);
             if (asCroupier)
             {
-                gameInstance.Players.Dealer = playerInSession;
+                players.Dealer = playerInSession;
                 chatOutput.WriteChat($"{fullName} joins as dealer");
             }
             else
             {
-                gameInstance.Players.Spectating.Add(playerInSession);
+                players.Spectating.Add(playerInSession);
                 chatOutput.WriteChat($"{fullName} joins as spectator");
             }
 
@@ -81,7 +84,7 @@ namespace MinigameCollection.Common.GameBoardCommon
         }
 
 
-        public PlayerInSession? AddTargetPlayer()
+        public PlayerInSession<T>? AddTargetPlayer()
         {
             string fullName = targeting.GetTargetName();
             return AddPlayer(fullName);
@@ -89,7 +92,7 @@ namespace MinigameCollection.Common.GameBoardCommon
 
         public void RemovePlayer(string fullName)
         {
-            if (gameInstance.Players.RemovePlayer(fullName))
+            if (players.RemovePlayer(fullName))
             {
                 chatOutput.WriteChat($"{fullName} leaves.");
             }
@@ -101,12 +104,12 @@ namespace MinigameCollection.Common.GameBoardCommon
 
         public bool IsPlayerInSession(string fullName)
         {
-            return gameInstance.Players.IsPlayerInSession(fullName.GetNameOnly(), fullName.GetWorld());
+            return players.IsPlayerInSession(fullName.GetNameOnly(), fullName.GetWorld());
         }
 
         public bool TogglePlayerAsAFK(string fullName)
         {
-            var player = gameInstance.Players.GetPlayer(fullName);
+            PlayerInSession<T>? player = players.GetPlayer(fullName);
 
             if (player == null)
             {
@@ -150,27 +153,27 @@ namespace MinigameCollection.Common.GameBoardCommon
 
         public bool MakePlayerActive(string fullName)
         {
-            return gameInstance.Players.MoveToActivePlayer(fullName);
+            return players.MoveToActivePlayer(fullName);
         }
 
         public bool MakePlayerSpectator(string fullName)
         {
-            return gameInstance.Players.MoveToSpectator(fullName);
+            return players.MoveToSpectator(fullName);
         }
 
-        public PlayerInSession? GetPlayer(string fullName)
+        public PlayerInSession<T>? GetPlayer(string fullName)
         {
-            return gameInstance.Players.GetPlayer(fullName);
+            return players.GetPlayer(fullName);
         }
 
-        public PlayerInSession? GetDealer()
+        public PlayerInSession<T>? GetDealer()
         {
-            return gameInstance.Players.Dealer;
+            return players.Dealer;
         }
 
         public bool IsPlayerInSession(string name, string world)
         {
-            throw new System.NotImplementedException();
+            return players.IsPlayerInSession(name, world);
         }
     }
 }

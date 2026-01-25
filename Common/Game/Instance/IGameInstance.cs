@@ -1,3 +1,4 @@
+using CommonServices.PlayerManagement.Interface;
 using Model.PlayerManagement;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CommonServices.Game.Instance
 {
-    public interface IGameInstance
+    public interface IGameInstance<T> where T: IGameSpecificPlayerData
     {
-        public SessionPlayers Players { get; }     
+        public SessionPlayers<T> Players { get; }     
     }
 }

@@ -13,14 +13,13 @@ namespace Common.Banking
 {
     internal class RealGilBank : GilBank
     {
-        private IPlayerRepository playerRepo;
+        private IOOGPlayerManager playerRepo;
 
         public RealGilBank(ILogService logService,
                             IChatGui chatGui,
-                            ISessionPlayerManager playerManager,
-                            IPlayerRepository playerRepo): base(logService, chatGui, playerManager, playerRepo)
+                            IOOGPlayerManager playerRepo): base(logService, chatGui, playerRepo)
         {
-            playerRepo = playerRepo;
+            this.playerRepo = playerRepo;
         }
 
         public override void StartBuyIn(string playerName, string playerWorld)

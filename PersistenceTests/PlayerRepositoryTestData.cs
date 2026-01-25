@@ -47,9 +47,9 @@ namespace PersistenceTests
                     {
                         HostPlayer = entities.ElementAt(rng.Next(entities.Count)),
                         PatronPlayer = entities.ElementAt(rng.Next(entities.Count)),
-                        IsRealGil = rng.Next(2) % 2 == 0,
-                        IsHouseCut = rng.Next(2) % 2 == 0,
-                        Amount = rng.Next(1000000),
+                        IsRealGil = rng.Next(2) % 2 == 0,                        
+                        InUseDiff = rng.Next(1000000),
+                        StoredDiff = rng.Next(1000000),
                         WhenUtc = DateTime.UtcNow - TimeSpan.FromSeconds(rng.Next(int.MaxValue))
                     };
                     entities[i].CashRecord.History.Add(transaction);

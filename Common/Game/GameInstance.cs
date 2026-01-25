@@ -4,8 +4,8 @@ using Model.PlayerManagement;
 
 namespace CommonServices.Game
 {
-    public class GameInstance<T> : IGameInstance<T> where T: IGameSpecificPlayerData
+    public class GameInstance : IGameHost
     {
-        public SessionPlayers<T> Players { get; } = new();
+        public SessionPlayers Players { get; } = new();
     }
 }

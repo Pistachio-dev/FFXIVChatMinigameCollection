@@ -2,17 +2,20 @@ using MinigameCollection.Common.GameBoardCommon;
 
 namespace CommonServices.PlayerManagement.Interface
 {
-    public interface ISessionPlayerManager<T> where T : IGameSpecificPlayerData
+    public interface ISessionPlayerManager
     {
-        PlayerInSession<T>? AddPlayer(string fullName, bool asSpectator = false);
-        PlayerInSession<T>? AddTargetPlayer();
-        PlayerInSession<T>? GetDealer();
-        PlayerInSession<T> GetOrAddHostPlayer();
-        PlayerInSession<T>? GetPlayer(string fullName);
+        PlayerInSession? AddPlayer(string fullName, bool asSpectator = false);
+        PlayerInSession? AddTargetPlayer();
+        PlayerInSession AdvancePlayer();
+        PlayerInSession? GetCurrentPlayer();
+        PlayerInSession? GetDealer();
+        PlayerInSession GetOrAddHostPlayer();
+        PlayerInSession? GetPlayer(string fullName);
+        List<PlayerInSession> GetPlayersPlaying();
         bool IsPlayerInSession(string name, string world);
         bool MakePlayerActive(string fullName);
         bool MakePlayerSpectator(string fullName);
         void RemovePlayer(string fullName);
-        bool TogglePlayerAsAFK(string fullName);
+        bool TogglePlayerAsAFK(string fullName);       
     }
 }

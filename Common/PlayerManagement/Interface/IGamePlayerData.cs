@@ -1,12 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CommonServices.PlayerManagement.Interface
 {
-    public interface IGameSpecificPlayerData
+    internal class IGamePlayerData
     {
-        public void Init();
-
     }
 }

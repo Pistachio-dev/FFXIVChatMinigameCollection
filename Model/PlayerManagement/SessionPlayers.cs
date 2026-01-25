@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace Model.PlayerManagement
 {
-    public class SessionPlayers<T> where T: IGameSpecificPlayerData
+    public class SessionPlayers
     {
-        public List<PlayerInSession<T>> InGame = new();
-        public List<PlayerInSession<T>> Spectating = new();
-        public PlayerInSession<T>? Dealer = null;
+        public List<PlayerInSession> InGame = new();
+        public List<PlayerInSession> Spectating = new();
+        public PlayerInSession? Dealer = null;
 
         public bool RemovePlayer(string fullName)
         {
-            PlayerInSession<T>? player = InGame.FirstOrDefault(x => x.FullName == fullName);
+            PlayerInSession? player = InGame.FirstOrDefault(x => x.FullName == fullName);
             if (player == null)
             {
                 player = Spectating.FirstOrDefault(x => x.FullName == fullName);
@@ -37,7 +37,7 @@ namespace Model.PlayerManagement
             return InGame.Any(p => p.Is(name, world)) || Spectating.Any(p => p.Is(name, world));
         }
 
-        public PlayerInSession<T>? GetPlayer(string fullName)
+        public PlayerInSession? GetPlayer(string fullName)
         {
             return InGame.Concat(Spectating).FirstOrDefault(p => p.FullName == fullName);
         }
@@ -52,9 +52,9 @@ namespace Model.PlayerManagement
             return ChangeCollection(fullName, Spectating, InGame);
         }
 
-        private bool ChangeCollection(string fullName, List<PlayerInSession<T>> origin, List<PlayerInSession<T>> target)
+        private bool ChangeCollection(string fullName, List<PlayerInSession> origin, List<PlayerInSession> target)
         {
-            PlayerInSession<T>? player = origin.FirstOrDefault(p => p.FullName == fullName);
+            PlayerInSession? player = origin.FirstOrDefault(p => p.FullName == fullName);
             if (player == null)
             {
                 return false;

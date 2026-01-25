@@ -42,18 +42,6 @@
         <mxCell id="MiYSX1tNOKYp5qwGwe88-23" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;Real&lt;/b&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;GilBank&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" vertex="1">
           <mxGeometry height="60" width="100" x="644" y="440" as="geometry" />
         </mxCell>
-        <mxCell id="MiYSX1tNOKYp5qwGwe88-32" edge="1" parent="1" source="MiYSX1tNOKYp5qwGwe88-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="MiYSX1tNOKYp5qwGwe88-29">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="MiYSX1tNOKYp5qwGwe88-47" edge="1" parent="1" source="MiYSX1tNOKYp5qwGwe88-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="MiYSX1tNOKYp5qwGwe88-45">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="MiYSX1tNOKYp5qwGwe88-56" edge="1" parent="1" source="MiYSX1tNOKYp5qwGwe88-26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="MiYSX1tNOKYp5qwGwe88-51">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="MiYSX1tNOKYp5qwGwe88-26" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;GameController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="90" width="310" x="-540" y="210" as="geometry" />
-        </mxCell>
         <mxCell id="MiYSX1tNOKYp5qwGwe88-29" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;PlayerManager&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Hides the complexity of&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;managing player lists&lt;/p&gt;" vertex="1">
           <mxGeometry height="90" width="160" x="-20" y="20" as="geometry" />
         </mxCell>
@@ -98,14 +86,14 @@
         <mxCell id="MiYSX1tNOKYp5qwGwe88-49" edge="1" parent="1" source="MiYSX1tNOKYp5qwGwe88-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="MiYSX1tNOKYp5qwGwe88-16" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="st1Y3dnpjlx0_XpLCkgc-1" edge="1" parent="1" source="MiYSX1tNOKYp5qwGwe88-45" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.613;entryY=1.022;entryDx=0;entryDy=0;exitX=0.138;exitY=0.011;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" target="MiYSX1tNOKYp5qwGwe88-29">
+        <mxCell id="st1Y3dnpjlx0_XpLCkgc-1" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.613;entryY=1.022;entryDx=0;entryDy=0;exitX=0.138;exitY=0.011;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="210" y="275" as="sourcePoint" />
-            <mxPoint x="140" y="130" as="targetPoint" />
+            <mxPoint x="87.73599999999988" y="200.98999999999978" as="sourcePoint" />
+            <mxPoint x="88.07999999999993" y="111.98000000000002" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="MiYSX1tNOKYp5qwGwe88-45" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;InSessionPlayerManager&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Ephemeral info about current player lists, afk,, etc)&lt;/p&gt;" vertex="1">
-          <mxGeometry height="90" width="160" x="210" y="210" as="geometry" />
+          <mxGeometry height="90" width="172" x="54" y="200" as="geometry" />
         </mxCell>
         <mxCell id="MiYSX1tNOKYp5qwGwe88-51" parent="1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;text-decoration:underline;&quot;&gt;&lt;b&gt;GilBanksContainer¡&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;Allows the user to operate without knowing if it real gil&lt;/p&gt;" vertex="1">
           <mxGeometry height="90" width="160" x="140" y="400" as="geometry" />

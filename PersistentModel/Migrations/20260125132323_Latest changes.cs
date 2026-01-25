@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PersistentModel.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Latestchanges : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -80,8 +80,9 @@ namespace PersistentModel.Migrations
                     HostPlayerId = table.Column<uint>(type: "INTEGER", nullable: false),
                     PatronPlayerId = table.Column<uint>(type: "INTEGER", nullable: false),
                     IsRealGil = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsHouseCut = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Amount = table.Column<long>(type: "INTEGER", nullable: false),
+                    Cause = table.Column<int>(type: "INTEGER", nullable: false),
+                    InUseDiff = table.Column<long>(type: "INTEGER", nullable: false),
+                    StoredDiff = table.Column<long>(type: "INTEGER", nullable: false),
                     WhenUtc = table.Column<DateTime>(type: "TEXT", nullable: false),
                     PlayerCashRecordEntityId = table.Column<uint>(type: "INTEGER", nullable: true)
                 },

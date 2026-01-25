@@ -12,8 +12,6 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
-using MinigameCollection.Common;
-using MinigameCollection.Games.NoGame;
 using MinigameCollection.Windows;
 using MinigameCollection.Windows.Main;
 using PersistentModel.Extensions;
@@ -81,7 +79,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
         serviceCollection.AddRepositories();
-        serviceCollection.AddSingleton<IGameInstance, GameInstance>();
+        serviceCollection.AddSingleton<IGameHost, GameInstance>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

@@ -21,7 +21,6 @@ namespace PersistentModel
 
         internal static string GetConnectionString()
         {
-            return $"Data Source=database.db";
             var dbPath = GetPath();
             return $"Data Source={dbPath}";
         }

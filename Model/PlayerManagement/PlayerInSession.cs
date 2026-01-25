@@ -4,7 +4,7 @@ using System;
 
 namespace MinigameCollection.Common.GameBoardCommon
 {
-    public class PlayerInSession<T> where T: IGameSpecificPlayerData
+    public class PlayerInSession
     {
         public PlayerInSession(PlayerOOGData player)
         {
@@ -18,6 +18,7 @@ namespace MinigameCollection.Common.GameBoardCommon
         public string Status { get; set; } = "Playing";
 
         public DateTime JoinedTimeUtc {  get; set; } = DateTime.UtcNow;
+        public Dictionary<string, IGameSpecificPlayerData> SpecificGameData { get; set; } = new();
 
         public string FullName => PlayerOOGData.FullName;
         public bool Is(string name, string world)

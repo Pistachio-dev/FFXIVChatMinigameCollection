@@ -11,8 +11,8 @@ using PersistentModel;
 namespace PersistentModel.Migrations
 {
     [DbContext(typeof(MinigameCollectionDbContext))]
-    [Migration("20260122190301_TransactionRefactor")]
-    partial class TransactionRefactor
+    [Migration("20260125132323_Latest changes")]
+    partial class Latestchanges
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,13 +26,13 @@ namespace PersistentModel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("Amount")
+                    b.Property<int>("Cause")
                         .HasColumnType("INTEGER");
 
                     b.Property<uint>("HostPlayerId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsHouseCut")
+                    b.Property<long>("InUseDiff")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsRealGil")
@@ -42,6 +42,9 @@ namespace PersistentModel.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<uint?>("PlayerCashRecordEntityId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("StoredDiff")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("WhenUtc")

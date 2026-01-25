@@ -1,13 +1,4 @@
-using Dalamud.Bindings.ImGui;
-using MinigameCollection.Common;
-using MinigameCollection.Common.GameBoardCommon;
-using MinigameCollection.Games.NoGame;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinigameCollection.Windows.Main
 {

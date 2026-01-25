@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace CommonServices.Game.Instance
 {
-    public interface IGameInstance<T> where T: IGameSpecificPlayerData
+    public interface IGameHost
     {
-        public SessionPlayers<T> Players { get; }     
+        public SessionPlayers Players { get; }     
     }
 }

@@ -10,7 +10,7 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
-using MinigameCollection.Windows;
+using MinigameCollection.UI.Windows;
 using MinigameCollection.Windows.Main;
 using System;
 

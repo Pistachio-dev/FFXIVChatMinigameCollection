@@ -7,7 +7,7 @@ using DalamudBasics.Logging;
 using Dalamud.Bindings.ImGui;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace MinigameCollection.Windows;
+namespace MinigameCollection.UI.Windows;
 
 public class ConfigWindow : PluginWindowBase, IDisposable
 {

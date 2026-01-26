@@ -1,12 +1,15 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
+using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
+using Model.Microgame;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace MinigameCollection.Windows.Main;
@@ -19,8 +22,10 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private IDataManager dataManager;
     private IChatOutput chatOutput;
     private IObjectTable objectTable;
+    private Configuration configuration;
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
+    private GameHost gameHost;
 
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
@@ -36,6 +41,8 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         chatOutput = serviceProvider.GetRequiredService<IChatOutput>();
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
+        configuration = (Configuration)serviceProvider.GetRequiredService<IConfiguration>();
+        gameHost = new GameHost();
     }
 
     public void Dispose() { }
@@ -49,8 +56,17 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         {
             if (ImGui.BeginTabItem("Game"))
             {
-                //gameModeManager.GetGame(GameSelected.None).Draw();
+                int selected = configuration.SelectedGame;
+                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(g => g.id.Value).ToArray(), GameHost.AvailableGames.Length))
+                {
+                    configuration.SelectedGame = selected;
+                    gameHost.StartGame(GameHost.AvailableGames[selected].builder());
+                }
+
+                gameHost.DrawUI();
+
                 ImGui.EndTabItem();
+                
             }
             if (ImGui.BeginTabItem("Players"))
             {

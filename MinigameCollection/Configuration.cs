@@ -1,5 +1,6 @@
 using Dalamud.Game.Text;
 using DalamudBasics.Configuration;
+using Model.Base;
 using System;
 
 namespace MinigameCollection;
@@ -14,4 +15,6 @@ public class Configuration : IConfiguration
     public int LimitedChatChannelsMessageDelayInMs { get; set; } = 1000;
 
     public bool UsingRealGil { get; set; } = true;
+
+    public int SelectedGame {  get; set; } 
 }

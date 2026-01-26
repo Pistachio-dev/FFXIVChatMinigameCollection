@@ -9,6 +9,7 @@ namespace MinigameCollection.Windows.Main
 {
     public partial class MainWindow
     {
+        // Old code, remove as soon as it isn't useful for reference
         private void DrawExperimentalButtons()
         {
             if (ImGui.Button("Get lumina sheets"))

@@ -4,13 +4,15 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
+using ECommons.Configuration;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
-using Model.Microgame;
+using MinigameCollection.UI.Windows.Main;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using static ECommons.UIHelpers.AddonMasterImplementations.AddonMaster;
 
 namespace MinigameCollection.Windows.Main;
 
@@ -22,10 +24,12 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private IDataManager dataManager;
     private IChatOutput chatOutput;
     private IObjectTable objectTable;
-    private Configuration configuration;
+    private IConfigurationService<Configuration> configurationSvc;
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
     private GameHost gameHost;
+    Configuration configuration;
+    PlayerMgmtTab playerMgmtTab;
 
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
@@ -41,8 +45,10 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         chatOutput = serviceProvider.GetRequiredService<IChatOutput>();
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
-        configuration = (Configuration)serviceProvider.GetRequiredService<IConfiguration>();
+        configurationSvc = serviceProvider.GetRequiredService<IConfigurationService<Configuration>>();
         gameHost = new GameHost();
+        configuration = configurationSvc.GetConfiguration();
+        playerMgmtTab = new PlayerMgmtTab(gameHost, logService, "Player Management");
     }
 
     public void Dispose() { }
@@ -51,18 +57,16 @@ public partial class MainWindow : PluginWindowBase, IDisposable
 
     protected override void SafeDraw()
     {
+        if (!gameHost.HasGame())
+        {
+            gameHost.StartGame(GameHost.AvailableGames.FirstOrDefault(p => p.id.Value.Equals("No game", StringComparison.OrdinalIgnoreCase)).builder());
+        }
+
         ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
         if (ImGui.BeginTabBar("##Main container"))
         {
             if (ImGui.BeginTabItem("Game"))
             {
-                int selected = configuration.SelectedGame;
-                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(g => g.id.Value).ToArray(), GameHost.AvailableGames.Length))
-                {
-                    configuration.SelectedGame = selected;
-                    gameHost.StartGame(GameHost.AvailableGames[selected].builder());
-                }
-
                 gameHost.DrawUI();
 
                 ImGui.EndTabItem();
@@ -70,6 +74,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             }
             if (ImGui.BeginTabItem("Players"))
             {
+                playerMgmtTab.Draw();
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Gil & Bank"))
@@ -78,6 +83,14 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             }
             if (ImGui.BeginTabItem("Game select"))
             {
+                int selected = configurationSvc.GetConfiguration().SelectedGame;
+                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(g => g.id.Value).ToArray(), GameHost.AvailableGames.Length))
+                {
+                    configuration.SelectedGame = selected;
+                    configurationSvc.SaveConfiguration();
+                    gameHost.StartGame(GameHost.AvailableGames[selected].builder());
+                }
+
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Experimental"))

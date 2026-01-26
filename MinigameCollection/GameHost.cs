@@ -18,9 +18,15 @@ namespace MinigameCollection
 
         private PlayerSet players;
 
+        public PlayerSet Players => players;
         public GameHost()
         {
             this.players = new PlayerSet();
+        }
+
+        public bool HasGame()
+        {
+            return activeGame != null;
         }
 
         public void StartGame(IGame game)

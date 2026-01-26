@@ -16,5 +16,5 @@ public class Configuration : IConfiguration
 
     public bool UsingRealGil { get; set; } = true;
 
-    public int SelectedGame {  get; set; } 
+    public int SelectedGame { get; set; } = 0;
 }

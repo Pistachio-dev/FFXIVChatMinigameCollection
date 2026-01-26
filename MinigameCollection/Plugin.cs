@@ -1,5 +1,7 @@
 using CommonServices.Game;
 using CommonServices.Game.Instance;
+using CommonServices.PlayerManagement;
+using CommonServices.PlayerManagement.Interface;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -12,6 +14,7 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Common.GameBoardCommon;
 using MinigameCollection.Windows;
 using MinigameCollection.Windows.Main;
 using PersistentModel.Extensions;
@@ -80,6 +83,8 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<StringDebugUtils>();
         serviceCollection.AddRepositories();
         serviceCollection.AddSingleton<IGameHost, GameInstance>();
+        serviceCollection.AddSingleton<IOOGPlayerManager, OOGPlayerManager>();
+        serviceCollection.AddSingleton<ISessionPlayerManager, SessionPlayerManager>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

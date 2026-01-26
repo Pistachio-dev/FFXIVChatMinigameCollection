@@ -1,3 +1,4 @@
+using CommonServices.PlayerManagement.Interface;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
@@ -28,6 +29,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private IObjectTable objectTable;
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
+    ISessionPlayerManager sessionPlayerManager;
 
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
@@ -43,6 +45,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         chatOutput = serviceProvider.GetRequiredService<IChatOutput>();
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
+        sessionPlayerManager = serviceProvider.GetRequiredService<ISessionPlayerManager>();
     }
 
     public void Dispose() { }
@@ -61,7 +64,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             }
             if (ImGui.BeginTabItem("Players"))
             {
-                DrawPlayerManagementTab();
+                DrawPlayerManagementTab(sessionPlayerManager);
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Gil & Bank"))

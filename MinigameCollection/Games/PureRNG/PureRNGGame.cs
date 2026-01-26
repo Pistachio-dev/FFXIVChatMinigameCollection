@@ -6,6 +6,7 @@ using MinigameCollection.Common;
 using MinigameCollection.Common.GameBoardCommon;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace MinigameCollection.Games.PureRNG
@@ -23,5 +24,12 @@ namespace MinigameCollection.Games.PureRNG
         {
             ImGui.TextUnformatted("asdf");
         }
+
+        public void AddPointAtRandom()
+        {
+            var index = new Random().Next(0, playerManager.GetPlayersPlaying().Count);
+            var player = playerManager.GetPlayersPlaying().ElementAt(index);
+        }
+
     }
 }

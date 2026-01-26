@@ -123,6 +123,7 @@ namespace MinigameCollection.Common.GameBoardCommon
         public PlayerInSession? AddTargetPlayer()
         {
             string fullName = targeting.GetTargetName();
+            logService.Warning("Full name: " + fullName);
             return AddPlayer(fullName);
         }
 

@@ -1,21 +1,13 @@
-using CommonServices.PlayerManagement.Interface;
 using Dalamud.Bindings.ImGui;
-using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
-using Lumina.Excel.Sheets;
 using Microsoft.Extensions.DependencyInjection;
-using MinigameCollection.Common;
-using MinigameCollection.Common.GameBoardCommon;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace MinigameCollection.Windows.Main;
 
@@ -29,7 +21,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private IObjectTable objectTable;
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
-    ISessionPlayerManager sessionPlayerManager;
 
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
@@ -45,7 +36,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         chatOutput = serviceProvider.GetRequiredService<IChatOutput>();
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
-        sessionPlayerManager = serviceProvider.GetRequiredService<ISessionPlayerManager>();
     }
 
     public void Dispose() { }
@@ -64,7 +54,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             }
             if (ImGui.BeginTabItem("Players"))
             {
-                DrawPlayerManagementTab(sessionPlayerManager);
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Gil & Bank"))

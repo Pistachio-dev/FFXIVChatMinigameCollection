@@ -34,18 +34,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Common\Common.csproj" />
-        <ProjectReference Include="..\Common\CommonServices.csproj" />
         <ProjectReference Include="..\DalamudBasics\DalamudBasics\DalamudBasics.csproj" />
-        <ProjectReference Include="..\PersistentModel\PersistentModel.csproj" />
+        <ProjectReference Include="..\Model\Model.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Update="DalamudPackager" Version="14.0.1" />
       <PackageReference Update="DotNet.ReproducibleBuilds" Version="1.2.39" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Games\NoGame\" />
     </ItemGroup>
 </Project>

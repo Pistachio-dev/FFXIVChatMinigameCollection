@@ -1,7 +1,3 @@
-using CommonServices.Game;
-using CommonServices.Game.Instance;
-using CommonServices.PlayerManagement;
-using CommonServices.PlayerManagement.Interface;
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin;
@@ -14,10 +10,8 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
-using MinigameCollection.Common.GameBoardCommon;
 using MinigameCollection.Windows;
 using MinigameCollection.Windows.Main;
-using PersistentModel.Extensions;
 using System;
 
 namespace MinigameCollection;
@@ -81,10 +75,6 @@ public sealed class Plugin : IDalamudPlugin
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
-        serviceCollection.AddRepositories();
-        serviceCollection.AddSingleton<IGameHost, GameInstance>();
-        serviceCollection.AddSingleton<IOOGPlayerManager, OOGPlayerManager>();
-        serviceCollection.AddSingleton<ISessionPlayerManager, SessionPlayerManager>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 
@@ -94,7 +84,6 @@ public sealed class Plugin : IDalamudPlugin
     private void InitializeServices(IServiceProvider serviceProvider)
     {
         IFramework framework = serviceProvider.GetRequiredService<IFramework>();
-        serviceProvider.InitializeDatabaseIfNeeded();
         serviceProvider.GetRequiredService<ILogService>().AttachToGameLogicLoop();
         serviceProvider.GetRequiredService<IChatListener>().InitializeAndRun(WaterMark, true);
         serviceProvider.GetRequiredService<IChatOutput>().InitializeAndAttachToGameLogicLoop(framework, WaterMark);

@@ -8,7 +8,7 @@ namespace MinigameCollection.Games
     public interface IGame
     {
 
-        void SafeInitialize(PlayerSet players);
+        void SafeInitialize(GameHost gameHost);
         void SafeUpdate();
         void SafeDrawUI();
     }

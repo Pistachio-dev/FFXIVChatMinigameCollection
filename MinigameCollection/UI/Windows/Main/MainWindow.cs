@@ -64,7 +64,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     {
         if (!gameHost.HasGame())
         {
-            gameHost.StartGame(NoGame.Id);
+            gameHost.StartGame(gameHost.AvailableGames()[configuration.SelectedGame].id);
         }
 
         ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
@@ -89,11 +89,12 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             if (ImGui.BeginTabItem("Game select"))
             {
                 int selected = configurationSvc.GetConfiguration().SelectedGame;
-                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(data => data.id.Value).ToArray(), GameHost.AvailableGames.Length))
+                var availableGames = gameHost.AvailableGames();
+                if (ImGui.Combo("Game mode", ref selected, availableGames.Select(data => data.id.Value).ToArray(), availableGames.Length))
                 {
                     configuration.SelectedGame = selected;
                     configurationSvc.SaveConfiguration();
-                    gameHost.StartGame(GameHost.AvailableGames[selected].id);
+                    gameHost.StartGame(availableGames[selected].id);
                 }
 
                 ImGui.EndTabItem();

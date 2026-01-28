@@ -12,6 +12,13 @@ namespace MinigameCollection.Windows.Main
         // Old code, remove as soon as it isn't useful for reference
         private void DrawExperimentalButtons()
         {
+            if (ImGui.Button("Add test players"))
+            {
+                gameHost.Players.AddPlayer("Mike Shinoda@Park");
+                gameHost.Players.AddPlayer("Chester Bennington@Park");
+                gameHost.Players.AddPlayer("Jimmy Page@LedZep");
+                gameHost.Players.AddPlayer("John Frusciante@RHCP");
+            }
             if (ImGui.Button("Get lumina sheets"))
             {
                 var data = dataManager.GameData.Excel;

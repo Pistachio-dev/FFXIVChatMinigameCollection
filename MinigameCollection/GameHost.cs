@@ -10,11 +10,13 @@ namespace MinigameCollection
 {
     public class GameHost
     {
-        public static (GameId id, Func<IGame> builder)[] AvailableGames =
-        [
-            (NoGame.Id, () => new NoGame()),
-            (Microgame.Id, () => new Microgame())
-        ];
+        public (GameId id, Func<IGame> builder)[] AvailableGames()
+        {
+            return [
+                (NoGame.Id, () => new NoGame()),
+                (Microgame.Id, () => new Microgame())
+            ];
+        }
 
         private IGame? activeGame;
 
@@ -34,9 +36,9 @@ namespace MinigameCollection
 
         public void StartGame(GameId gameId)
         {
-            (GameId id, Func<IGame> constructor) = AvailableGames.FirstOrDefault(p => p.id.Equals(gameId));
+            (GameId id, Func<IGame> constructor) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
             activeGame = constructor();
-            activeGame.SafeInitialize(players);
+            activeGame.SafeInitialize(this);
         }
 
         public void Update()

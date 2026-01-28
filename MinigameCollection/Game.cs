@@ -1,3 +1,4 @@
+using Dalamud.Bindings.ImGui;
 using MinigameCollection.Games;
 using System;
 using System.Collections.Generic;
@@ -9,13 +10,13 @@ namespace MinigameCollection
     {
         private bool initialized = false;
 
-        public virtual void SafeInitialize(PlayerSet players)
+        public void SafeInitialize(GameHost host)
         {
             if (!initialized) { initialized = true; }
-            Initialize(players);
+            Initialize(host);
         }
 
-        public virtual void SafeUpdate()
+        public void SafeUpdate()
         {
             if (!initialized)
             {
@@ -24,10 +25,13 @@ namespace MinigameCollection
             Update();
         }
 
-        public virtual void SafeDrawUI() { }
+        public void SafeDrawUI()
+        {
+            DrawUI();
+        }
 
         public abstract void DrawUI();
-        public abstract void Initialize(PlayerSet players);
+        public abstract void Initialize(GameHost host);
         public abstract void Update();
     }
 }

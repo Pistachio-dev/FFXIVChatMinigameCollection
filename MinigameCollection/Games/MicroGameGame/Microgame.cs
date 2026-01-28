@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Components;
 using DalamudBasics.Extensions;
 using MinigameCollection;
 using MinigameCollection.Games;
@@ -20,6 +21,8 @@ namespace MinigameCollection.Games.MicroGameGame
 
         private PlayerSet playerSet;
         private GameHost host;
+        private MicroGameState state = MicroGameState.NotStarted;
+        private MGPlayer winner = null;
 
         public override void DrawUI()
         {
@@ -53,6 +56,41 @@ namespace MinigameCollection.Games.MicroGameGame
 
                 ImGui.EndTable();
             }
+
+            switch (state)
+            {
+                case MicroGameState.Playing:
+                    if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Dice, "Roll random point"))
+                    {
+                        var player = this.playerSet.Players[new Random().Next(0, this.playerSet.Players.Count)];
+                        var data = player.GetData<MicroGamePlayerData>(Id);
+                        data.Score += 1;
+                        player.SetData(Id, data);
+
+                        if (data.Score >= 5)
+                        {
+                            winner = player;
+                            state = MicroGameState.WinnerFound;
+                        }
+                    }
+                    break;
+                case MicroGameState.WinnerFound:
+                    {
+                        ImGui.TextUnformatted($"{winner?.FullName.GetFirstName() ?? "null?"} wins");
+                        break;
+                    }
+                case MicroGameState.NotStarted:
+                    if (playerSet.Players.Count > 1)
+                    {
+                        if(ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowRight, "Start this random microgame"))
+                        {
+                            state = MicroGameState.Playing;
+                        }
+                        break;
+                    }
+                    ImGui.TextUnformatted("Waiting for players");
+                    break;
+            }
         }
 
         public override void Initialize(GameHost host)
@@ -66,8 +104,7 @@ namespace MinigameCollection.Games.MicroGameGame
         }
 
         public override void Update()
-        {
-            if (playerSet == null) return;
+        {    
         }
         private uint GetRowColor(int row)
         {

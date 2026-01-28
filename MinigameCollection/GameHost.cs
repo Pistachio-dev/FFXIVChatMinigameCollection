@@ -1,3 +1,4 @@
+using Dalamud.Plugin.Services;
 using MinigameCollection.Games;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
@@ -24,7 +25,7 @@ namespace MinigameCollection
 
         public PlayerSet Players => players;
 
-        public GameHost(PlayerSet players)
+        public GameHost(PlayerSet players, IFramework framework)
         {
             this.players = players;
         }

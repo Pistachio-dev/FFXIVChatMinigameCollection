@@ -7,9 +7,11 @@ using DalamudBasics.Logging;
 using ECommons.Configuration;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Games.NoGameGame;
 using MinigameCollection.UI.Windows.Main;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Numerics;
 using static ECommons.UIHelpers.AddonMasterImplementations.AddonMaster;
@@ -28,6 +30,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
     private GameHost gameHost;
+    private PlayerManager playerManager;
     Configuration configuration;
     PlayerMgmtTab playerMgmtTab;
 
@@ -46,9 +49,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         objectTable = serviceProvider.GetRequiredService<IObjectTable>();
         notificationManager = serviceProvider.GetRequiredService<INotificationManager>();
         configurationSvc = serviceProvider.GetRequiredService<IConfigurationService<Configuration>>();
-        gameHost = new GameHost();
+        gameHost = serviceProvider.GetRequiredService<GameHost>();
         configuration = configurationSvc.GetConfiguration();
-        playerMgmtTab = new PlayerMgmtTab(gameHost, logService, "Player Management");
+        playerManager = serviceProvider.GetRequiredService<PlayerManager>();
+        playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, logService, "Player Management");
+        
     }
 
     public void Dispose() { }
@@ -59,7 +64,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     {
         if (!gameHost.HasGame())
         {
-            gameHost.StartGame(GameHost.AvailableGames.FirstOrDefault(p => p.id.Value.Equals("No game", StringComparison.OrdinalIgnoreCase)).builder());
+            gameHost.StartGame(NoGame.Id);
         }
 
         ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
@@ -84,11 +89,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             if (ImGui.BeginTabItem("Game select"))
             {
                 int selected = configurationSvc.GetConfiguration().SelectedGame;
-                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(g => g.id.Value).ToArray(), GameHost.AvailableGames.Length))
+                if (ImGui.Combo("Game mode", ref selected, GameHost.AvailableGames.Select(data => data.id.Value).ToArray(), GameHost.AvailableGames.Length))
                 {
                     configuration.SelectedGame = selected;
                     configurationSvc.SaveConfiguration();
-                    gameHost.StartGame(GameHost.AvailableGames[selected].builder());
+                    gameHost.StartGame(GameHost.AvailableGames[selected].id);
                 }
 
                 ImGui.EndTabItem();

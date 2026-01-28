@@ -8,11 +8,11 @@ namespace Model.Base
     {
         public MGPlayer(string fullName)
         {
-            Fullname = fullName;
+            FullName = fullName;
         }
 
         private Dictionary<GameId, GameSpecificPlayerData> gameData = new();
-        public string Fullname { get; set; } = "Unset name";
+        public string FullName { get; set; } = "Unset name";
 
         public GameSpecificPlayerData GetData(GameId id)
         {

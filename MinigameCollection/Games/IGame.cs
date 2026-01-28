@@ -7,10 +7,9 @@ namespace MinigameCollection.Games
 {
     public interface IGame
     {
-        public GameId Id { get; }
 
-        void Initialize(PlayerSet players);
-        void Update();
-        void DrawUI();
+        void SafeInitialize(PlayerSet players);
+        void SafeUpdate();
+        void SafeDrawUI();
     }
 }

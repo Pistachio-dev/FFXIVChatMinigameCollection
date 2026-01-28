@@ -1,8 +1,10 @@
 using MinigameCollection.Games;
+using MinigameCollection.Games.MicroGameGame;
+using MinigameCollection.Games.NoGameGame;
 using Model.Base;
-using Model.Microgame;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MinigameCollection
 {
@@ -10,8 +12,8 @@ namespace MinigameCollection
     {
         public static (GameId id, Func<IGame> builder)[] AvailableGames =
         [
-            (new GameId("No Game"), () => new NoGame()),
-            (new GameId("Microgame"), () => new Microgame())
+            (NoGame.Id, () => new NoGame()),
+            (Microgame.Id, () => new Microgame())
         ];
 
         private IGame? activeGame;
@@ -19,9 +21,10 @@ namespace MinigameCollection
         private PlayerSet players;
 
         public PlayerSet Players => players;
-        public GameHost()
+
+        public GameHost(PlayerSet players)
         {
-            this.players = new PlayerSet();
+            this.players = players;
         }
 
         public bool HasGame()
@@ -29,20 +32,21 @@ namespace MinigameCollection
             return activeGame != null;
         }
 
-        public void StartGame(IGame game)
+        public void StartGame(GameId gameId)
         {
-            activeGame = game;
-            activeGame.Initialize(players);
+            (GameId id, Func<IGame> constructor) = AvailableGames.FirstOrDefault(p => p.id.Equals(gameId));
+            activeGame = constructor();
+            activeGame.SafeInitialize(players);
         }
 
         public void Update()
         {
-            activeGame?.Update();
+            activeGame?.SafeUpdate();
         }
 
         public void DrawUI()
         {
-            activeGame?.DrawUI();
+            activeGame?.SafeDrawUI();
         }
     }
 }

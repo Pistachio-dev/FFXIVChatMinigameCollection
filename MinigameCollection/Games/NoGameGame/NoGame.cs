@@ -4,28 +4,28 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MinigameCollection.Games
+namespace MinigameCollection.Games.NoGameGame
 {
-    internal class NoGame : IGame
+    internal class NoGame : Game
     {
-        public GameId Id => new GameId("No game");
+        public static GameId Id => new GameId("No Game");
         private PlayerSet players;
 
-        public void DrawUI()
+        public override void DrawUI()
         {
             ImGui.TextUnformatted("No game selected");
             foreach (var player in players.Players)
             {
-                ImGui.TextUnformatted(player.Fullname);
+                ImGui.TextUnformatted(player.FullName);
             }
         }
 
-        public void Initialize(PlayerSet players)
+        public override void Initialize(PlayerSet players)
         {
             this.players = players;
         }
 
-        public void Update()
+        public override void Update()
         {
             if (players == null) return;
         }

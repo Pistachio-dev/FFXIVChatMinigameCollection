@@ -1,5 +1,6 @@
 using Dalamud.Game.Command;
 using Dalamud.Interface.Windowing;
+using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Listener;
@@ -21,6 +22,9 @@ public sealed class Plugin : IDalamudPlugin
     private const string CommandName = "/minig";
     private const string WaterMark = "[MG]";
 
+    [PluginService]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+    internal static IPluginLog Log { get; private set; }
     public Configuration Configuration { get; init; }
 
     public readonly WindowSystem WindowSystem = new("MinigameCollection");
@@ -29,12 +33,16 @@ public sealed class Plugin : IDalamudPlugin
     private IServiceProvider serviceProvider { get; init; }
     private ILogService logService { get; set; }
 
+    private PlayerSet players { get; set; }
+
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
         ECommonsMain.Init(pluginInterface, this);
 
+        players = new PlayerSet();
         serviceProvider = BuildServiceProvider(pluginInterface);
-        logService = serviceProvider.GetRequiredService<ILogService>();
+        
+        logService = serviceProvider.GetRequiredService<ILogService>();        
 
         InitializeServices(serviceProvider);
 
@@ -75,6 +83,9 @@ public sealed class Plugin : IDalamudPlugin
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
+        serviceCollection.AddSingleton<PlayerManager>();
+        serviceCollection.AddSingleton<PlayerSet>((sp) => this.players);
+        serviceCollection.AddSingleton<GameHost>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

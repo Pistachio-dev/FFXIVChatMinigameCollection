@@ -1,25 +1,22 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
-using DalamudBasics.Chat.Output;
-using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using ECommons;
-using System;
-using System.Linq;
 using System.Numerics;
-using System.Xml;
 
 namespace MinigameCollection.UI.Windows.Main
 {
     internal class PlayerMgmtTab : PluginWindowBase
     {
         private readonly GameHost host;
+        private readonly PlayerManager playerMng;
 
-        public PlayerMgmtTab(GameHost host, ILogService logService, string name, ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false) 
+        public PlayerMgmtTab(GameHost host, PlayerManager playerMng, ILogService logService, string name, ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false) 
             : base(logService, name, flags, forceMainWindow)
         {
             this.host = host;
+            this.playerMng = playerMng;
         }
 
         protected override void SafeDraw()
@@ -42,10 +39,22 @@ namespace MinigameCollection.UI.Windows.Main
                     var color = GetRowColor(playerCounter);
                     ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, color);
 
+                    ImGui.TableNextColumn();
+                    ImGui.BeginGroup();
+                    var playerName = player.FullName;
+                    ImGui.TextUnformatted(playerName);
+                    ImGui.EndGroup();
                 }
 
                 ImGui.EndTable();
             }
+
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Plus, "Add targeted player"))
+            {
+                playerMng.TryAddTargetedPlayer();
+            }
+
+            DrawTooltip("Add the player you're currently targeting to the game.");
         }
 
         private uint GetRowColor(int row)

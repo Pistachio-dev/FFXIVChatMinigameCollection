@@ -6,25 +6,25 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Model.Microgame
+namespace MinigameCollection.Games.MicroGameGame
 {
-    public class Microgame : IGame
+    public class Microgame : Game
     {
-        public GameId Id => new GameId("Microgame");
+        public static GameId Id => new GameId("Microgame");
 
-        private PlayerSet players;
+        private PlayerSet players;       
 
-        public void DrawUI()
+        public override void DrawUI()
         {
             ImGui.TextUnformatted("This is the microgame");
         }
 
-        public void Initialize(PlayerSet players)
+        public override void Initialize(PlayerSet players)
         {
             this.players = players;
         }
 
-        public void Update()
+        public override void Update()
         {
             if (players == null) return;
         }

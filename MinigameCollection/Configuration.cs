@@ -1,5 +1,7 @@
 using Dalamud.Game.Text;
+using DalamudBasics.Chat.Interpretation;
 using DalamudBasics.Configuration;
+using MinigameCollection.Dice;
 using Model.Base;
 using System;
 
@@ -17,4 +19,6 @@ public class Configuration : IConfiguration
     public bool UsingRealGil { get; set; } = true;
 
     public int SelectedGame { get; set; } = 0;
+
+    public AcceptedRollType AcceptedRollType { get; set; } = AcceptedRollType.Any;
 }

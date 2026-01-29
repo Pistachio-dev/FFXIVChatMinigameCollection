@@ -22,7 +22,7 @@ namespace MinigameCollection.Games.MicroGameGame
         private PlayerSet playerSet;
         private GameHost host;
         private MicroGameState state = MicroGameState.NotStarted;
-        private MGPlayer winner = null;
+        private MGPlayer? winner = null;
 
         public override void DrawUI()
         {

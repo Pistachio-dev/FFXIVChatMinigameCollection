@@ -92,6 +92,10 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 var availableGames = gameHost.AvailableGames();
                 if (ImGui.Combo("Game mode", ref selected, availableGames.Select(data => data.id.Value).ToArray(), availableGames.Length))
                 {
+                    if (gameHost.HasGame())
+                    {
+
+                    }
                     configuration.SelectedGame = selected;
                     configurationSvc.SaveConfiguration();
                     gameHost.StartGame(availableGames[selected].id);

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MinigameCollection.Games
 {
-    public interface IGame
+    public interface IGame: IDisposable
     {
 
         void SafeInitialize(GameHost gameHost);

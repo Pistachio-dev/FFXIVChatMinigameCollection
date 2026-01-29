@@ -11,6 +11,7 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Dice;
 using MinigameCollection.UI.Windows;
 using MinigameCollection.Windows.Main;
 using System;
@@ -86,6 +87,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<PlayerManager>();
         serviceCollection.AddSingleton<PlayerSet>((sp) => this.players);
         serviceCollection.AddSingleton<GameHost>();
+        serviceCollection.AddSingleton<RollTracker>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

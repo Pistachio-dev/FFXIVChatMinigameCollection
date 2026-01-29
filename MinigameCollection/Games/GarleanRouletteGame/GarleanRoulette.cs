@@ -21,9 +21,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private GRGameState gameState;
         private GRActions grActions;
 
-        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config)
+        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions)
         {
             this.rollTracker = rollTracker;
+            this.gameState = gameState;
+            this.grActions = grActions;
             this.config = config.GetConfiguration();
         }
 
@@ -51,9 +53,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
 
             AddTestPlayers(host);
-            gameState = new GRGameState();
             gameState.Stage = GRStage.NotStarted;
-            grActions = new GRActions(Host, gameState, rollTracker, config);
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }
 
@@ -72,14 +72,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 case GRStage.RollingOrder:
                     if (HaveAllRolledOrder())
                     {
-                        Plugin.Log.Info("Ending roll order phase");
-                        ShufflePlayersBasedOnRolledOrder();
-                        Plugin.Log.Info("Starting shooting phase");
-                        gameState.Stage = GRStage.Shooting;
+                        grActions.FinishOrderAndStartShooting();
                     }
                         break;
                 case GRStage.Shooting:
-                    if (RemainingSurvivors() == 1)
+                    if (gameState.WinCondition())
                     {
                         grActions.OnWin();
                         return;
@@ -99,19 +96,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private bool HaveAllRolledOrder()
         {
             return !Host.Players.Players.Any(p => p.GetData().OrderRolled == -1);
-        }
-
-        private int RemainingSurvivors()
-        {
-            return Host.Players.Players.Count(p => p.GetData().Alive);
-        }
-
-        private void ShufflePlayersBasedOnRolledOrder()
-        {
-            var ordered = Host.Players.Players.OrderBy(p => p.GetData().OrderRolled).ToList();
-            Host.Players.Players.Clear();
-            Host.Players.Players.AddRange(ordered);
-            Plugin.Log.Verbose($"New player order: {Host.Players.Players.Select(p => p.FullName.GetFirstName()).Humanize()}");
         }
     }
 }

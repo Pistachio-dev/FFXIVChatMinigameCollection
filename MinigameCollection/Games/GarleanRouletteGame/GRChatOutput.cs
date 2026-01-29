@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
-    internal class ChatOutput
+    internal class GRChatOutput
     {
         private readonly IChatOutput chatOutput;
         private readonly string[] ShootQuips = [
@@ -32,17 +32,23 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         ];
 
-        public ChatOutput(IChatOutput chatOutput)
+        
+        public GRChatOutput(IChatOutput chatOutput)
         {
             this.chatOutput = chatOutput;
         }
 
-        public void DrawPlayerSurvives(MGPlayer player)
+        public void WriteWinner(MGPlayer player)
+        {
+            chatOutput.WriteChat($"{player.FullName} wins.");
+        }
+
+        public void DrawPlayerSurvives(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
             chatOutput.WriteChat("The gun clicks");
         }
-        public void DrawPlayerShot(MGPlayer player)
+        public void DrawPlayerShot(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
 
@@ -57,7 +63,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             var randomQuip = ShootQuips[new Random().Next(0, ShootQuips.Length)];
             chatOutput.WriteChat(randomQuip);
             var randomDeathQuip = PlayerDeadQuips[new Random().Next(0, PlayerDeadQuips.Length)];
-            chatOutput.WriteChat(randomDeathQuip.Replace("<T>", player.FullName.GetNameOnly()));
+            chatOutput.WriteChat(randomDeathQuip.Replace("<T>", player?.FullName.GetNameOnly() ?? "nobody"));
         }
     }
 }

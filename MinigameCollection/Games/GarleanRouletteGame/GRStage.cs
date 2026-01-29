@@ -8,6 +8,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
     {
         NotStarted,
         RollingOrder,
-        Shooting
+        Shooting,
+        Winner
     }
 }

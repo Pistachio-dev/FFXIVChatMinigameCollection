@@ -56,7 +56,6 @@ namespace MinigameCollection
         }
 
 
-
         public bool HasGame()
         {
             return activeGame != null;

@@ -95,6 +95,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<GarleanRoulette>();
         serviceCollection.AddSingleton<GRActions>();
         serviceCollection.AddSingleton<GRGameState>();
+        serviceCollection.AddSingleton<GRChatOutput>();
         serviceCollection.AddSingleton<NoGame>();
         serviceCollection.AddSingleton<MicroGamePlayerData>();
         //serviceCollection.AddGamesBase();        

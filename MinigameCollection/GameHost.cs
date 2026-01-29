@@ -3,6 +3,7 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Dice;
 using MinigameCollection.Games;
 using MinigameCollection.Games.GarleanRouletteGame;
@@ -16,12 +17,12 @@ namespace MinigameCollection
 {
     public class GameHost : IDisposable
     {
-        public (GameId id, Func<IGame> builder)[] AvailableGames()
+        public (GameId id, Func<IServiceProvider, IGame> builder)[] AvailableGames()
         {
             return [
-                (NoGame.Id, () => new NoGame()),
-                (Microgame.Id, () => new Microgame()),
-                (GarleanRoulette.Id, () => new GarleanRoulette(rollTracker, config))
+                (NoGame.Id, (sp) => sp.GetRequiredService<NoGame>()),
+                (Microgame.Id, (sp) => sp.GetRequiredService<Microgame>()),
+                (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>())
             ];
         }
 
@@ -30,6 +31,7 @@ namespace MinigameCollection
         public readonly IChatGui ChatGui;
         public readonly IObjectTable ObjectTable;
         private readonly RollTracker rollTracker;
+        private readonly IServiceProvider serviceProvider;
         private readonly Configuration config;
         private IGame? activeGame;
 
@@ -39,7 +41,8 @@ namespace MinigameCollection
         public PlayerSet Players => players;
 
         public GameHost(PlayerSet players, IFramework framework, DiceRollManager diceManager, IChatOutput chatOutput,
-            IChatGui chatGui, IObjectTable objectTable, RollTracker rollTracker, IConfigurationService<Configuration> config)
+            IChatGui chatGui, IObjectTable objectTable, RollTracker rollTracker, IConfigurationService<Configuration> config,
+            IServiceProvider serviceProvider)
         {
             this.players = players;
             this.Framework = framework;
@@ -48,6 +51,7 @@ namespace MinigameCollection
             this.ChatGui = chatGui;
             this.ObjectTable = objectTable;
             this.rollTracker = rollTracker;
+            this.serviceProvider = serviceProvider;
             this.config = config.GetConfiguration();
         }
 
@@ -60,8 +64,8 @@ namespace MinigameCollection
 
         public void StartGame(GameId gameId)
         {
-            (GameId id, Func<IGame> constructor) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
-            activeGame = constructor();
+            (GameId id, Func<IServiceProvider, IGame> constructor) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
+            activeGame = constructor(serviceProvider);
             activeGame.SafeInitialize(this);
         }
 

@@ -12,6 +12,9 @@ using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Dice;
+using MinigameCollection.Games.GarleanRouletteGame;
+using MinigameCollection.Games.MicroGameGame;
+using MinigameCollection.Games.NoGameGame;
 using MinigameCollection.UI.Windows;
 using MinigameCollection.Windows.Main;
 using System;
@@ -88,6 +91,12 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<PlayerSet>((sp) => this.players);
         serviceCollection.AddSingleton<GameHost>();
         serviceCollection.AddSingleton<RollTracker>();
+        serviceCollection.AddSingleton<IServiceProvider>((sp) => serviceProvider);
+        serviceCollection.AddSingleton<GarleanRoulette>();
+        serviceCollection.AddSingleton<GRActions>();
+        serviceCollection.AddSingleton<GRGameState>();
+        serviceCollection.AddSingleton<NoGame>();
+        serviceCollection.AddSingleton<MicroGamePlayerData>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

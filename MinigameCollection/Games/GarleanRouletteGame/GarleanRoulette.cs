@@ -21,10 +21,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private GRGameState gameState;
         private GRActions grActions;
 
-        public GarleanRoulette(RollTracker rollTracker, Configuration config)
+        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config)
         {
             this.rollTracker = rollTracker;
-            this.config = config;        }
+            this.config = config.GetConfiguration();
+        }
 
         public override void DrawUI()
         {

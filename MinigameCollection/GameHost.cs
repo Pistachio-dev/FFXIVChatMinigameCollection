@@ -55,7 +55,6 @@ namespace MinigameCollection
             this.config = config.GetConfiguration();
         }
 
-
         public bool HasGame()
         {
             return activeGame != null;

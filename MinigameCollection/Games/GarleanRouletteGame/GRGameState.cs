@@ -17,9 +17,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public List<int> ChambersLoaded { get; set; } = new();
 
         public GRStage Stage = GRStage.RollingOrder;
+
         private readonly GameHost gameHost;
 
-        public bool AwaitingOwnRoll { get; set; }
+        public int TriggerPulls { get; set; } = 0;
 
         public bool WinCondition()
         {

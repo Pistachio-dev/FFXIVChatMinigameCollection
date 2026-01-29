@@ -22,6 +22,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly GRChatOutput chatOutput;
         private const int RevolverRollMax = 7;
         private const int OrderRollMax = 100;
+
         public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput)
         {
             this.gameHost = gameHost;
@@ -82,6 +83,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             Plugin.Log.Info("Starting shooting phase");
             gameState.Stage = GRStage.Shooting;
             gameState.CurrentPlayer = gameHost.Players.Players.FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
+            AddBullet(true);
             SetupCurrentPlayerRoll();
         }
 
@@ -89,10 +91,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             var player = gameState.CurrentPlayer ?? throw new Exception("Trying to set up current player roll to be awaited, but current player is null");
             gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. /dice 7, please.");
-            rollTracker.QueueExpectedRoll(player.FullName, config.AcceptedRollType, RevolverRollMax, ProcessShotRoll);
+            rollTracker.QueueExpectedRoll(player.FullName, config.AcceptedRollType, RevolverRollMax, ProcessShootRoll);
         }
 
-        private void ProcessShotRoll(DiceRoll role)
+        private void ProcessShootRoll(DiceRoll role)
         {
             if (gameState.ChambersLoaded.Contains(role.RollResult))
             {
@@ -103,21 +105,55 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 if (gameState.WinCondition())
                 {
                     var winner = gameHost.Players.Players.FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
-                    chatOutput.WriteWinner(gameState.CurrentPlayer);
+                    chatOutput.WriteWinner(winner);
                     gameState.Stage = GRStage.Winner;
+                    return;
                 }
-                gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
-                SetupCurrentPlayerRoll();
             }
             else
             {
                 chatOutput.DrawPlayerSurvives(gameState.CurrentPlayer);
             }
 
-            
+            gameState.TriggerPulls++;
+            if (gameState.TriggerPulls == gameHost.Players.GetNonAfkPlayers().Count())
+            {
+                AddBullet(false);
+            }
+            gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
+            Plugin.Log.Verbose("Setting next player: " + gameState.CurrentPlayer.FullName);
+            SetupCurrentPlayerRoll();
+
+
         }
 
+        public void AddBullet(bool isFirstTime)
+        {
+            if (!isFirstTime)
+            {
+                gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes");
+            }
+            gameState.TriggerPulls = 0;
+            if (gameState.ChambersLoaded.Count == RevolverRollMax)
+            {
+                gameHost.ChatOutput.WriteChat("All chambers are loaded! How lucky can you get?");
+                return;
+            }
 
+            bool bulletInserted = false;
+            while (!bulletInserted)
+            {
+                var bullet = new Random().Next(RevolverRollMax);
+                if (!gameState.ChambersLoaded.Contains(bullet))
+                {
+                    gameState.ChambersLoaded.Add(bullet);
+                    gameHost.ChatOutput.WriteChat($"Inserting a new bullet on chamber {bullet}");
+                    gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}");
+                    gameHost.ChatOutput.WriteChat($"The host spins the drum.");
+                    bulletInserted = true;
+                }
+            }
+        }
         private void ShufflePlayersBasedOnRolledOrder()
         {
             var ordered = gameHost.Players.Reorder(p => p.GetData().OrderRolled);

@@ -44,7 +44,6 @@ namespace MinigameCollection
                 throw new Exception("Trying to get next player, but current one is null");
             }
 
-            bool found = false;
             bool loopedAround = false;
             int playersChecked = 0;
             if (conditionNeeded == null)
@@ -52,29 +51,28 @@ namespace MinigameCollection
                 conditionNeeded = (player) => true;
             }
 
-            for (int i = 0; i < _players.Count;)
+            var currentIndex = _players.IndexOf(current) + 1;
+
+            while (playersChecked < _players.Count)
             {                
-                if (found)
+                if (currentIndex == _players.Count && !loopedAround)
                 {
-                    if (conditionNeeded(_players[i]))
-                    {
-                        return _players[i];
-                    }
+
+                    currentIndex = 0;
+                    loopedAround = true;                    
                 }
-                else if (_players[i].FullName.Equals(current.FullName)){
-                    found = true;
-                }
-                if (i == _players.Count - 1 && !loopedAround)
+
+                Plugin.Log.Warning($"Checking player {currentIndex}: {_players[currentIndex].FullName}");
+                if (conditionNeeded(_players[currentIndex]))
                 {
-                    i = 0;
-                    loopedAround = true;
+                    return _players[currentIndex];
                 }
+
+                currentIndex++;
                 playersChecked += 1;
-                if (playersChecked == _players.Count)
-                {
-                    throw new Exception($"Could not get next player. Current player is {current.FullName}");
-                }
             }
+
+            throw new Exception($"Could not get next player. Current player is {current.FullName}");
 
             Log.Warning($"Next player {current.FullName} is the previous one");
             return current;
@@ -104,6 +102,11 @@ namespace MinigameCollection
             }
 
             return null;
+        }
+
+        public List<MGPlayer> GetNonAfkPlayers()
+        {
+            return Players.Where(p => !p.Afk).ToList();
         }
 
     }

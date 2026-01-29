@@ -46,7 +46,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public void DrawPlayerSurvives(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
-            chatOutput.WriteChat("The gun clicks");
+            chatOutput.WriteChat("The gun clicks", minSpacingBeforeInMs: 1000);
         }
         public void DrawPlayerShot(MGPlayer? player)
         {

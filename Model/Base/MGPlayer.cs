@@ -14,6 +14,8 @@ namespace Model.Base
         private Dictionary<GameId, GameSpecificPlayerData> gameData = new();
         public string FullName { get; set; } = "Unset name";
 
+        public bool Afk { get; set; } = false;
+
         public T GetData<T>(GameId id) where T: GameSpecificPlayerData, new()
         {
             if (gameData.ContainsKey(id))

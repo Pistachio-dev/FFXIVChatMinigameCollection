@@ -2,12 +2,10 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using Model.Base;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
-    internal class GRChatOutput
+    public class GRChatOutput
     {
         private readonly IChatOutput chatOutput;
         private readonly string[] ShootQuips = [
@@ -36,6 +34,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public GRChatOutput(IChatOutput chatOutput)
         {
             this.chatOutput = chatOutput;
+        }
+
+        public void RollDiceAsHouse(string expectedRollerName, int outOf, bool isAlliance)
+        {
+            chatOutput.WriteChat($"{expectedRollerName.GetFirstName()} is taking too long. The house takes the shot...");
+            chatOutput.WriteDiceCommand(outOf, isAlliance);
         }
 
         public void WriteWinner(MGPlayer player)

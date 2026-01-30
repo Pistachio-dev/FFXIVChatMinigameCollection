@@ -80,6 +80,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             SetupCurrentPlayerRoll();
         }
 
+        public void RollInsteadOfPlayer()
+        {
+            rollTracker.AcceptNextRollRegardless();
+            chatOutput.RollDiceAsHouse(gameState.CurrentPlayer.FullName, RevolverRollMaxInclusive, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
+        }
+
         public void SetupCurrentPlayerRoll(bool isHousePressingTheTrigger = false)
         {
             var player = gameState.CurrentPlayer ?? throw new Exception("Trying to set up current player roll to be awaited, but current player is null");
@@ -116,11 +122,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
             Plugin.Log.Verbose("Setting next player: " + gameState.CurrentPlayer.FullName);
             SetupCurrentPlayerRoll();
-
-
         }
 
-        public void AddBullet(bool isFirstTime)
+        private void AddBullet(bool isFirstTime)
         {
             if (!isFirstTime)
             {

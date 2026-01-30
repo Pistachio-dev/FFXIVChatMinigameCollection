@@ -36,7 +36,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Gun, "Take next shot manually"))
                 {
-                    grActions.SetupCurrentPlayerRoll(true);
+                    grActions.RollInsteadOfPlayer();
                 }
             }
 

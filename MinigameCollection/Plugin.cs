@@ -15,6 +15,7 @@ using MinigameCollection.Dice;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
+using MinigameCollection.UI;
 using MinigameCollection.UI.Windows;
 using MinigameCollection.Windows.Main;
 using System;
@@ -96,9 +97,11 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<GRActions>();
         serviceCollection.AddSingleton<GRGameState>();
         serviceCollection.AddSingleton<GRChatOutput>();
+        serviceCollection.AddSingleton<GRUI>();
         serviceCollection.AddSingleton<NoGame>();
         serviceCollection.AddSingleton<Microgame>();
         serviceCollection.AddSingleton<MicroGamePlayerData>();
+        serviceCollection.AddSingleton<ColorPalette>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 

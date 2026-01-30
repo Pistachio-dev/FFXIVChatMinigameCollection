@@ -5,6 +5,7 @@ using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Dice;
+using MinigameCollection.Games.MicroGameGame;
 using Model.Base;
 using System;
 using System.Collections.Generic;
@@ -20,40 +21,20 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly Configuration config;
         private GRGameState gameState;
         private GRActions grActions;
+        private readonly GRUI grui;
 
-        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions)
+        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions, GRUI grui)
         {
             this.rollTracker = rollTracker;
             this.gameState = gameState;
             this.grActions = grActions;
+            this.grui = grui;
             this.config = config.GetConfiguration();
         }
 
         public override void DrawUI()
         {
-
-            if (gameState.Stage == GRStage.Shooting)
-            {
-                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Gun, "Take next shot manually"))
-                {
-                    grActions.RollInsteadOfPlayer();
-                }
-            }
-
-            if (gameState.Stage == GRStage.NotStarted)
-            {
-                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowUp, "Roll order"))
-                {
-                    grActions.StartOrderRound();
-                }
-            }
-            if (gameState.Stage == GRStage.Winner)
-            {
-                ImGui.TextUnformatted(gameState.GetSurvivor().FullName);
-                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again")){
-                    grActions.StartOrderRound();
-                }
-            }
+            grui.DrawUI();
         }
 
         public override void Initialize(GameHost host)

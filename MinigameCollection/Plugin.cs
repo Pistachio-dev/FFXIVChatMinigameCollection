@@ -97,6 +97,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<GRGameState>();
         serviceCollection.AddSingleton<GRChatOutput>();
         serviceCollection.AddSingleton<NoGame>();
+        serviceCollection.AddSingleton<Microgame>();
         serviceCollection.AddSingleton<MicroGamePlayerData>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();

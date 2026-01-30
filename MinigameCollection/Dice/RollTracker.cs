@@ -27,6 +27,12 @@ namespace MinigameCollection.Dice
             Plugin.Log.Info($"Queued awaited roll. {RollRecordToString}");
         }
 
+        public void Reset()
+        {
+            awaitedRollQueue.Clear();
+            acceptNextRollWithoutChecking = false;
+        }
+
         // In case the house needs to roll for the player, forces the next roll to be accepted regardless of whom is it.
         public void AcceptNextRollRegardless()
         {

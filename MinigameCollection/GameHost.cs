@@ -62,6 +62,7 @@ namespace MinigameCollection
 
         public void StartGame(GameId gameId)
         {
+            RemoveStillTrackedRolls();
             (GameId id, Func<IServiceProvider, IGame> constructor) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
             activeGame = constructor(serviceProvider);
             activeGame.SafeInitialize(this);
@@ -94,5 +95,10 @@ namespace MinigameCollection
                 activeGame!.Dispose();
             }
         }
+
+        private void RemoveStillTrackedRolls()
+        {
+            rollTracker.Reset();
+        }    
     }
 }

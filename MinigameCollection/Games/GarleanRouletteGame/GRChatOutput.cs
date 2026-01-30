@@ -2,6 +2,7 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using Model.Base;
 using System;
+using System.Collections.Generic;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
@@ -14,13 +15,14 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 "N O T H I N G  P E R S O N A L",
                 "Y O U  R O L L E D  P O O R L Y",
                 "E A T  L E A D",
-                "T O U G H  L U C K"
+                "T O U G H  L U C K",
+                "Y O U  L O S E",
             ];
 
         private readonly string[] PlayerDeadQuips = [
-            "<T> mind gets opened a bit too strong",
+            "<T> mind gets opened a bit too strongly",
             "<T> dies unceremoniously",
-            "<T> has their brains reditributed",
+            "<T> has their brains redistributed",
             "<T> unsubscribes from life",
             "<T> is in a better place now",
             "<T> receives a dose of lead applied via gun",
@@ -48,12 +50,17 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WriteChat($"{player.FullName} wins.");
         }
 
-        public void DrawPlayerSurvives(MGPlayer? player)
+        public void WritePlayerOrder(List<string> names)
+        {
+            chatOutput.WriteChat($"Order: {names.GetWordsSeparatedByArrows()}");
+        }
+
+        public void WritePlayerSurvives(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
             chatOutput.WriteChat("The gun clicks<se.12>", minSpacingBeforeInMs: 1000);
         }
-        public void DrawPlayerShot(MGPlayer? player)
+        public void WritePlayerShot(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);

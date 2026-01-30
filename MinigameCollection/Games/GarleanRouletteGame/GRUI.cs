@@ -33,11 +33,18 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             DrawButtons();
             if (gameState.Stage == GRStage.Shooting)
             {
+                DrawPlayerOrder();
                 DrawChambersLoaded();
                 DrawCurrentPlayer();
             }
             
         }
+
+        private void DrawPlayerOrder()
+        {
+            ImGui.TextUnformatted($"Order: {host.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
+        }
+
         private void DrawPlayerTable()
         {
             const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;

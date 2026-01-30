@@ -73,6 +73,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             Plugin.Log.Info("Ending roll order phase");
             ShufflePlayersBasedOnRolledOrder();
+            chatOutput.WritePlayerOrder(gameHost.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList());
             Plugin.Log.Info("Starting shooting phase");
             gameState.Stage = GRStage.Shooting;
             gameState.CurrentPlayer = gameHost.Players.Players.FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
@@ -97,7 +98,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             if (gameState.ChambersLoaded.Contains(role.RollResult))
             {
-                chatOutput.DrawPlayerShot(gameState.CurrentPlayer);
+                chatOutput.WritePlayerShot(gameState.CurrentPlayer);
                 var pData = gameState.CurrentPlayer?.GetData() ?? throw new Exception("Processing shot roll, but current player is null");
                 pData.Alive = false;
                 gameState.CurrentPlayer.SetData(pData);
@@ -111,7 +112,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
             else
             {
-                chatOutput.DrawPlayerSurvives(gameState.CurrentPlayer);
+                chatOutput.WritePlayerSurvives(gameState.CurrentPlayer);
             }
 
             gameState.TriggerPulls++;

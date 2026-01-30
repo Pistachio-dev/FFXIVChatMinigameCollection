@@ -40,19 +40,21 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void WriteWinner(MGPlayer player)
         {
+            chatOutput.WriteChat("<se.15>", minSpacingBeforeInMs: 2000);
             chatOutput.WriteChat($"{player.FullName} wins.");
         }
 
         public void DrawPlayerSurvives(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
-            chatOutput.WriteChat("The gun clicks", minSpacingBeforeInMs: 1000);
+            chatOutput.WriteChat("The gun clicks<se.12>", minSpacingBeforeInMs: 1000);
         }
         public void DrawPlayerShot(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
+            chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
 
-            chatOutput.WriteChat(@"　 ∧､");
+            chatOutput.WriteChat(@"　 ∧､<se.4>", minSpacingBeforeInMs: 1000);
             chatOutput.WriteChat(@"／⌒ヽ＼　　   ∧＿∧");
             chatOutput.WriteChat(@"|( ● )|　i＼（　´_ゝ`）");
             chatOutput.WriteChat(@"＼＿ノ　^i |ハ 　 　 ＼");

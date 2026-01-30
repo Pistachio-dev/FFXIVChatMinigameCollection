@@ -32,14 +32,27 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public override void DrawUI()
         {
 
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Gun, "Take next shot manually"))
+            if (gameState.Stage == GRStage.Shooting)
             {
-                grActions.CastRoll(gameState.CurrentPlayer!.FullName);
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Gun, "Take next shot manually"))
+                {
+                    grActions.SetupCurrentPlayerRoll(true);
+                }
             }
 
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowUp, "Roll order"))
+            if (gameState.Stage == GRStage.NotStarted)
             {
-                grActions.StartOrderRound();
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowUp, "Roll order"))
+                {
+                    grActions.StartOrderRound();
+                }
+            }
+            if (gameState.Stage == GRStage.Winner)
+            {
+                ImGui.TextUnformatted(gameState.GetSurvivor().FullName);
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again")){
+                    grActions.StartOrderRound();
+                }
             }
         }
 
@@ -52,7 +65,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.CurrentPlayer = firstPlayer;
             }
 
-            //AddTestPlayers(host);
+            AddTestPlayers(host);
             gameState.Stage = GRStage.NotStarted;
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }

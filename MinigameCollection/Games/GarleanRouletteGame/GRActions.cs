@@ -20,7 +20,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly RollTracker rollTracker;
         private readonly Configuration config;
         private readonly GRChatOutput chatOutput;
-        private const int RevolverRollMax = 7;
+        private const int RevolverRollMin = 1;
+        private const int RevolverRollMaxInclusive = 7;
         private const int OrderRollMax = 100;
 
         public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput)
@@ -34,21 +35,25 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void StartOrderRound()
         {
-            gameState.Stage = GRStage.RollingOrder;
-            gameHost.ChatOutput.WriteChat("Rolling player order");
+
             if (gameHost.Players.Players.Count < 2)
             {
                 gameHost.ChatGui.PrintError("Not enough players. Needs two at least");
+                return;
             }
+
+            gameState.Stage = GRStage.RollingOrder;
+            gameHost.ChatOutput.WriteChat("Rolling player order");
+
             foreach (var player in gameHost.Players.Players)
             {
                 var data = player.GetData();
-                data.OrderRolled = -1;
+                data.Reset();
                 player.SetData(data);
 
                 rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax,   (roll) => SetPlayerOrderRoll(player, roll.RollResult));
                 gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
-                gameHost.ChatOutput.WriteCommand("/dice 100");
+                gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
             }
         }
 
@@ -57,18 +62,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             var data = player.GetData();
             data.OrderRolled = order;
             player.SetData(data);
-        }
-
-        public void CastRoll(string playerFullName)
-        {
-            if (!MakeSureCurrentPlayerExists())
-            {
-                Plugin.Log.Warning("Could not \"Cast roll\", player list is empty");
-                return;
-            }
-
-            gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer);
-            gameHost.ChatOutput.WriteCommand("/dice");
         }
 
         public void ProcessRoll(DiceRoll roll)
@@ -87,11 +80,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             SetupCurrentPlayerRoll();
         }
 
-        public void SetupCurrentPlayerRoll()
+        public void SetupCurrentPlayerRoll(bool isHousePressingTheTrigger = false)
         {
             var player = gameState.CurrentPlayer ?? throw new Exception("Trying to set up current player roll to be awaited, but current player is null");
-            gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. /dice 7, please.");
-            rollTracker.QueueExpectedRoll(player.FullName, config.AcceptedRollType, RevolverRollMax, ProcessShootRoll);
+            gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. /dice 7, please. <se.3>", minSpacingBeforeInMs: 1000);
+            rollTracker.QueueExpectedRoll(player.FullName, config.AcceptedRollType, RevolverRollMaxInclusive, ProcessShootRoll);
         }
 
         private void ProcessShootRoll(DiceRoll role)
@@ -131,10 +124,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             if (!isFirstTime)
             {
-                gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes");
+                gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes", minSpacingBeforeInMs: 2000);
             }
             gameState.TriggerPulls = 0;
-            if (gameState.ChambersLoaded.Count == RevolverRollMax)
+            if (gameState.ChambersLoaded.Count == RevolverRollMaxInclusive)
             {
                 gameHost.ChatOutput.WriteChat("All chambers are loaded! How lucky can you get?");
                 return;
@@ -143,12 +136,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             bool bulletInserted = false;
             while (!bulletInserted)
             {
-                var bullet = new Random().Next(RevolverRollMax);
+                var bullet = new Random().Next(RevolverRollMin, RevolverRollMaxInclusive + 1);
                 if (!gameState.ChambersLoaded.Contains(bullet))
                 {
                     gameState.ChambersLoaded.Add(bullet);
                     gameHost.ChatOutput.WriteChat($"Inserting a new bullet on chamber {bullet}");
-                    gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}");
+                    gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}", minSpacingBeforeInMs: 2000);
                     gameHost.ChatOutput.WriteChat($"The host spins the drum.");
                     bulletInserted = true;
                 }

@@ -31,5 +31,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             return gameHost.Players.Players.Count(p => p.GetData().Alive);
         }
+
+        public MGPlayer GetSurvivor()
+        {
+            return gameHost.Players.Players.First(p => p.GetData().Alive);
+        }
     }
 }

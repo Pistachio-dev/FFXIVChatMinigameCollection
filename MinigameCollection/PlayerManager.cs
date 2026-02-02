@@ -67,9 +67,11 @@ namespace MinigameCollection
             if (created)
             {
                 logService.Info($"Created player {fullName}");
+                chatOutput.WriteChat($"{fullName} joins the game.");
                 return;
             }
 
+            chatOutput.WriteChat($"Could not add {fullName}. Maybe they're already in.");
             logService.Info($"Could not create player {fullName}");
         }
 
@@ -84,6 +86,12 @@ namespace MinigameCollection
         {
             Plugin.Log.Info($"[ACTION] Wake up through chat sound. Player: {player.FullName}.");
             chatOutput.WriteChat($"{player.FullName} it's your turn! <se.9");
+        }
+
+        public void Remove(MGPlayer player)
+        {
+            chatOutput.WriteChat($"{player.FullName} leaves the game.");
+            players.Remove(player);
         }
     }
 }

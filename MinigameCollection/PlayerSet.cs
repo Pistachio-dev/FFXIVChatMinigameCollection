@@ -109,5 +109,10 @@ namespace MinigameCollection
             return Players.Where(p => !p.Afk).ToList();
         }
 
+        public void Remove(MGPlayer player)
+        {
+            _players.Remove(player);
+        }
+
     }
 }

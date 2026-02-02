@@ -51,7 +51,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void DrawBetSetting()
         {
             var previous = gameState.Bet;
-            if (ImGui.InputLong("", ref previous))
+            if (ImGui.InputLong("Bet", ref previous))
             {
                 gameState.Bet = previous;
             }

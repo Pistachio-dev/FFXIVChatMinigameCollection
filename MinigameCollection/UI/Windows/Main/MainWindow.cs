@@ -79,16 +79,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
             gameHost.StartGame(gameHost.AvailableGames()[configuration.SelectedGame].id);
         }
 
-        if (ImGui.Button("Trade info"))
-        {
-            tradingMgr.PrintInfo();
-        }
-        if (ImGui.Button("Press Yes"))
-        {
-            tradingMgr.SelectYesBruteForce();
-        }
-
-
         ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
         if (ImGui.BeginTabBar("##Main container"))
         {
@@ -99,13 +89,9 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 ImGui.EndTabItem();
                 
             }
-            if (ImGui.BeginTabItem("Players"))
+            if (ImGui.BeginTabItem("Players & Gil"))
             {
                 playerMgmtTab.Draw();
-                ImGui.EndTabItem();
-            }
-            if (ImGui.BeginTabItem("Gil & Bank"))
-            {
                 ImGui.EndTabItem();
             }
             if (ImGui.BeginTabItem("Game select"))
@@ -125,12 +111,13 @@ public partial class MainWindow : PluginWindowBase, IDisposable
 
                 ImGui.EndTabItem();
             }
+#if DEBUG
             if (ImGui.BeginTabItem("Experimental"))
             {
                 DrawExperimentalButtons();
                 ImGui.EndTabItem();
             }
-
+#endif
             ImGui.EndTabBar();
         }
     }

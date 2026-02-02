@@ -7,6 +7,8 @@ using ECommons;
 using MinigameCollection.Bank;
 using MinigameCollection.Trader;
 using Model.Base;
+using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace MinigameCollection.UI.Windows.Main.PlayerManagement
@@ -35,6 +37,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
         protected override void SafeDraw()
         {
             const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
+            List<Action> thingsToDoAfterIteration = new();
             if (ImGui.BeginTable("##PlayerTable", 5, flags))
             {
                 ImGui.TableSetupColumn("Player", ImGuiTableColumnFlags.WidthStretch, 0.8f);
@@ -73,7 +76,12 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                     // Actions
                     ImGui.TableNextColumn();
                     DrawPlayerActionButtons(player);
-
+                    ImGui.SameLine();
+                    if (ImGuiComponents.IconButton($"##{player.FullName}",Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
+                    {
+                        thingsToDoAfterIteration.Add(() => playerMgmt.Remove(player));
+                    }
+                    DrawTooltip("Shift+Click to remove player");
                     playerCounter++;
                 }
 
@@ -86,10 +94,15 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             }
             ImGui.SameLine();
             if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");
+            ImGui.SameLine();
 
             DrawTooltip("Add the player you're currently targeting to the game.");
             DrawFundsModal();
 
+            foreach (var action in thingsToDoAfterIteration)
+            {
+                action();
+            }
         }
 
         private uint GetRowColor(int row)

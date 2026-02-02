@@ -11,6 +11,7 @@
         "gil",
         "roulette",
         "garlean",
-        "darts"        
-    ]
+        "darts"
+    ],
+    "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png"
 }

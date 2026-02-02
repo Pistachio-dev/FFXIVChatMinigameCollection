@@ -39,6 +39,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             {
                 ImGui.TableSetupColumn("Player", ImGuiTableColumnFlags.WidthStretch, 0.8f);
                 ImGui.TableSetupColumn("AFK", ImGuiTableColumnFlags.WidthStretch, 0.2f);
+                ImGui.TableSetupColumn("Gil in a game", ImGuiTableColumnFlags.WidthStretch, 0.2f);
                 ImGui.TableSetupColumn("Stored gil", ImGuiTableColumnFlags.WidthStretch, 0.3f);
                 ImGui.TableSetupColumn("Actions", ImGuiTableColumnFlags.WidthStretch, 0.8f);
                 ImGui.TableHeadersRow();
@@ -120,6 +121,12 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 tradingManager.StartCashOut(player);
             }
             DrawTooltip("Cash out (take gil from player bank and to the player)");
+            ImGui.SameLine();
+            if (ImGuiComponents.IconButton($"secure##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.SackDollar))
+            {
+                bankMgmt.StoreAll(player);
+            }
+            DrawTooltip("Move any gil in a game into the bank");
             ImGui.PopStyleVar();
             ImGui.PopID();
         }

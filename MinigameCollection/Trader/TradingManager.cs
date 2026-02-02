@@ -88,6 +88,14 @@ namespace MinigameCollection.Trader
         public void OnTransactionDetected()
         {
             currentTradeStatus = MGTradeStatus.TransactionOngoing;
+            if (currentTradeType == TradeType.CashOut && targeting.GetTarget() != null && targeting.GetTarget() is IPlayerCharacter player)
+            {
+                var tradedPlayer = host.Players.GetPlayer(player.GetFullName());
+                if (tradedPlayer != null)
+                {
+                    SetOutgoing(Math.Min(tradedPlayer.Bank.Stored, 1000000));
+                }                
+            }
         }
 
         public void OnTransactionEnd()
@@ -103,7 +111,6 @@ namespace MinigameCollection.Trader
                 
                 wasLastTransactionCompleted = gilDifference != 0;
 
-                bankActions.AddStored(host.Players.GetPlayer(player.GetFullName()), gilDifference);
                 // TODO: Trade again if relevant
                 if (wasLastTransactionCompleted)
                 {
@@ -269,6 +276,14 @@ namespace MinigameCollection.Trader
             Plugin.Log.Warning($"Local trade state: {inventoryManager->TradeLocalState}");
             Plugin.Log.Warning($"Remote trade state: {inventoryManager->TradeRemoteState}");
             return true;
+        }
+
+        private unsafe void SetOutgoing(long amount)
+        {
+            var inventoryManager = InventoryManager.Instance();
+            inventoryManager->SetTradeGilAmount((uint)amount);
+
+            Plugin.Log.Warning("Cash out auto-amount set");
         }
 
         private unsafe AtkTextNode* GetOutgoingGilTextCmp(AddonTrade* addon)

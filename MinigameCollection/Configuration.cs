@@ -21,4 +21,7 @@ public class Configuration : IConfiguration
     public int SelectedGame { get; set; } = 0;
 
     public AcceptedRollType AcceptedRollType { get; set; } = AcceptedRollType.Any;
+
+    public bool AutoBuyIn {  get; set; } = true;
+    public bool AutoCashOut { get; set; } = true;
 }

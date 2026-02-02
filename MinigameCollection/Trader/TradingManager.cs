@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
+using DalamudBasics.Extensions;
 using DalamudBasics.Targeting;
 using ECommons;
 using ECommons.Automation;
@@ -28,13 +29,17 @@ namespace MinigameCollection.Trader
         private readonly IChatOutput chatOutput;
         private readonly ITargetingService targeting;
         private readonly IFramework framework;
+        private readonly GameHost host;
+        private readonly BankActions bankActions;
         private TradeType currentTradeType;
         private MGTradeStatus currentTradeStatus;
         private long preTransactionGil; // How much gil you have before the trade
         private bool wasLastTransactionCompleted = false;
+        private string lastTradeTargetName = string.Empty;
 
 
-        public TradingManager(IChatGui chatGui, IObjectTable objectTable, IPlayerState playerState, IChatOutput chatOutput, ITargetingService targeting, IFramework framework)
+        public TradingManager(IChatGui chatGui, IObjectTable objectTable, IPlayerState playerState, IChatOutput chatOutput, ITargetingService targeting, IFramework framework,
+            GameHost host, BankActions bankActions)
         {
             this.chatGui = chatGui;
             this.objectTable = objectTable;
@@ -42,6 +47,8 @@ namespace MinigameCollection.Trader
             this.chatOutput = chatOutput;
             this.targeting = targeting;
             this.framework = framework;
+            this.host = host;
+            this.bankActions = bankActions;
         }
 
         public void Attach()
@@ -74,6 +81,7 @@ namespace MinigameCollection.Trader
             {
                 throw new Exception("Local player is null when processing a transaction");
             }
+            lastTradeTargetName = targeting.GetTargetName();
             preTransactionGil = GetGil();            
         }
 
@@ -84,16 +92,38 @@ namespace MinigameCollection.Trader
 
         public void OnTransactionEnd()
         {
-            var gilDifference = GetGilDifference();
-            if (gilDifference != 0)
+            if (targeting.GetTarget() != null && targeting.GetTarget() is IPlayerCharacter player)
             {
-                wasLastTransactionCompleted = true;
+                var tradedPlayer = host.Players.GetPlayer(player.GetFullName());
+                var gilDifference = GetGilDifference();
+                if (tradedPlayer != null)
+                {
+                    bankActions.AddStored(tradedPlayer, gilDifference);
+                }
+                
+                wasLastTransactionCompleted = gilDifference != 0;
+
+                bankActions.AddStored(host.Players.GetPlayer(player.GetFullName()), gilDifference);
+                // TODO: Trade again if relevant
+                if (wasLastTransactionCompleted)
+                {
+                    if (tradedPlayer != null && lastTradeTargetName == tradedPlayer.FullName)
+                    {
+                        if (currentTradeType == TradeType.BuyIn)
+                        {
+                            chatGui.Print("Auto trading again for buy-in");
+                            StartBuyIn(tradedPlayer);
+                        }
+                        else if (currentTradeType == TradeType.CashOut && tradedPlayer.Bank.Stored > 0)
+                        {
+                            chatGui.Print("Auto trading again for cash-out");
+                            StartCashOut(tradedPlayer);
+                        }
+                    }
+                }
             }
-            currentTradeStatus = MGTradeStatus.None;
-            wasLastTransactionCompleted = false;
-             
-            // TODO: Trade again if relevant
         }
+
 
         public void OnTransactionAbort()
         {
@@ -101,9 +131,11 @@ namespace MinigameCollection.Trader
             wasLastTransactionCompleted = false;
         }
 
+        // Positive means the croupier got more money now
         private long GetGilDifference()
         {
             var newGil = GetGil();
+            chatGui.Print($"Previous:  {preTransactionGil} New: {newGil}");
             long difference = newGil - preTransactionGil;
             if (difference > 0)
             {
@@ -118,7 +150,7 @@ namespace MinigameCollection.Trader
                 chatGui.Print($"Trade cancelled, or 0 gil traded.");
             }
 
-            return newGil;
+            return difference;
         }
 
         public void StartBuyIn(MGPlayer player)
@@ -127,6 +159,7 @@ namespace MinigameCollection.Trader
                 chatGui.PrintError($"Could not select player {player.FullName}. Buy In aborted");
             }
 
+            chatOutput.WriteChat($"Trading for buy in. Current funds: {player.Bank.Stored.Formatted()}");
             chatOutput.WriteCommand("/trade");
             currentTradeStatus = MGTradeStatus.RequestSent;
             currentTradeType = TradeType.BuyIn;
@@ -139,6 +172,8 @@ namespace MinigameCollection.Trader
             {
                 chatGui.PrintError($"Could not select player {player.FullName}. Cash out aborted");
             }
+            chatOutput.WriteChat($"Trading for cash out. Current funds: {player.Bank.Stored.Formatted()}");
+            chatOutput.WriteCommand("/trade");
             currentTradeStatus = MGTradeStatus.RequestSent;
             currentTradeType = TradeType.CashOut;
         }
@@ -187,6 +222,7 @@ namespace MinigameCollection.Trader
             this.gameGui = gameGui;
             this.addonLifecycle = addonLifecycle;
         }
+
         public unsafe void PrintInfo()
         {
             if (GenericHelpers.TryGetAddonByName<AddonTrade>("Trade", out var addon))

@@ -34,7 +34,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                     ImGui.InputInt(addOrRemove == 0 ? "Amount to add" : "Amount to cash out", ref amountToAddOrRemove);
 
                     var selectedPlayerName = playerNames[selectedPlayerNameIndex];
-                    var player = playerMgmt.GetPlayer(selectedPlayerName);
+                    var player = playerMgmt.GetPlayer(selectedPlayerName, true);
                     var buttonText = addOrRemove == 0 ? "Add gil" : "Remove gil";
                     DrawActionButton(() => bankMgmt.AddStored(playerMgmt.GetPlayer(selectedPlayerName), amountToAddOrRemove * (addOrRemove == 0 ? 1 : -1)), buttonText);
                     ImGui.SameLine();

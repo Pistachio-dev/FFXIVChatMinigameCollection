@@ -32,17 +32,17 @@ namespace MinigameCollection
             this.chatOutput = chatOutput;
         }
 
-        public MGPlayer GetPlayer(string fullName)
+        public MGPlayer GetPlayer(string fullName, bool muteLog=false)
         {
-            logService.Debug($"Getting player {fullName}");
+            if (!muteLog) logService.Debug($"Getting player {fullName}");
             var existing = players.GetPlayer(fullName);
             if (existing != null)
             {
-                logService.Debug("Success");
+                if (!muteLog) logService.Debug("Success");
                 return existing;    
             }
 
-            logService.Debug("Not found");
+            if (!muteLog) logService.Debug("Not found");
             return null;
         }
 

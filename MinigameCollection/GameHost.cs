@@ -4,6 +4,7 @@ using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using MinigameCollection.Games;
 using MinigameCollection.Games.GarleanRouletteGame;
@@ -32,6 +33,7 @@ namespace MinigameCollection
         public readonly IObjectTable ObjectTable;
         private readonly RollTracker rollTracker;
         private readonly IServiceProvider serviceProvider;
+        private readonly BankActions bankActions;
         private readonly Configuration config;
         private IGame? activeGame;
 
@@ -42,7 +44,7 @@ namespace MinigameCollection
 
         public GameHost(PlayerSet players, IFramework framework, DiceRollManager diceManager, IChatOutput chatOutput,
             IChatGui chatGui, IObjectTable objectTable, RollTracker rollTracker, IConfigurationService<Configuration> config,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider, BankActions bankActions)
         {
             this.players = players;
             this.Framework = framework;
@@ -52,6 +54,7 @@ namespace MinigameCollection
             this.ObjectTable = objectTable;
             this.rollTracker = rollTracker;
             this.serviceProvider = serviceProvider;
+            this.bankActions = bankActions;
             this.config = config.GetConfiguration();
         }
 
@@ -60,6 +63,13 @@ namespace MinigameCollection
             return activeGame != null;
         }
 
+        public void ReturnInGameGil()
+        {
+            foreach (var player in players.Players)
+            {
+                bankActions.StoreAll(player);
+            }
+        }
         public void StartGame(GameId gameId)
         {
             RemoveStillTrackedRolls();

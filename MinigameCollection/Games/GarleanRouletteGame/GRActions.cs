@@ -1,17 +1,12 @@
-using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Humanizer;
-using Microsoft.VisualBasic;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using Model.Base;
-using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
@@ -39,7 +34,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void StartOrderRound()
         {
-
             if (gameHost.Players.Players.Count < 2)
             {
                 gameHost.ChatGui.PrintError("Not enough players. Needs two at least");
@@ -61,9 +55,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 data.Reset();
                 player.SetData(data);
                 bank.StoreAll(player);
-                bank.Draw(player, gameState.Bet);                
+                bank.Draw(player, gameState.Bet);
 
-                rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax,   (roll) => SetPlayerOrderRoll(player, roll.RollResult));
+                rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult));
                 gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
                 gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
             }
@@ -78,7 +72,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void ProcessRoll(DiceRoll roll)
         {
-            rollTracker.ProcessRoll(roll);            
+            rollTracker.ProcessRoll(roll);
         }
 
         public void FinishOrderAndStartShooting()
@@ -145,6 +139,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             gameHost.ChatOutput.WriteChat($"Bet set to {gameState.Bet}");
             gameState.Bet = bet;
         }
+
         private void AddBullet(bool isFirstTime)
         {
             if (!isFirstTime && !gameState.DidSomeoneDieThisRound)
@@ -173,6 +168,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 }
             }
         }
+
         private void ShufflePlayersBasedOnRolledOrder()
         {
             var ordered = gameHost.Players.Reorder(p => p.GetData().OrderRolled);
@@ -196,7 +192,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil!");
         }
 
-
         private bool MakeSureCurrentPlayerExists()
         {
             if (gameState.CurrentPlayer != null)
@@ -205,7 +200,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
 
             var first = gameHost.Players.GetFirst();
-            if  (first == null)
+            if (first == null)
             {
                 return false;
             }

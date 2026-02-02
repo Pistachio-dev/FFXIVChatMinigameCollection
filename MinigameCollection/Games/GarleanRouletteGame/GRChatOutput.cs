@@ -9,6 +9,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
     public class GRChatOutput
     {
         private readonly IChatOutput chatOutput;
+
         private readonly string[] ShootQuips = [
                 "D O D G E  T H I S",
                 "B I T E  T H E  B U L L E T",
@@ -32,7 +33,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         ];
 
-        
         public GRChatOutput(IChatOutput chatOutput)
         {
             this.chatOutput = chatOutput;
@@ -60,6 +60,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);
             chatOutput.WriteChat("The gun clicks<se.12>", minSpacingBeforeInMs: 1000);
         }
+
         public void WritePlayerShot(MGPlayer? player)
         {
             chatOutput.WriteChat("...", minSpacingBeforeInMs: 1000);

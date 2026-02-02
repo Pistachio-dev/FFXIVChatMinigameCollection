@@ -1,8 +1,5 @@
 using Dalamud.Bindings.ImGui;
 using Model.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MinigameCollection.Games.NoGameGame
 {
@@ -15,6 +12,7 @@ namespace MinigameCollection.Games.NoGameGame
         public NoGame()
         {
         }
+
         public override void DrawUI()
         {
             ImGui.TextUnformatted("No game selected. Select on on the \"Game select\" tab");

@@ -1,17 +1,9 @@
-using Dalamud.Bindings.ImGui;
-using Dalamud.Interface.Components;
 using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
-using DalamudBasics.Extensions;
-using Humanizer;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
-using MinigameCollection.Games.MicroGameGame;
 using Model.Base;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
@@ -41,8 +33,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         }
 
         public override void Initialize(GameHost host)
-        {            
-            host.DiceManager.OnDiceRoll += PlayerTriggerPull;            
+        {
+            host.DiceManager.OnDiceRoll += PlayerTriggerPull;
             var firstPlayer = host.Players?.GetFirst();
             if (firstPlayer != null)
             {
@@ -68,12 +60,14 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 case GRStage.NotStarted:
                     return;
+
                 case GRStage.RollingOrder:
                     if (HaveAllRolledOrder())
                     {
                         grActions.FinishOrderAndStartShooting();
                     }
                     break;
+
                 default:
                     break;
             }

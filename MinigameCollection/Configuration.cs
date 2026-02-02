@@ -1,8 +1,6 @@
 using Dalamud.Game.Text;
-using DalamudBasics.Chat.Interpretation;
 using DalamudBasics.Configuration;
 using MinigameCollection.Dice;
-using Model.Base;
 using System;
 
 namespace MinigameCollection;
@@ -22,6 +20,6 @@ public class Configuration : IConfiguration
 
     public AcceptedRollType AcceptedRollType { get; set; } = AcceptedRollType.Any;
 
-    public bool AutoBuyIn {  get; set; } = true;
+    public bool AutoBuyIn { get; set; } = true;
     public bool AutoCashOut { get; set; } = true;
 }

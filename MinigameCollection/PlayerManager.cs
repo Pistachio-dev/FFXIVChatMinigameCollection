@@ -3,15 +3,8 @@ using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.ClientOnlyDisplay;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Logging;
-using DalamudBasics.Targeting;
 using ECommons.GameHelpers;
 using Model.Base;
-using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace MinigameCollection
 {
@@ -32,14 +25,14 @@ namespace MinigameCollection
             this.chatOutput = chatOutput;
         }
 
-        public MGPlayer GetPlayer(string fullName, bool muteLog=false)
+        public MGPlayer GetPlayer(string fullName, bool muteLog = false)
         {
             if (!muteLog) logService.Debug($"Getting player {fullName}");
             var existing = players.GetPlayer(fullName);
             if (existing != null)
             {
                 if (!muteLog) logService.Debug("Success");
-                return existing;    
+                return existing;
             }
 
             if (!muteLog) logService.Debug("Not found");
@@ -59,8 +52,8 @@ namespace MinigameCollection
             logService.Info(msg);
             chatGui.Print(msg);
             return false;
-
         }
+
         public void AddPlayer(string fullName)
         {
             var created = players.AddPlayer(fullName);

@@ -1,20 +1,20 @@
 using DalamudBasics.Chat.Output;
 using DalamudBasics.DiceRolling;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MinigameCollection.Dice
 {
     public class RollTracker
     {
         private bool acceptNextRollWithoutChecking = false;
+
         public RollTracker(IChatOutput chatOutput)
         {
             this.chatOutput = chatOutput;
         }
+
         public delegate void AwaitedRollCallback(DiceRoll roll);
+
         private record AwaitedRoll(string rollerFullName, AcceptedRollType type, int outOf, AwaitedRollCallback callback);
 
         private Queue<AwaitedRoll> awaitedRollQueue = new();
@@ -36,8 +36,7 @@ namespace MinigameCollection.Dice
         // In case the house needs to roll for the player, forces the next roll to be accepted regardless of whom is it.
         public void AcceptNextRollRegardless()
         {
-            acceptNextRollWithoutChecking = true;            
-
+            acceptNextRollWithoutChecking = true;
         }
 
         public void ProcessRoll(DiceRoll roll)
@@ -52,7 +51,7 @@ namespace MinigameCollection.Dice
             var expected = awaitedRollQueue.Peek();
             Plugin.Log.Info($"Checking match with: {RollRecordToString(expected)}");
 
-            if (acceptNextRollWithoutChecking || 
+            if (acceptNextRollWithoutChecking ||
                 (roll.PlayerFullName == expected.rollerFullName
                 && roll.OutOf == expected.outOf
                 && DiceRollTypeMatches(roll, expected)))
@@ -65,13 +64,11 @@ namespace MinigameCollection.Dice
             }
 
             Plugin.Log.Info($"Roll does not match any expected. From: {roll.PlayerFullName}, Type:{roll.Type} {roll.RollResult} out  of: {roll.OutOf}");
-
         }
 
         private string RollRecordToString(AwaitedRoll roll)
         {
             return $"From: {roll.rollerFullName}, Type:{roll.type} Out  of: {roll.outOf}";
-
         }
 
         private bool DiceRollTypeMatches(DiceRoll roll, AwaitedRoll expected)

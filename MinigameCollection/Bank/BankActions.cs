@@ -1,11 +1,6 @@
 using DalamudBasics.Chat.ClientOnlyDisplay;
 using DalamudBasics.Chat.Output;
-using DalamudBasics.Extensions;
 using Model.Base;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using static FFXIVClientStructs.FFXIV.Client.UI.AddonAirShipExploration;
 
 namespace MinigameCollection.Bank
 {
@@ -44,7 +39,7 @@ namespace MinigameCollection.Bank
 
         public bool Draw(MGPlayer player, long amount)
         {
-            DualPrint( $"{player.FullName} draws {amount} gil from bank.");
+            DualPrint($"{player.FullName} draws {amount} gil from bank.");
             if (amount > player.Bank.Stored)
             {
                 Plugin.Log.Info($"Trying to draw more than there is stored. {player.FullName}: {amount}/{player.Bank.Stored}");
@@ -79,5 +74,4 @@ namespace MinigameCollection.Bank
             Plugin.Log.Info(msg);
         }
     }
-    
 }

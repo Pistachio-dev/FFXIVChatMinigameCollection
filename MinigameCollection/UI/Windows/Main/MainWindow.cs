@@ -4,11 +4,9 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
-using ECommons.Configuration;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Bank;
-using MinigameCollection.Games.NoGameGame;
 using MinigameCollection.Trader;
 using MinigameCollection.UI;
 using MinigameCollection.UI.Windows.Main.PlayerManagement;
@@ -17,14 +15,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Numerics;
-using static ECommons.UIHelpers.AddonMasterImplementations.AddonMaster;
 
 namespace MinigameCollection.Windows.Main;
 
 public partial class MainWindow : PluginWindowBase, IDisposable
 {
     protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
-
 
     private IDataManager dataManager;
     private IChatOutput chatOutput;
@@ -35,13 +31,12 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private GameHost gameHost;
     private BankActions bankMng;
     private PlayerManager playerManager;
-    Configuration configuration;
-    TradingManager tradingMgr;
-    PlayerMgmtTab playerMgmtTab;
-    TradingManager tradingManager;
-    
-    ColorPalette palette;
+    private Configuration configuration;
+    private TradingManager tradingMgr;
+    private PlayerMgmtTab playerMgmtTab;
+    private TradingManager tradingManager;
 
+    private ColorPalette palette;
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
         : base(logService, "MinigameCollection")
@@ -65,10 +60,10 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         tradingManager = serviceProvider.GetRequiredService<TradingManager>();
         playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, bankMng, logService, "Player Management", palette, tradingManager);
         tradingMgr = serviceProvider.GetRequiredService<TradingManager>();
-        
     }
 
-    public void Dispose() { }
+    public void Dispose()
+    { }
 
     private string queryedSheetName = "";
 
@@ -87,7 +82,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 gameHost.DrawUI();
 
                 ImGui.EndTabItem();
-                
             }
             if (ImGui.BeginTabItem("Players & Gil"))
             {
@@ -102,7 +96,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 {
                     if (gameHost.HasGame())
                     {
-
                     }
                     configuration.SelectedGame = selected;
                     configurationSvc.SaveConfiguration();
@@ -140,7 +133,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         {
             foreach (var data in markerInfo.MarkerData)
             {
-
             }
         }
     }

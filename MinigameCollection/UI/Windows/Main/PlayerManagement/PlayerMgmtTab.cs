@@ -1,6 +1,5 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
-using Dalamud.Plugin.Services;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using ECommons;
@@ -23,7 +22,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
 
         public PlayerMgmtTab(GameHost host, PlayerManager playerMng, BankActions bankMgmt, ILogService logService, string name,
             ColorPalette palette, TradingManager tradingManager,
-            ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false) 
+            ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false)
             : base(logService, name, flags, forceMainWindow)
         {
             this.host = host;
@@ -32,7 +31,6 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             this.palette = palette;
             this.tradingManager = tradingManager;
         }
-
 
         protected override void SafeDraw()
         {
@@ -77,7 +75,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                     ImGui.TableNextColumn();
                     DrawPlayerActionButtons(player);
                     ImGui.SameLine();
-                    if (ImGuiComponents.IconButton($"##{player.FullName}",Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
+                    if (ImGuiComponents.IconButton($"##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
                     {
                         thingsToDoAfterIteration.Add(() => playerMgmt.Remove(player));
                     }
@@ -129,7 +127,8 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             }
             DrawTooltip("Play wake up sound");
             ImGui.SameLine();
-            if (ImGuiComponents.IconButton("##buyin{player.FullName}", Dalamud.Interface.FontAwesomeIcon.ArrowDown)) {
+            if (ImGuiComponents.IconButton("##buyin{player.FullName}", Dalamud.Interface.FontAwesomeIcon.ArrowDown))
+            {
                 tradingManager.StartBuyIn(player);
             }
             DrawTooltip("Buy in (take gil from player and into their bank");

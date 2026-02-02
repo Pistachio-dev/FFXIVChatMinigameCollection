@@ -70,6 +70,7 @@ namespace MinigameCollection
                 bankActions.StoreAll(player);
             }
         }
+
         public void StartGame(GameId gameId)
         {
             RemoveStillTrackedRolls();
@@ -109,6 +110,6 @@ namespace MinigameCollection
         private void RemoveStillTrackedRolls()
         {
             rollTracker.Reset();
-        }    
+        }
     }
 }

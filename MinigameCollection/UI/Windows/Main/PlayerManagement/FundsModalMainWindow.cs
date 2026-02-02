@@ -1,5 +1,4 @@
 using Dalamud.Bindings.ImGui;
-using System;
 using System.Linq;
 using System.Numerics;
 
@@ -59,6 +58,6 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
 
                 ImGui.EndPopup();
             }
-        }        
+        }
     }
 }

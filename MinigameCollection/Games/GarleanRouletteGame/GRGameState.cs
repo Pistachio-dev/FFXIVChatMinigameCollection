@@ -2,7 +2,6 @@ using Model.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
@@ -12,6 +11,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             this.gameHost = gameHost;
         }
+
         public MGPlayer? CurrentPlayer { get; set; }
 
         public List<int> ChambersLoaded { get; set; } = new();

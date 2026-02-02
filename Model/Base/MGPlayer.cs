@@ -1,7 +1,4 @@
 using Model.Base.Bank;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Model.Base
 {
@@ -19,7 +16,7 @@ namespace Model.Base
 
         public PlayerBankAccount Bank { get; set; } = new();
 
-        public T GetData<T>(GameId id) where T: GameSpecificPlayerData, new()
+        public T GetData<T>(GameId id) where T : GameSpecificPlayerData, new()
         {
             if (gameData.ContainsKey(id))
             {
@@ -31,12 +28,12 @@ namespace Model.Base
             return (T)gameData[id];
         }
 
-        public void InitData<T>(GameId id) where T: GameSpecificPlayerData, new()
+        public void InitData<T>(GameId id) where T : GameSpecificPlayerData, new()
         {
             SetData<T>(id, new T());
         }
 
-        public void SetData<T>(GameId id, T updatedData) where T:GameSpecificPlayerData, new()
+        public void SetData<T>(GameId id, T updatedData) where T : GameSpecificPlayerData, new()
         {
             gameData[id] = updatedData;
         }

@@ -1,14 +1,9 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
 using DalamudBasics.Extensions;
-using MinigameCollection;
-using MinigameCollection.Games;
 using Model.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
 
 namespace MinigameCollection.Games.MicroGameGame
 {
@@ -16,8 +11,8 @@ namespace MinigameCollection.Games.MicroGameGame
     {
         public Microgame()
         {
-
         }
+
         public static GameId Id => new GameId("Microgame");
 
         private PlayerSet playerSet;
@@ -52,7 +47,6 @@ namespace MinigameCollection.Games.MicroGameGame
                     // Score
                     ImGui.TableNextColumn();
                     ImGui.TextUnformatted(player.GetData<MicroGamePlayerData>(Id).Score.ToString());
-
                 }
 
                 ImGui.EndTable();
@@ -75,6 +69,7 @@ namespace MinigameCollection.Games.MicroGameGame
                         }
                     }
                     break;
+
                 case MicroGameState.WinnerFound:
                     {
                         ImGui.TextUnformatted($"{winner?.FullName.GetFirstName() ?? "null?"} wins");
@@ -83,7 +78,7 @@ namespace MinigameCollection.Games.MicroGameGame
                 case MicroGameState.NotStarted:
                     if (playerSet.Players.Count > 1)
                     {
-                        if(ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowRight, "Start this random microgame"))
+                        if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowRight, "Start this random microgame"))
                         {
                             state = MicroGameState.Playing;
                         }
@@ -105,12 +100,12 @@ namespace MinigameCollection.Games.MicroGameGame
         }
 
         public override void Update()
-        {    
+        {
         }
+
         private uint GetRowColor(int row)
         {
             return ImGui.GetColorU32(new Vector4(0.3f, 0.3f, 0.3f, row % 2 != 0 ? 0.65f : 0.45f));
         }
-
     }
 }

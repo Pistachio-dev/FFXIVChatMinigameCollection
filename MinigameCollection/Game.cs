@@ -1,9 +1,6 @@
-using Dalamud.Bindings.ImGui;
 using DalamudBasics.DiceRolling;
 using MinigameCollection.Games;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MinigameCollection
 {
@@ -21,7 +18,6 @@ namespace MinigameCollection
             Initialize(host);
             this.host.DiceManager.OnDiceRoll += OnDiceRoll;
             this.host.Framework.Update += (iframework) => SafeUpdate();
-            
         }
 
         public void SafeUpdate()
@@ -39,9 +35,13 @@ namespace MinigameCollection
         }
 
         public abstract void DrawUI();
+
         public abstract void Initialize(GameHost host);
+
         public abstract void Update();
-        public virtual void OnDiceRoll(DiceRoll roll) { }
+
+        public virtual void OnDiceRoll(DiceRoll roll)
+        { }
 
         public void Dispose()
         {

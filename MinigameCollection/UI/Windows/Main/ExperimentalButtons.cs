@@ -1,5 +1,5 @@
-using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.ImGuiNotification;
 using Lumina.Excel.Sheets;
 using System.IO;
 using System.Linq;
@@ -50,7 +50,6 @@ namespace MinigameCollection.Windows.Main
             {
                 foreach (var obj in objectTable)
                 {
-
                     logService.Warning($"Kind: {obj.ObjectKind} Name: {obj.Name})");
                 }
             }

@@ -1,11 +1,10 @@
-using System;
-using System.Numerics;
-using Dalamud.Interface.Windowing;
+using Dalamud.Bindings.ImGui;
 using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
-using Dalamud.Bindings.ImGui;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Numerics;
 
 namespace MinigameCollection.UI.Windows;
 
@@ -21,7 +20,8 @@ public class ConfigWindow : PluginWindowBase, IDisposable
         configuration = sp.GetRequiredService<IConfiguration>();
     }
 
-    public void Dispose() { }
+    public void Dispose()
+    { }
 
     public override void PreDraw()
     {
@@ -29,6 +29,5 @@ public class ConfigWindow : PluginWindowBase, IDisposable
 
     protected override void SafeDraw()
     {
-        
     }
 }

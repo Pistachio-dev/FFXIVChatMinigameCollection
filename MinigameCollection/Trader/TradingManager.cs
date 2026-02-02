@@ -4,18 +4,12 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using DalamudBasics.Targeting;
 using ECommons;
-using ECommons.Automation;
-using ECommons.Automation.UIInput;
-using ECommons.UIHelpers.AddonMasterImplementations;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using MinigameCollection.Bank;
 using Model.Base;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using static ECommons.UIHelpers.AddonMasterImplementations.AddonMaster;
 
 namespace MinigameCollection.Trader
 {
@@ -36,7 +30,6 @@ namespace MinigameCollection.Trader
         private long preTransactionGil; // How much gil you have before the trade
         private bool wasLastTransactionCompleted = false;
         private string lastTradeTargetName = string.Empty;
-
 
         public TradingManager(IChatGui chatGui, IObjectTable objectTable, IPlayerState playerState, IChatOutput chatOutput, ITargetingService targeting, IFramework framework,
             GameHost host, BankActions bankActions)
@@ -82,7 +75,7 @@ namespace MinigameCollection.Trader
                 throw new Exception("Local player is null when processing a transaction");
             }
             lastTradeTargetName = targeting.GetTargetName();
-            preTransactionGil = GetGil();            
+            preTransactionGil = GetGil();
         }
 
         public void OnTransactionDetected()
@@ -94,7 +87,7 @@ namespace MinigameCollection.Trader
                 if (tradedPlayer != null)
                 {
                     SetOutgoing(Math.Min(tradedPlayer.Bank.Stored, 1000000));
-                }                
+                }
             }
         }
 
@@ -108,7 +101,7 @@ namespace MinigameCollection.Trader
                 {
                     bankActions.AddStored(tradedPlayer, gilDifference);
                 }
-                
+
                 wasLastTransactionCompleted = gilDifference != 0;
 
                 if (wasLastTransactionCompleted)
@@ -129,7 +122,6 @@ namespace MinigameCollection.Trader
                 }
             }
         }
-
 
         public void OnTransactionAbort()
         {
@@ -161,7 +153,8 @@ namespace MinigameCollection.Trader
 
         public void StartBuyIn(MGPlayer player)
         {
-            if(!targeting.TargetPlayer(player.FullName)){
+            if (!targeting.TargetPlayer(player.FullName))
+            {
                 chatGui.PrintError($"Could not select player {player.FullName}. Buy In aborted");
             }
 
@@ -169,7 +162,6 @@ namespace MinigameCollection.Trader
             chatOutput.WriteCommand("/trade");
             currentTradeStatus = MGTradeStatus.RequestSent;
             currentTradeType = TradeType.BuyIn;
-            
         }
 
         public void StartCashOut(MGPlayer player)
@@ -199,8 +191,9 @@ namespace MinigameCollection.Trader
                         OnTransactionStart();
                         OnTransactionDetected();
                         currentTradeStatus = MGTradeStatus.TransactionOngoing;
-                    }                    
+                    }
                     break;
+
                 case TradeState.NotTrading:
                     // Trade finished or cancelled
                     if (currentTradeStatus != MGTradeStatus.None)
@@ -212,7 +205,8 @@ namespace MinigameCollection.Trader
                     {
                         // No transaction ongoing, nothing to cancel.
                     }
-                        break;
+                    break;
+
                 default:
                     break;
             }
@@ -243,13 +237,13 @@ namespace MinigameCollection.Trader
 
                 GetTradeStatus();
                 return;
-            }            
+            }
 
             Plugin.Log.Warning("Trade NOT open");
         }
 
         public unsafe void SelectYes()
-        {            
+        {
             //if (GenericHelpers.TryGetAddonByName<AddonSelectYesno>("SelectYesNo", out var addon)){
             //    if (addon == null) Plugin.Log.Error("Could not get yesno addon");
             //    var yesNoAddon = new AddonMaster.SelectYesno(addon);
@@ -307,10 +301,9 @@ namespace MinigameCollection.Trader
             if (localSection == null) return null;
 
             var gilTextNode = addon->GetTextNodeById(31);
-            if (gilTextNode == null) return null;            
+            if (gilTextNode == null) return null;
 
             return gilTextNode;
-
         }
     }
 }

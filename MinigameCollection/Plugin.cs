@@ -30,8 +30,8 @@ public sealed class Plugin : IDalamudPlugin
     private const string WaterMark = "[MG]";
 
     [PluginService]
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
     internal static IPluginLog Log { get; private set; }
+
     public Configuration Configuration { get; init; }
 
     public readonly WindowSystem WindowSystem = new("MinigameCollection");
@@ -48,8 +48,8 @@ public sealed class Plugin : IDalamudPlugin
 
         players = new PlayerSet();
         serviceProvider = BuildServiceProvider(pluginInterface);
-        
-        logService = serviceProvider.GetRequiredService<ILogService>();        
+
+        logService = serviceProvider.GetRequiredService<ILogService>();
 
         InitializeServices(serviceProvider);
 
@@ -74,7 +74,7 @@ public sealed class Plugin : IDalamudPlugin
         pluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
     }
 
-    bool IsMainWindowOpen()
+    private bool IsMainWindowOpen()
     {
         return MainWindow.IsOpen;
     }
@@ -114,7 +114,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<TradingManager>();
         serviceCollection.AddSingleton<MainWindow>(sp => MainWindow);
         serviceCollection.AddSingleton<TradingManager>();
-        //serviceCollection.AddGamesBase();        
+        //serviceCollection.AddGamesBase();
         //serviceCollection.AddNoGame();
 
         return serviceCollection.BuildServiceProvider();
@@ -139,5 +139,6 @@ public sealed class Plugin : IDalamudPlugin
     private void DrawUI() => WindowSystem.Draw();
 
     public void ToggleConfigUI() => ConfigWindow.Toggle();
+
     public void ToggleMainUI() => MainWindow.Toggle();
 }

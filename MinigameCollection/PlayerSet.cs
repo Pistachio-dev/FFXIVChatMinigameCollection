@@ -1,10 +1,8 @@
-
 using Model.Base;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MinigameCollection
 {
@@ -21,7 +19,7 @@ namespace MinigameCollection
 
         public PlayerSet(List<MGPlayer> players)
         {
-            _players = players; 
+            _players = players;
         }
 
         public PlayerSet Reorder<T>(Func<MGPlayer, T> comparer)
@@ -37,6 +35,7 @@ namespace MinigameCollection
         {
             return _players.FirstOrDefault();
         }
+
         public MGPlayer GetNext(MGPlayer? current, Func<MGPlayer, bool>? conditionNeeded = null)
         {
             if (current == null)
@@ -54,12 +53,11 @@ namespace MinigameCollection
             var currentIndex = _players.IndexOf(current) + 1;
 
             while (playersChecked < _players.Count)
-            {                
+            {
                 if (currentIndex == _players.Count && !loopedAround)
                 {
-
                     currentIndex = 0;
-                    loopedAround = true;                    
+                    loopedAround = true;
                 }
 
                 Plugin.Log.Warning($"Checking player {currentIndex}: {_players[currentIndex].FullName}");
@@ -113,6 +111,5 @@ namespace MinigameCollection
         {
             _players.Remove(player);
         }
-
     }
 }

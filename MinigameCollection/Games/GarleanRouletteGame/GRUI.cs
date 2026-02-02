@@ -1,16 +1,10 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
-using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Bank;
-using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.UI;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using static Dalamud.Interface.Utility.Raii.ImRaii;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
@@ -38,14 +32,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 DrawBetSetting();
             }
             DrawButtons();
-            
+
             if (gameState.Stage == GRStage.Shooting)
             {
                 DrawPlayerOrder();
                 DrawChambersLoaded();
                 DrawCurrentPlayer();
             }
-            
         }
 
         private void DrawBetSetting()
@@ -61,6 +54,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 host.ChatOutput.WriteChat($"Bet set to {gameState.Bet.Formatted()}");
             }
         }
+
         private void DrawPlayerOrder()
         {
             ImGui.TextUnformatted($"Order: {host.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
@@ -137,15 +131,15 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void DrawChambersLoaded()
         {
-            if (gameState.ChambersLoaded.Any()) {
+            if (gameState.ChambersLoaded.Any())
+            {
                 ImGui.TextUnformatted($"Chambers loaded: {gameState.ChambersLoaded.OrderBy(c => c).Humanize()}");
             }
-            
         }
 
         private void DrawCurrentPlayer()
         {
-            ImGui.TextUnformatted($"Up next: {(gameState.CurrentPlayer?.FullName ?? "Nobody")}");            
+            ImGui.TextUnformatted($"Up next: {(gameState.CurrentPlayer?.FullName ?? "Nobody")}");
         }
     }
 }

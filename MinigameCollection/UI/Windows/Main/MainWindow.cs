@@ -7,8 +7,11 @@ using DalamudBasics.Logging;
 using ECommons.Configuration;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Bank;
 using MinigameCollection.Games.NoGameGame;
-using MinigameCollection.UI.Windows.Main;
+using MinigameCollection.Trader;
+using MinigameCollection.UI;
+using MinigameCollection.UI.Windows.Main.PlayerManagement;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -30,17 +33,22 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private INotificationManager notificationManager;
     private List<System.Action> delayedActions = new(); // For actions that can't be done while iterating, like removing a player
     private GameHost gameHost;
+    private BankActions bankMng;
     private PlayerManager playerManager;
     Configuration configuration;
+    TradingManager tradingMgr;
     PlayerMgmtTab playerMgmtTab;
+    TradingManager tradingManager;
+    
+    ColorPalette palette;
 
 
     public MainWindow(ILogService logService, IServiceProvider serviceProvider)
-        : base(logService, "MinigameCollection", ImGuiWindowFlags.AlwaysAutoResize)
+        : base(logService, "MinigameCollection")
     {
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(600, 360),
+            MinimumSize = new Vector2(700, 360),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
@@ -52,7 +60,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         gameHost = serviceProvider.GetRequiredService<GameHost>();
         configuration = configurationSvc.GetConfiguration();
         playerManager = serviceProvider.GetRequiredService<PlayerManager>();
-        playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, logService, "Player Management");
+        palette = serviceProvider.GetRequiredService<ColorPalette>();
+        bankMng = serviceProvider.GetRequiredService<BankActions>();
+        tradingManager = serviceProvider.GetRequiredService<TradingManager>();
+        playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, bankMng, logService, "Player Management", palette, tradingManager);
+        tradingMgr = serviceProvider.GetRequiredService<TradingManager>();
         
     }
 
@@ -66,6 +78,16 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         {
             gameHost.StartGame(gameHost.AvailableGames()[configuration.SelectedGame].id);
         }
+
+        if (ImGui.Button("Trade info"))
+        {
+            tradingMgr.PrintInfo();
+        }
+        if (ImGui.Button("Press Yes"))
+        {
+            tradingMgr.SelectYesBruteForce();
+        }
+
 
         ImGuiTabBarFlags tabBarFlags = ImGuiTabBarFlags.None;
         if (ImGui.BeginTabBar("##Main container"))

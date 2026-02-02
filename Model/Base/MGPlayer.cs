@@ -1,3 +1,4 @@
+using Model.Base.Bank;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +16,8 @@ namespace Model.Base
         public string FullName { get; set; } = "Unset name";
 
         public bool Afk { get; set; } = false;
+
+        public PlayerBankAccount Bank { get; set; } = new();
 
         public T GetData<T>(GameId id) where T: GameSpecificPlayerData, new()
         {

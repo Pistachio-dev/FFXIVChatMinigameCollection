@@ -1,13 +1,16 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.ClientOnlyDisplay;
+using DalamudBasics.Chat.Output;
 using DalamudBasics.Logging;
 using DalamudBasics.Targeting;
 using ECommons.GameHelpers;
 using Model.Base;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace MinigameCollection
@@ -18,13 +21,15 @@ namespace MinigameCollection
         private readonly ILogService logService;
         private readonly ITargetManager targetManager;
         private readonly IClientChatGui chatGui;
+        private readonly IChatOutput chatOutput;
 
-        public PlayerManager(PlayerSet players, ILogService logService, ITargetManager targetManager, IClientChatGui chatGui)
+        public PlayerManager(PlayerSet players, ILogService logService, ITargetManager targetManager, IClientChatGui chatGui, IChatOutput chatOutput)
         {
             this.players = players;
             this.logService = logService;
             this.targetManager = targetManager;
             this.chatGui = chatGui;
+            this.chatOutput = chatOutput;
         }
 
         public MGPlayer GetPlayer(string fullName)
@@ -66,6 +71,19 @@ namespace MinigameCollection
             }
 
             logService.Info($"Could not create player {fullName}");
+        }
+
+        public void TogglePlayerAFK(MGPlayer player)
+        {
+            Plugin.Log.Info($"[ACTION] Toggle AFK. Player: {player.FullName}.");
+            player.Afk = !player.Afk;
+            chatOutput.WriteChat($"{player.FullName} is {(player.Afk ? "AFK" : "no longer AFK")}");
+        }
+
+        public void ChatSoundWakeUp(MGPlayer player)
+        {
+            Plugin.Log.Info($"[ACTION] Wake up through chat sound. Player: {player.FullName}.");
+            chatOutput.WriteChat($"{player.FullName} it's your turn! <se.9");
         }
     }
 }

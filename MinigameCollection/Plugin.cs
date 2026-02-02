@@ -11,10 +11,12 @@ using DalamudBasics.Interop;
 using DalamudBasics.Logging;
 using ECommons;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
+using MinigameCollection.Trader;
 using MinigameCollection.UI;
 using MinigameCollection.UI.Windows;
 using MinigameCollection.Windows.Main;
@@ -72,6 +74,11 @@ public sealed class Plugin : IDalamudPlugin
         pluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
     }
 
+    bool IsMainWindowOpen()
+    {
+        return MainWindow.IsOpen;
+    }
+
     public void Dispose()
     {
         serviceProvider.GetRequiredService<HookManager>().Dispose();
@@ -80,7 +87,8 @@ public sealed class Plugin : IDalamudPlugin
         ConfigWindow.Dispose();
         MainWindow.Dispose();
 
-        serviceProvider.GetRequiredService<ICommandManager>().RemoveHandler(CommandName);        
+        serviceProvider.GetRequiredService<ICommandManager>().RemoveHandler(CommandName);
+        serviceProvider.GetRequiredService<TradingManager>().Dispose();
     }
 
     private IServiceProvider BuildServiceProvider(IDalamudPluginInterface pluginInterface)
@@ -102,6 +110,10 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<Microgame>();
         serviceCollection.AddSingleton<MicroGamePlayerData>();
         serviceCollection.AddSingleton<ColorPalette>();
+        serviceCollection.AddSingleton<BankActions>();
+        serviceCollection.AddSingleton<TradingManager>();
+        serviceCollection.AddSingleton<MainWindow>(sp => MainWindow);
+        serviceCollection.AddSingleton<TradingManager>();
         //serviceCollection.AddGamesBase();        
         //serviceCollection.AddNoGame();
 
@@ -115,6 +127,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceProvider.GetRequiredService<IChatListener>().InitializeAndRun(WaterMark, true);
         serviceProvider.GetRequiredService<IChatOutput>().InitializeAndAttachToGameLogicLoop(framework, WaterMark);
         serviceProvider.GetRequiredService<HookManager>();
+        serviceProvider.GetRequiredService<TradingManager>().Attach();
     }
 
     private void OnCommand(string command, string args)

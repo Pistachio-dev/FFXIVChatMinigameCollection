@@ -111,7 +111,6 @@ namespace MinigameCollection.Trader
                 
                 wasLastTransactionCompleted = gilDifference != 0;
 
-                // TODO: Trade again if relevant
                 if (wasLastTransactionCompleted)
                 {
                     if (tradedPlayer != null && lastTradeTargetName == tradedPlayer.FullName)

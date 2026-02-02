@@ -1,7 +1,9 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
+using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
 using Humanizer;
+using MinigameCollection.Bank;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.UI;
 using System;
@@ -29,8 +31,14 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void DrawUI()
         {
+            ImGui.TextUnformatted("Garlean roulette");
             DrawPlayerTable();
+            if (gameState.Stage == GRStage.NotStarted)
+            {
+                DrawBetSetting();
+            }
             DrawButtons();
+            
             if (gameState.Stage == GRStage.Shooting)
             {
                 DrawPlayerOrder();
@@ -40,6 +48,19 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             
         }
 
+        private void DrawBetSetting()
+        {
+            var previous = gameState.Bet;
+            if (ImGui.InputLong("", ref previous))
+            {
+                gameState.Bet = previous;
+            }
+            ImGui.SameLine();
+            if (ImGui.Button("Announce bet"))
+            {
+                host.ChatOutput.WriteChat($"Bet set to {gameState.Bet.Formatted()}");
+            }
+        }
         private void DrawPlayerOrder()
         {
             ImGui.TextUnformatted($"Order: {host.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
@@ -48,10 +69,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void DrawPlayerTable()
         {
             const ImGuiTableFlags flags = ImGuiTableFlags.SizingFixedFit | ImGuiTableFlags.Resizable | ImGuiTableFlags.Borders;
-            if (ImGui.BeginTable("##PlayerTable", 2, flags))
+            if (ImGui.BeginTable("##PlayerTable", 4, flags))
             {
                 ImGui.TableSetupColumn("Player", ImGuiTableColumnFlags.WidthStretch, 0.8f);
                 ImGui.TableSetupColumn("Status", ImGuiTableColumnFlags.WidthStretch, 0.3f);
+                ImGui.TableSetupColumn("Bet", ImGuiTableColumnFlags.WidthStretch, 0.3f);
+                ImGui.TableSetupColumn("Bank", ImGuiTableColumnFlags.WidthStretch, 0.3f);
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
@@ -70,7 +93,15 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                     // Alive?
                     ImGui.TableNextColumn();
                     if (player.GetData().Alive) { ImGui.TextColored(palette.LightGreen, "OK"); }
-                    else { ImGui.TextColored(palette.LightRed, "KO"); }                                                
+                    else { ImGui.TextColored(palette.LightRed, "KO"); }
+
+                    // Bet
+                    ImGui.TableNextColumn();
+                    ImGui.TextUnformatted(player.Bank.InUse.Formatted());
+
+                    // Bank
+                    ImGui.TableNextColumn();
+                    ImGui.TextUnformatted(player.Bank.Stored.Formatted());
                 }
 
                 ImGui.EndTable();

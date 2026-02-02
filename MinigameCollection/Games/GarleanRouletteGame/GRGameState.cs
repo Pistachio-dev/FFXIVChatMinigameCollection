@@ -22,6 +22,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public int TriggerPulls { get; set; } = 0;
 
+        public bool DidSomeoneDieThisRound = false;
+
+        public long Bet { get; set; } = 0;
+
         public bool WinCondition()
         {
             return RemainingSurvivors() == 1;
@@ -29,12 +33,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private int RemainingSurvivors()
         {
-            return gameHost.Players.Players.Count(p => p.GetData().Alive);
+            return gameHost.Players.GetNonAfkPlayers().Count(p => p.GetData().Alive);
         }
 
         public MGPlayer GetSurvivor()
         {
-            return gameHost.Players.Players.First(p => p.GetData().Alive);
+            return gameHost.Players.GetNonAfkPlayers().First(p => p.GetData().Alive);
         }
     }
 }

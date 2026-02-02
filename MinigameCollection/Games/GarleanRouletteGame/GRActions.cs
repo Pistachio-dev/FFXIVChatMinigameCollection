@@ -3,6 +3,8 @@ using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Humanizer;
+using Microsoft.VisualBasic;
+using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using Model.Base;
 using Serilog;
@@ -20,17 +22,19 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly RollTracker rollTracker;
         private readonly Configuration config;
         private readonly GRChatOutput chatOutput;
+        private readonly BankActions bank;
         private const int RevolverRollMin = 1;
         private const int RevolverRollMaxInclusive = 7;
         private const int OrderRollMax = 100;
 
-        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput)
+        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank)
         {
             this.gameHost = gameHost;
             this.gameState = gameState;
             this.rollTracker = rollTracker;
             this.config = config.GetConfiguration();
             this.chatOutput = chatOutput;
+            this.bank = bank;
         }
 
         public void StartOrderRound()
@@ -42,6 +46,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 return;
             }
 
+            if (gameHost.Players.GetNonAfkPlayers().Any(p => p.Bank.Stored < gameState.Bet))
+            {
+                gameHost.ChatGui.PrintError("One or more players can't afford that bet");
+                return;
+            }
+
             gameState.Stage = GRStage.RollingOrder;
             gameHost.ChatOutput.WriteChat("Rolling player order");
 
@@ -50,6 +60,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 var data = player.GetData();
                 data.Reset();
                 player.SetData(data);
+                bank.StoreAll(player);
+                bank.Draw(player, gameState.Bet);                
 
                 rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax,   (roll) => SetPlayerOrderRoll(player, roll.RollResult));
                 gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
@@ -99,14 +111,17 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             if (gameState.ChambersLoaded.Contains(role.RollResult))
             {
                 chatOutput.WritePlayerShot(gameState.CurrentPlayer);
+                gameState.ChambersLoaded = gameState.ChambersLoaded.Where(n => n != role.RollResult).ToList();
                 var pData = gameState.CurrentPlayer?.GetData() ?? throw new Exception("Processing shot roll, but current player is null");
                 pData.Alive = false;
+                gameState.DidSomeoneDieThisRound = true;
                 gameState.CurrentPlayer.SetData(pData);
                 if (gameState.WinCondition())
                 {
                     var winner = gameHost.Players.Players.FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
                     chatOutput.WriteWinner(winner);
                     gameState.Stage = GRStage.Winner;
+                    OnWin();
                     return;
                 }
             }
@@ -125,12 +140,18 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             SetupCurrentPlayerRoll();
         }
 
+        public void SetBet(long bet)
+        {
+            gameHost.ChatOutput.WriteChat($"Bet set to {gameState.Bet}");
+            gameState.Bet = bet;
+        }
         private void AddBullet(bool isFirstTime)
         {
-            if (!isFirstTime)
+            if (!isFirstTime && !gameState.DidSomeoneDieThisRound)
             {
                 gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes", minSpacingBeforeInMs: 2000);
             }
+            gameState.DidSomeoneDieThisRound = false;
             gameState.TriggerPulls = 0;
             if (gameState.ChambersLoaded.Count == RevolverRollMaxInclusive)
             {
@@ -147,7 +168,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                     gameState.ChambersLoaded.Add(bullet);
                     gameHost.ChatOutput.WriteChat($"Inserting a new bullet on chamber {bullet}");
                     gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}", minSpacingBeforeInMs: 2000);
-                    gameHost.ChatOutput.WriteChat($"The host spins the drum.");
+                    gameHost.ChatOutput.WriteChat($"The host spins the cylinder.");
                     bulletInserted = true;
                 }
             }
@@ -160,13 +181,19 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void OnWin()
         {
-            MGPlayer? survivor = gameHost.Players.Players.FirstOrDefault(p => p.GetData().Alive);
+            MGPlayer? survivor = gameHost.Players.GetNonAfkPlayers().FirstOrDefault(p => p.GetData().Alive);
             if (survivor == null)
             {
                 Plugin.Log.Warning("No survivors at the end of game. This should not happen.");
+                return;
             }
 
-            Plugin.Log.Warning($"{survivor.FullName} wins!");
+            foreach (var player in gameHost.Players.GetNonAfkPlayers().Where(p => p != survivor))
+            {
+                bank.TransferInUse(player, survivor);
+            }
+
+            Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil!");
         }
 
 

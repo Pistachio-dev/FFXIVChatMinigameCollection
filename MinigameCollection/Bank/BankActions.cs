@@ -44,7 +44,7 @@ namespace MinigameCollection.Bank
 
         public bool Draw(MGPlayer player, long amount)
         {
-            DualPrint( $"{player.Bank.InUse} draws {amount} gil from bank.");
+            DualPrint( $"{player.FullName} draws {amount} gil from bank.");
             if (amount > player.Bank.Stored)
             {
                 Plugin.Log.Info($"Trying to draw more than there is stored. {player.FullName}: {amount}/{player.Bank.Stored}");

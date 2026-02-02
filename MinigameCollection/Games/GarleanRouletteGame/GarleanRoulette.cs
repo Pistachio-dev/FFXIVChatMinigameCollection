@@ -4,6 +4,7 @@ using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Humanizer;
+using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using MinigameCollection.Games.MicroGameGame;
 using Model.Base;
@@ -22,13 +23,15 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private GRGameState gameState;
         private GRActions grActions;
         private readonly GRUI grui;
+        private readonly BankActions bank;
 
-        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions, GRUI grui)
+        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions, GRUI grui, BankActions bank)
         {
             this.rollTracker = rollTracker;
             this.gameState = gameState;
             this.grActions = grActions;
             this.grui = grui;
+            this.bank = bank;
             this.config = config.GetConfiguration();
         }
 
@@ -55,6 +58,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             host.Players.AddPlayer("Pistachio Herald@Omega");
             host.Players.AddPlayer("Macalania Nut@Louisoix");
+            host.Players.AddPlayer("Lion Around@Omega");
+            bank.SetAllStored(host.Players, 69420000);
         }
 
         public override void Update()
@@ -68,13 +73,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                     {
                         grActions.FinishOrderAndStartShooting();
                     }
-                        break;
-                case GRStage.Shooting:
-                    if (gameState.WinCondition())
-                    {
-                        grActions.OnWin();
-                        return;
-                    }
                     break;
                 default:
                     break;
@@ -83,7 +81,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void PlayerTriggerPull(DiceRoll roll)
         {
-            Plugin.Log.Warning("playerTriggerPull");
+            Plugin.Log.Info("Player trigger pull");
             grActions.ProcessRoll(roll);
         }
 

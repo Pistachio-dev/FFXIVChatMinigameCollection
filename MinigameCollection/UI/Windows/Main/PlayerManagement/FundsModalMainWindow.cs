@@ -21,8 +21,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             isFundsDialogueOpen = true;
             if (ImGui.BeginPopupModal("Funds", ref isFundsDialogueOpen, ImGuiWindowFlags.AlwaysAutoResize))
             {
-                ImGui.TextColored(new Vector4(1, 0, 0, 1), "This dialog is meant to be used to play without actual gil or troubleshoot trade errors. For gil, please shift click the player funds to" +
-                    " ask for gil, shift righ-click to cash out.");
+                ImGui.TextColored(new Vector4(1, 1, 1, 1), "This dialog is meant to be used to play without actual gil or troubleshoot trade errors. For gil, use the Buy-In and Cash-Out buttons.");
                 ImGui.TextUnformatted("Select a player");
                 var playerNames = host.Players.Players.Select(p => p.FullName).ToArray();
                 ImGui.Combo("Player", ref selectedPlayerNameIndex, playerNames, playerNames.Length);

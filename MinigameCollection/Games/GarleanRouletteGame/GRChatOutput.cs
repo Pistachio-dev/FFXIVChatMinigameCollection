@@ -20,7 +20,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             ];
 
         private readonly string[] PlayerDeadQuips = [
-            "<T> mind gets opened a bit too strongly",
+            "<T> 's mind gets opened a bit too strongly",
             "<T> dies unceremoniously",
             "<T> has their brains redistributed",
             "<T> unsubscribes from life",

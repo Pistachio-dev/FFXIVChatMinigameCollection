@@ -62,6 +62,10 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                     ImGui.TableNextColumn();
                     ImGui.TextColored(player.Afk ? palette.MidRed : palette.MidGreen, player.Afk ? "AFK" : "No");
 
+                    // Guil in game
+                    ImGui.TableNextColumn();
+                    ImGui.TextColored(player.Bank.InUse >= 0 ? palette.White : palette.MidRed, player.Bank.InUse.Formatted());
+
                     // Gil stored
                     ImGui.TableNextColumn();
                     ImGui.TextColored(player.Bank.Stored >= 0 ? palette.White : palette.MidRed, player.Bank.Stored.Formatted());
@@ -69,6 +73,8 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                     // Actions
                     ImGui.TableNextColumn();
                     DrawPlayerActionButtons(player);
+
+                    playerCounter++;
                 }
 
                 ImGui.EndTable();
@@ -96,7 +102,6 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             Vector2 buttonSize = new Vector2(18, 18);
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 0));
             ImGui.PushID($"AFKButton#{player.FullName}");
-            ImGui.TableNextColumn();
             if (ImGui.Button("", buttonSize))
             {
                 playerMgmt.TogglePlayerAFK(playerMgmt.GetPlayer(player.FullName));

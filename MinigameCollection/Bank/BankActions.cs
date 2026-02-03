@@ -20,12 +20,12 @@ namespace MinigameCollection.Bank
         public void AddStored(MGPlayer player, long amount)
         {
             player.Bank.Stored += amount;
-            DualPrint($"{amount} added to {player.FullName}'s bank.");
+            DualPrint($"{amount.Formatted()} added to {player.FullName}'s bank.");
         }
 
         public void SetStored(MGPlayer player, long amount)
         {
-            DualPrint($"{player.FullName} bank set to {amount} gil");
+            DualPrint($"{player.FullName} bank is set to {amount.Formatted()} gil");
             player.Bank.Stored = amount;
         }
 
@@ -39,10 +39,10 @@ namespace MinigameCollection.Bank
 
         public bool Draw(MGPlayer player, long amount)
         {
-            DualPrint($"{player.FullName} draws {amount} gil from bank.");
+            DualPrint($"{player.FullName} draws {amount.Formatted()} gil from bank.");
             if (amount > player.Bank.Stored)
             {
-                Plugin.Log.Info($"Trying to draw more than there is stored. {player.FullName}: {amount}/{player.Bank.Stored}");
+                Plugin.Log.Info($"Trying to draw more than there is stored. {player.FullName}: {amount.Formatted()}/{player.Bank.Stored.Formatted()}");
                 return false;
             }
 

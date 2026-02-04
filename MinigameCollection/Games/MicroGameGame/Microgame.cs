@@ -9,6 +9,7 @@ namespace MinigameCollection.Games.MicroGameGame
 {
     public class Microgame : Game
     {
+        public static string Description { get; } = "Very simple game where the button rolls a random point for a random player until someone reaches a limit.\nMade for testing.";
         public Microgame()
         {
         }

@@ -18,12 +18,12 @@ namespace MinigameCollection
 {
     public class GameHost : IDisposable
     {
-        public (GameId id, Func<IServiceProvider, IGame> builder)[] AvailableGames()
+        public (GameId id, Func<IServiceProvider, IGame> builder, string description)[] AvailableGames()
         {
             return [
-                (NoGame.Id, (sp) => sp.GetRequiredService<NoGame>()),
-                (Microgame.Id, (sp) => sp.GetRequiredService<Microgame>()),
-                (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>())
+                (NoGame.Id, (sp) => sp.GetRequiredService<NoGame>(), NoGame.Description),
+                (Microgame.Id, (sp) => sp.GetRequiredService<Microgame>(), Microgame.Description),
+                (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>(), GarleanRoulette.Description)
             ];
         }
 
@@ -74,7 +74,7 @@ namespace MinigameCollection
         public void StartGame(GameId gameId)
         {
             RemoveStillTrackedRolls();
-            (GameId id, Func<IServiceProvider, IGame> constructor) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
+            (GameId id, Func<IServiceProvider, IGame> constructor, _) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
             activeGame = constructor(serviceProvider);
             activeGame.SafeInitialize(this);
         }

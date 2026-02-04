@@ -105,6 +105,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                     gameHost.StartGame(availableGames[selected].id);
                 }
 
+                ImGui.TextUnformatted(availableGames[selected].description);
                 ImGui.EndTabItem();
             }
 #if DEBUG

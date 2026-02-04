@@ -72,7 +72,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.Players)
+                foreach (var player in host.Players.GetNonAfkPlayers())
                 {
                     ImGui.TableNextRow();
                     var color = palette.GetRowColor(playerCounter);
@@ -121,10 +121,18 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
             if (gameState.Stage == GRStage.Winner)
             {
-                ImGui.TextColored(palette.LightGreen, $"{gameState.GetSurvivor().FullName} wins!");
+                var survivor = gameState.GetSurvivor();
+                if (survivor == null)
+                {
+                    ImGui.TextUnformatted("No survivors. This is not supposed to happen");
+                }
+                else
+                {                
+                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins!");
+                }
                 if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again"))
                 {
-                    grActions.StartOrderRound();
+                    grActions.GoBackToBetting();
                 }
             }
         }

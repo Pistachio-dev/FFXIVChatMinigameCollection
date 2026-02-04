@@ -70,7 +70,7 @@ namespace MinigameCollection
                 }
 
                 Plugin.Log.Warning($"Checking player {currentIndex}: {_players[currentIndex].FullName}");
-                if (conditionNeeded(_players[currentIndex]))
+                if (!_players[currentIndex].Afk && conditionNeeded(_players[currentIndex]))
                 {
                     return _players[currentIndex];
                 }

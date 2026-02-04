@@ -6,6 +6,7 @@ namespace MinigameCollection.Games.NoGameGame
     internal class NoGame : Game
     {
         public static GameId Id => new GameId("No Game");
+        public static string Description { get; } = "No game is selected.";
         private PlayerSet players => gameHost.Players;
         private GameHost gameHost;
 

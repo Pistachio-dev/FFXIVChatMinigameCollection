@@ -4,6 +4,7 @@ using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
+using MinigameCollection.Save;
 using Model.Base;
 using System;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly Configuration config;
         private readonly GRChatOutput chatOutput;
         private readonly BankActions bank;
+        private readonly SaveManager saveManager;
         private const int RevolverRollMin = 1;
         private const int RevolverRollMaxInclusive = 7;
         private const int OrderRollMax = 100;
 
-        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank)
+        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, 
+            IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank, SaveManager saveManager)
         {
             this.gameHost = gameHost;
             this.gameState = gameState;
@@ -30,11 +33,16 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             this.config = config.GetConfiguration();
             this.chatOutput = chatOutput;
             this.bank = bank;
+            this.saveManager = saveManager;
         }
 
+        public void GoBackToBetting()
+        {
+            gameState.Stage = GRStage.NotStarted;
+        }
         public void StartOrderRound()
         {
-            if (gameHost.Players.Players.Count < 2)
+            if (gameHost.Players.GetNonAfkPlayers().Count < 2)
             {
                 gameHost.ChatGui.PrintError("Not enough players. Needs two at least");
                 return;
@@ -49,18 +57,24 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             gameState.Stage = GRStage.RollingOrder;
             gameHost.ChatOutput.WriteChat("Rolling player order");
 
-            foreach (var player in gameHost.Players.Players)
+            foreach (var player in gameHost.Players.GetNonAfkPlayers())
             {
+                // Set up the bets
                 var data = player.GetData();
                 data.Reset();
                 player.SetData(data);
                 bank.StoreAll(player);
                 bank.Draw(player, gameState.Bet);
-
+            }
+            foreach (var player in gameHost.Players.GetNonAfkPlayers())
+            {
+                // Prepare the expected roll
                 rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult));
                 gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
                 gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
             }
+
+            //saveManager.Save();
         }
 
         private void SetPlayerOrderRoll(MGPlayer player, int order)
@@ -68,6 +82,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             var data = player.GetData();
             data.OrderRolled = order;
             player.SetData(data);
+            //saveManager.Save();
         }
 
         public void ProcessRoll(DiceRoll roll)
@@ -82,7 +97,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WritePlayerOrder(gameHost.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList());
             Plugin.Log.Info("Starting shooting phase");
             gameState.Stage = GRStage.Shooting;
-            gameState.CurrentPlayer = gameHost.Players.Players.FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
+            gameState.CurrentPlayer = gameHost.Players.GetNonAfkPlayers().FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
             AddBullet(true);
             SetupCurrentPlayerRoll();
         }
@@ -112,7 +127,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.CurrentPlayer.SetData(pData);
                 if (gameState.WinCondition())
                 {
-                    var winner = gameHost.Players.Players.FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
+                    var winner = gameHost.Players.GetNonAfkPlayers().FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
                     chatOutput.WriteWinner(winner);
                     gameState.Stage = GRStage.Winner;
                     OnWin();
@@ -172,7 +187,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void ShufflePlayersBasedOnRolledOrder()
         {
             var ordered = gameHost.Players.Reorder(p => p.GetData().OrderRolled);
-            Plugin.Log.Verbose($"New player order: {gameHost.Players.Players.Select(p => p.FullName.GetFirstName()).Humanize()}");
+            Plugin.Log.Verbose($"New player order: {gameHost.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).Humanize()}");
         }
 
         public void OnWin()
@@ -190,24 +205,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
 
             Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil!");
-        }
-
-        private bool MakeSureCurrentPlayerExists()
-        {
-            if (gameState.CurrentPlayer != null)
-            {
-                return true;
-            }
-
-            var first = gameHost.Players.GetFirst();
-            if (first == null)
-            {
-                return false;
-            }
-
-            gameState.CurrentPlayer = first;
-
-            return true;
         }
     }
 }

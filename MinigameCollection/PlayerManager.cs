@@ -4,6 +4,7 @@ using DalamudBasics.Chat.ClientOnlyDisplay;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Logging;
 using ECommons.GameHelpers;
+using MinigameCollection.Save;
 using Model.Base;
 
 namespace MinigameCollection
@@ -15,14 +16,17 @@ namespace MinigameCollection
         private readonly ITargetManager targetManager;
         private readonly IClientChatGui chatGui;
         private readonly IChatOutput chatOutput;
+        private readonly SaveManager saveManager;
 
-        public PlayerManager(PlayerSet players, ILogService logService, ITargetManager targetManager, IClientChatGui chatGui, IChatOutput chatOutput)
+        public PlayerManager(PlayerSet players, ILogService logService, ITargetManager targetManager,
+            IClientChatGui chatGui, IChatOutput chatOutput, SaveManager saveManager)
         {
             this.players = players;
             this.logService = logService;
             this.targetManager = targetManager;
             this.chatGui = chatGui;
             this.chatOutput = chatOutput;
+            this.saveManager = saveManager;
         }
 
         public MGPlayer GetPlayer(string fullName, bool muteLog = false)
@@ -45,6 +49,7 @@ namespace MinigameCollection
             {
                 string playerName = target.GetNameWithWorld();
                 AddPlayer(playerName);
+                saveManager.Save();
                 return true;
             }
 
@@ -61,6 +66,7 @@ namespace MinigameCollection
             {
                 logService.Info($"Created player {fullName}");
                 chatOutput.WriteChat($"{fullName} joins the game.");
+                saveManager.Save();
                 return;
             }
 
@@ -73,6 +79,7 @@ namespace MinigameCollection
             Plugin.Log.Info($"[ACTION] Toggle AFK. Player: {player.FullName}.");
             player.Afk = !player.Afk;
             chatOutput.WriteChat($"{player.FullName} is {(player.Afk ? "AFK" : "no longer AFK")}");
+            saveManager.Save();
         }
 
         public void ChatSoundWakeUp(MGPlayer player)
@@ -83,8 +90,9 @@ namespace MinigameCollection
 
         public void Remove(MGPlayer player)
         {
-            chatOutput.WriteChat($"{player.FullName} leaves the game.");
+            chatOutput.WriteChat($"{player.FullName} leaves the game.");            
             players.Remove(player);
+            saveManager.Save();
         }
     }
 }

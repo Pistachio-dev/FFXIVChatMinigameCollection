@@ -7,6 +7,7 @@ using DalamudBasics.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Bank;
+using MinigameCollection.Output;
 using MinigameCollection.Trader;
 using MinigameCollection.UI;
 using MinigameCollection.UI.Windows.Main.PlayerManagement;
@@ -35,6 +36,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
     private TradingManager tradingMgr;
     private PlayerMgmtTab playerMgmtTab;
     private TradingManager tradingManager;
+    private CommonChatOutput commonChatOutput;
 
     private ColorPalette palette;
 
@@ -58,7 +60,8 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         palette = serviceProvider.GetRequiredService<ColorPalette>();
         bankMng = serviceProvider.GetRequiredService<BankActions>();
         tradingManager = serviceProvider.GetRequiredService<TradingManager>();
-        playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, bankMng, logService, "Player Management", palette, tradingManager);
+        commonChatOutput = serviceProvider.GetRequiredService<CommonChatOutput>();
+        playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, bankMng, logService, "Player Management", palette, tradingManager, commonChatOutput);
         tradingMgr = serviceProvider.GetRequiredService<TradingManager>();
     }
 
@@ -94,14 +97,12 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 var availableGames = gameHost.AvailableGames();
                 if (ImGui.Combo("Game mode", ref selected, availableGames.Select(data => data.id.Value).ToArray(), availableGames.Length))
                 {
-                    if (gameHost.HasGame())
-                    {
-                    }
                     configuration.SelectedGame = selected;
                     configurationSvc.SaveConfiguration();
                     gameHost.StartGame(availableGames[selected].id);
                 }
 
+                ImGui.TextUnformatted(availableGames[selected].description);
                 ImGui.EndTabItem();
             }
 #if DEBUG
@@ -123,17 +124,6 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         {
             var fc = *pointer.Value;
             logService.Warning($"{fc.Name}");
-        }
-    }
-
-    private unsafe void ListMarkers()
-    {
-        var map = *FFXIVClientStructs.FFXIV.Client.Game.UI.Map.Instance();
-        foreach (var markerInfo in map.QuestMarkers)
-        {
-            foreach (var data in markerInfo.MarkerData)
-            {
-            }
         }
     }
 }

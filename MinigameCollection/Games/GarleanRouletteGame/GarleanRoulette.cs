@@ -10,6 +10,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
     internal class GarleanRoulette : Game
     {
         public static readonly GameId Id = new GameId("Garlean Roulette");
+        public static string Description { get; } = "Players take turns to shoot themselves with a partially loaded revolver. Last man standing wins all.";
         private readonly RollTracker rollTracker;
         private readonly Configuration config;
         private GRGameState gameState;

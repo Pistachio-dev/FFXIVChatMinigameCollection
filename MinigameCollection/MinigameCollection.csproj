@@ -27,6 +27,7 @@
 
     <ItemGroup>
       <Content Include="MinigameCollection.json" />
+      <Content Include="NewestRelease.json" />
     </ItemGroup>
 
     <ItemGroup>

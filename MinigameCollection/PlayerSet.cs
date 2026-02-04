@@ -3,13 +3,16 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace MinigameCollection
 {
     public class PlayerSet
     {
-        private readonly List<MGPlayer> _players = new();
+        [JsonInclude]
+        private List<MGPlayer> _players { get; set; } = new();
 
+        [JsonIgnore]
         public List<MGPlayer> Players => _players;
 
         public PlayerSet()
@@ -20,6 +23,12 @@ namespace MinigameCollection
         public PlayerSet(List<MGPlayer> players)
         {
             _players = players;
+        }
+
+        public void Restore(PlayerSet storedCopy)
+        {
+            _players.Clear();
+            _players.AddRange(storedCopy.Players);
         }
 
         public PlayerSet Reorder<T>(Func<MGPlayer, T> comparer)
@@ -61,7 +70,7 @@ namespace MinigameCollection
                 }
 
                 Plugin.Log.Warning($"Checking player {currentIndex}: {_players[currentIndex].FullName}");
-                if (conditionNeeded(_players[currentIndex]))
+                if (!_players[currentIndex].Afk && conditionNeeded(_players[currentIndex]))
                 {
                     return _players[currentIndex];
                 }

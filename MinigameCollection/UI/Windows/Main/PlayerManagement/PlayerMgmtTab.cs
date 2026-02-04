@@ -4,6 +4,7 @@ using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using ECommons;
 using MinigameCollection.Bank;
+using MinigameCollection.Output;
 using MinigameCollection.Trader;
 using Model.Base;
 using System;
@@ -19,9 +20,10 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
         private readonly BankActions bankMgmt;
         private readonly ColorPalette palette;
         private readonly TradingManager tradingManager;
+        private readonly CommonChatOutput commonChatOutput;
 
         public PlayerMgmtTab(GameHost host, PlayerManager playerMng, BankActions bankMgmt, ILogService logService, string name,
-            ColorPalette palette, TradingManager tradingManager,
+            ColorPalette palette, TradingManager tradingManager, CommonChatOutput commonChatOutput,
             ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false)
             : base(logService, name, flags, forceMainWindow)
         {
@@ -30,6 +32,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             this.bankMgmt = bankMgmt;
             this.palette = palette;
             this.tradingManager = tradingManager;
+            this.commonChatOutput = commonChatOutput;
         }
 
         protected override void SafeDraw()
@@ -73,13 +76,8 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
 
                     // Actions
                     ImGui.TableNextColumn();
-                    DrawPlayerActionButtons(player);
-                    ImGui.SameLine();
-                    if (ImGuiComponents.IconButton($"##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
-                    {
-                        thingsToDoAfterIteration.Add(() => playerMgmt.Remove(player));
-                    }
-                    DrawTooltip("Shift+Click to remove player");
+                    DrawPlayerActionButtons(player, ref thingsToDoAfterIteration);
+
                     playerCounter++;
                 }
 
@@ -91,10 +89,14 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 playerMgmt.TryAddTargetedPlayer();
             }
             ImGui.SameLine();
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");
-            ImGui.SameLine();
-
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");            
             DrawTooltip("Add the player you're currently targeting to the game.");
+            ImGui.SameLine();
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ChartBar, $"Print money on table"))
+            {
+                commonChatOutput.WriteFinances();
+
+            }
             DrawFundsModal();
 
             foreach (var action in thingsToDoAfterIteration)
@@ -108,7 +110,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             return ImGui.GetColorU32(new Vector4(0.3f, 0.3f, 0.3f, row % 2 != 0 ? 0.65f : 0.45f));
         }
 
-        private void DrawPlayerActionButtons(MGPlayer player)
+        private void DrawPlayerActionButtons(MGPlayer player, ref List<Action> thingsToDoAfterIteration)
         {
             Vector2 buttonSize = new Vector2(18, 18);
             ImGui.PushStyleVar(ImGuiStyleVar.FramePadding, new Vector2(1, 0));
@@ -119,7 +121,6 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             }
             DrawTooltip("Toggle AFK status. AFK players keep their funds, but don't play.");
 
-            ImGui.PushID($"SmallWakeUpButton#{player.FullName}");
             ImGui.SameLine();
             if (ImGui.Button($"!", buttonSize))
             {
@@ -144,8 +145,16 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 bankMgmt.StoreAll(player);
             }
             DrawTooltip("Move any gil in a game into the bank");
-            ImGui.PopStyleVar();
+
+            ImGui.SameLine();
+            if (ImGuiComponents.IconButton($"##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
+            {
+                thingsToDoAfterIteration.Add(() => playerMgmt.Remove(player));
+            }
+            DrawTooltip("Shift+Click to remove player");
+
             ImGui.PopID();
+            ImGui.PopStyleVar();
         }
     }
 }

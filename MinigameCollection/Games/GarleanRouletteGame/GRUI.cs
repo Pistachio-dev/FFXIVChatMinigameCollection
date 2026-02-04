@@ -48,6 +48,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 gameState.Bet = previous;
             }
+            
             ImGui.SameLine();
             if (ImGui.Button("Announce bet"))
             {
@@ -72,7 +73,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.Players)
+                foreach (var player in host.Players.GetNonAfkPlayers())
                 {
                     ImGui.TableNextRow();
                     var color = palette.GetRowColor(playerCounter);
@@ -118,13 +119,23 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 {
                     grActions.StartOrderRound();
                 }
+                DrawTooltip("Roll /dice 100 for each player. Players will shoot from lower to higher roll");
+
             }
             if (gameState.Stage == GRStage.Winner)
             {
-                ImGui.TextColored(palette.LightGreen, $"{gameState.GetSurvivor().FullName} wins!");
+                var survivor = gameState.GetSurvivor();
+                if (survivor == null)
+                {
+                    ImGui.TextUnformatted("No survivors. This is not supposed to happen");
+                }
+                else
+                {                
+                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins!");
+                }
                 if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again"))
                 {
-                    grActions.StartOrderRound();
+                    grActions.GoBackToBetting();
                 }
             }
         }
@@ -140,6 +151,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void DrawCurrentPlayer()
         {
             ImGui.TextUnformatted($"Up next: {(gameState.CurrentPlayer?.FullName ?? "Nobody")}");
+        }
+        protected void DrawTooltip(string text)
+        {
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip(text);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
+using MinigameCollection.Save;
 using Model.Base;
 using System;
 using System.Linq;
@@ -18,11 +19,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly Configuration config;
         private readonly GRChatOutput chatOutput;
         private readonly BankActions bank;
+        private readonly SaveManager saveManager;
         private const int RevolverRollMin = 1;
         private const int RevolverRollMaxInclusive = 7;
         private const int OrderRollMax = 100;
 
-        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank)
+        public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, 
+            IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank, SaveManager saveManager)
         {
             this.gameHost = gameHost;
             this.gameState = gameState;
@@ -30,6 +33,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             this.config = config.GetConfiguration();
             this.chatOutput = chatOutput;
             this.bank = bank;
+            this.saveManager = saveManager;
         }
 
         public void StartOrderRound()
@@ -61,6 +65,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
                 gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
             }
+
+            //saveManager.Save();
         }
 
         private void SetPlayerOrderRoll(MGPlayer player, int order)
@@ -68,6 +74,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             var data = player.GetData();
             data.OrderRolled = order;
             player.SetData(data);
+            //saveManager.Save();
         }
 
         public void ProcessRoll(DiceRoll roll)

@@ -16,6 +16,8 @@ using MinigameCollection.Dice;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
+using MinigameCollection.Output;
+using MinigameCollection.Save;
 using MinigameCollection.Trader;
 using MinigameCollection.UI;
 using MinigameCollection.UI.Windows;
@@ -114,8 +116,8 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<TradingManager>();
         serviceCollection.AddSingleton<MainWindow>(sp => MainWindow);
         serviceCollection.AddSingleton<TradingManager>();
-        //serviceCollection.AddGamesBase();
-        //serviceCollection.AddNoGame();
+        serviceCollection.AddSingleton<SaveManager>();
+        serviceCollection.AddSingleton<CommonChatOutput>();
 
         return serviceCollection.BuildServiceProvider();
     }
@@ -128,6 +130,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceProvider.GetRequiredService<IChatOutput>().InitializeAndAttachToGameLogicLoop(framework, WaterMark);
         serviceProvider.GetRequiredService<HookManager>();
         serviceProvider.GetRequiredService<TradingManager>().Attach();
+        serviceProvider.GetRequiredService<SaveManager>().Load();
     }
 
     private void OnCommand(string command, string args)

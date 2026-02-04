@@ -4,6 +4,7 @@ using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using ECommons;
 using MinigameCollection.Bank;
+using MinigameCollection.Output;
 using MinigameCollection.Trader;
 using Model.Base;
 using System;
@@ -19,9 +20,10 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
         private readonly BankActions bankMgmt;
         private readonly ColorPalette palette;
         private readonly TradingManager tradingManager;
+        private readonly CommonChatOutput commonChatOutput;
 
         public PlayerMgmtTab(GameHost host, PlayerManager playerMng, BankActions bankMgmt, ILogService logService, string name,
-            ColorPalette palette, TradingManager tradingManager,
+            ColorPalette palette, TradingManager tradingManager, CommonChatOutput commonChatOutput,
             ImGuiWindowFlags flags = ImGuiWindowFlags.None, bool forceMainWindow = false)
             : base(logService, name, flags, forceMainWindow)
         {
@@ -30,6 +32,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             this.bankMgmt = bankMgmt;
             this.palette = palette;
             this.tradingManager = tradingManager;
+            this.commonChatOutput = commonChatOutput;
         }
 
         protected override void SafeDraw()
@@ -86,10 +89,14 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 playerMgmt.TryAddTargetedPlayer();
             }
             ImGui.SameLine();
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");
-            ImGui.SameLine();
-
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");            
             DrawTooltip("Add the player you're currently targeting to the game.");
+            ImGui.SameLine();
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ChartBar, $"Print money on table"))
+            {
+                commonChatOutput.WriteFinances();
+
+            }
             DrawFundsModal();
 
             foreach (var action in thingsToDoAfterIteration)

@@ -48,6 +48,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 gameState.Bet = previous;
             }
+            
             ImGui.SameLine();
             if (ImGui.Button("Announce bet"))
             {
@@ -118,6 +119,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 {
                     grActions.StartOrderRound();
                 }
+                DrawTooltip("Roll /dice 100 for each player. Players will shoot from lower to higher roll");
+
             }
             if (gameState.Stage == GRStage.Winner)
             {
@@ -148,6 +151,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void DrawCurrentPlayer()
         {
             ImGui.TextUnformatted($"Up next: {(gameState.CurrentPlayer?.FullName ?? "Nobody")}");
+        }
+        protected void DrawTooltip(string text)
+        {
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetTooltip(text);
+            }
         }
     }
 }

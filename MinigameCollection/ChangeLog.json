@@ -1,5 +1,11 @@
 [
   {
+    "AssemblyVersion": "0.0.0.2",
+    "DalamudApiLevel": 14,
+    "ChangeLog": "- Players and money are now always saved so they can be automatically loaded after a crash\n- Tweaked output to be clearer and less spammy\nFixed tabs getting bugged sometimes\n- Added a button to print the money on the table",
+    "IsTest": false
+  },
+  {
     "AssemblyVersion": "0.0.0.1",
     "DalamudApiLevel": 14,
     "ChangeLog": "- Initial Release",

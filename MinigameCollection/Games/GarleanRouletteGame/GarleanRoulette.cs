@@ -42,7 +42,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.CurrentPlayer = firstPlayer;
             }
 
-            //AddTestPlayers(host);
+            AddTestPlayers(host);
             gameState.Stage = GRStage.NotStarted;
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }

@@ -20,12 +20,12 @@ namespace MinigameCollection.Output
 
         public void WriteFinances()
         {
-            var highestInUse = this.players.Players.Max(p => p.Bank.InUse);
-            var highestStored = this.players.Players.Max(p => p.Bank.Stored);
+            var highestInUse = this.players.AllPlayers.Max(p => p.Bank.InUse);
+            var highestStored = this.players.AllPlayers.Max(p => p.Bank.Stored);
             var inUseNumberFormat = CommonChatOutput.GetNumberFormat(highestInUse);
             var storedNumberFormat = CommonChatOutput.GetNumberFormat(highestStored);
             chatOutput.WriteChat($"==Money on the table:");
-            foreach (var player in this.players.Players)
+            foreach (var player in this.players.AllPlayers)
             {
                 chatOutput.WriteChat($"In use: {player.Bank.InUse.ToString(inUseNumberFormat)} gil. Stored: {player.Bank.Stored.ToString(storedNumberFormat)} gil. <={player.FullName.GetFirstName()}");
             }

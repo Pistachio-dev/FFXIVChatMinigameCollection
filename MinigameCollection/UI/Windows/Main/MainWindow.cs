@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Components;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
@@ -22,7 +23,7 @@ namespace MinigameCollection.Windows.Main;
 public partial class MainWindow : PluginWindowBase, IDisposable
 {
     protected readonly Vector4 defaultColor = new Vector4(0.1f, 0.1f, 0.1f, 1);
-
+    private readonly Plugin plugin;
     private IDataManager dataManager;
     private IChatOutput chatOutput;
     private IObjectTable objectTable;
@@ -40,7 +41,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
 
     private ColorPalette palette;
 
-    public MainWindow(ILogService logService, IServiceProvider serviceProvider)
+    public MainWindow(ILogService logService, Plugin plugin, IServiceProvider serviceProvider)
         : base(logService, "MinigameCollection")
     {
         SizeConstraints = new WindowSizeConstraints
@@ -63,6 +64,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
         commonChatOutput = serviceProvider.GetRequiredService<CommonChatOutput>();
         playerMgmtTab = new PlayerMgmtTab(gameHost, playerManager, bankMng, logService, "Player Management", palette, tradingManager, commonChatOutput);
         tradingMgr = serviceProvider.GetRequiredService<TradingManager>();
+        this.plugin = plugin;
     }
 
     public void Dispose()
@@ -91,7 +93,7 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 playerMgmtTab.Draw();
                 ImGui.EndTabItem();
             }
-            if (ImGui.BeginTabItem("Game select"))
+            if (ImGui.BeginTabItem("Game select & Configuration"))
             {
                 int selected = configurationSvc.GetConfiguration().SelectedGame;
                 var availableGames = gameHost.AvailableGames();
@@ -103,6 +105,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 }
 
                 ImGui.TextUnformatted(availableGames[selected].description);
+
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Gauge, "Configuration"))
+                {
+                    plugin.ToggleConfigUI();
+                }
                 ImGui.EndTabItem();
             }
 #if DEBUG

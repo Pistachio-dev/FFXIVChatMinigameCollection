@@ -22,7 +22,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             {
                 ImGui.TextColored(new Vector4(1, 1, 1, 1), "This dialog is meant to be used to play without actual gil or troubleshoot trade errors. For gil, use the Buy-In and Cash-Out buttons.");
                 ImGui.TextUnformatted("Select a player");
-                var playerNames = host.Players.Players.Select(p => p.FullName).ToArray();
+                var playerNames = host.Players.AllPlayers.Select(p => p.FullName).ToArray();
                 ImGui.Combo("Player", ref selectedPlayerNameIndex, playerNames, playerNames.Length);
 
                 if (selectedPlayerNameIndex != -1)

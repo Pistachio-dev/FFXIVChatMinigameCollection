@@ -56,7 +56,7 @@ public sealed class Plugin : IDalamudPlugin
         InitializeServices(serviceProvider);
 
         ConfigWindow = new ConfigWindow(logService, serviceProvider);
-        MainWindow = new MainWindow(logService, serviceProvider);
+        MainWindow = new MainWindow(logService, this, serviceProvider);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);

@@ -44,6 +44,16 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WriteDiceCommand(outOf, isAlliance);
         }
 
+        public void WriteClearCylinder()
+        {
+            chatOutput.WriteChat("The host empties the cylinder.");
+        }
+
+        public void WriteGunEmptied()
+        {
+            chatOutput.WriteChat($"No more bullets left. Let's start another round.");
+        }
+
         public void WriteWinner(MGPlayer player)
         {
             chatOutput.WriteChat("<se.15>", minSpacingBeforeInMs: 2000);

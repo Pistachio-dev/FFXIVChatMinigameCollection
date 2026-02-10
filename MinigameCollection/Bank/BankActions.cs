@@ -22,14 +22,6 @@ namespace MinigameCollection.Bank
             this.playerSet = playerSet;
         }
 
-
-        public void PrintBankState()
-        {
-            foreach (var player in playerSet.Players)
-            {
-
-            }
-        }
         // Negative values to substract
         // Yes this lets you get into debt
         public void AddStored(MGPlayer player, long amount)
@@ -49,7 +41,7 @@ namespace MinigameCollection.Bank
 
         public void SetAllStored(PlayerSet playerSet, long amount)
         {
-            foreach (var player in playerSet.Players)
+            foreach (var player in playerSet.AllPlayers)
             {
                 SetStored(player, amount);
             }
@@ -85,7 +77,7 @@ namespace MinigameCollection.Bank
                 Plugin.Log.Info($"Store from {player.FullName}'s InUse top Stored skipped. Reason: 0 gil");
                 return;
             }
-            DualPrint($"{player.Bank.InUse} gil moved to bank for {player.FullName}");
+            DualPrint($"{player.Bank.InUse.Formatted()} gil moved to bank for {player.FullName}");
             player.Bank.Stored += player.Bank.InUse;
             player.Bank.InUse = 0;
 
@@ -99,7 +91,7 @@ namespace MinigameCollection.Bank
                 Plugin.Log.Info($"Transfer from {source.FullName} to {destination.FullName} skipped. Reason: 0 gil");
                 return;
             }
-            DualPrint($"{source.Bank.InUse} gil moved from {source.FullName.GetFirstName()} to {destination.FullName.GetFirstName()}");
+            DualPrint($"{source.Bank.InUse.Formatted()} gil moved from {source.FullName.GetFirstName()} to {destination.FullName.GetFirstName()}");
             destination.Bank.InUse += source.Bank.InUse;
             source.Bank.InUse = 0;
 
@@ -108,7 +100,7 @@ namespace MinigameCollection.Bank
 
         private void DualPrint(string msg)
         {
-            chatGui.Print(msg);
+            //chatGui.Print(msg);
             chatOutput.WriteChat(msg);
             Plugin.Log.Info(msg);
         }

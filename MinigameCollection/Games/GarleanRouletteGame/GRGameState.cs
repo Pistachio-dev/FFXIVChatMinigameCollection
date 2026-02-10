@@ -33,12 +33,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private int RemainingSurvivors()
         {
-            return gameHost.Players.GetNonAfkPlayers().Count(p => p.GetData().Alive);
+            return gameHost.Players.ActivePlayers.Count(p => p.GetData().Alive);
         }
 
         public MGPlayer? GetSurvivor()
         {
-            return gameHost.Players.GetNonAfkPlayers().FirstOrDefault(p => p.GetData().Alive);
+            return gameHost.Players.ActivePlayers.FirstOrDefault(p => p.GetData().Alive);
         }
     }
 }

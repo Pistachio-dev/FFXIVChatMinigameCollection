@@ -32,7 +32,14 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 DrawBetSetting();
             }
             DrawButtons();
-
+            ImGui.SameLine();
+            ImGui.BeginDisabled(!ImGui.GetIO().KeyShift);
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Trash, "Reset"))
+            {
+                grActions.ResetGame(host);
+            }
+            DrawTooltip("Shift+Click to reset the game.");
+            ImGui.EndDisabled();
             if (gameState.Stage == GRStage.Shooting)
             {
                 DrawPlayerOrder();
@@ -58,7 +65,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void DrawPlayerOrder()
         {
-            ImGui.TextUnformatted($"Order: {host.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
+            ImGui.TextUnformatted($"Order: {host.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
         }
 
         private void DrawPlayerTable()
@@ -73,7 +80,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.GetNonAfkPlayers())
+                foreach (var player in host.Players.ActivePlayers)
                 {
                     ImGui.TableNextRow();
                     var color = palette.GetRowColor(playerCounter);
@@ -131,13 +138,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 }
                 else
                 {                
-                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins!");
+                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins! <se.15>");
                 }
                 if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again"))
                 {
                     grActions.GoBackToBetting();
                 }
-            }
+            }            
         }
 
         private void DrawChambersLoaded()

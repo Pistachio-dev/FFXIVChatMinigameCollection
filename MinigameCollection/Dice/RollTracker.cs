@@ -1,42 +1,52 @@
+using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.DiceRolling;
 using System.Collections.Generic;
+using DalamudBasics.Extensions;
 
 namespace MinigameCollection.Dice
 {
     public class RollTracker
     {
-        private bool acceptNextRollWithoutChecking = false;
+        private bool acceptNextRollWithoutCheckingPlayer = false;
 
-        public RollTracker(IChatOutput chatOutput)
+        public RollTracker(IChatOutput chatOutput, IObjectTable objectTable)
         {
             this.chatOutput = chatOutput;
+            this.objectTable = objectTable;
         }
 
         public delegate void AwaitedRollCallback(DiceRoll roll);
-
-        private record AwaitedRoll(string rollerFullName, AcceptedRollType type, int outOf, AwaitedRollCallback callback);
+        private record AwaitedRoll(string rollerFullName, AcceptedRollType type, int outOf, bool rolledByHouse, AwaitedRollCallback callback);
 
         private Queue<AwaitedRoll> awaitedRollQueue = new();
         private readonly IChatOutput chatOutput;
+        private readonly IObjectTable objectTable;
 
-        public void QueueExpectedRoll(string rollerFullName, AcceptedRollType type, int outOf, AwaitedRollCallback callback)
+        public void ClearQueue()
         {
-            var record = new AwaitedRoll(rollerFullName, type, outOf, callback);
+            awaitedRollQueue.Clear();
+        }
+
+        /// <summary>
+        /// Stores information of a roll expected on the hook soon
+        /// </summary>
+        /// <param name="rollerFullName"></param>
+        /// <param name="type">/dice or /random</param>
+        /// <param name="outOf">Max inclusive value</param>
+        /// <param name="rollAsHouse">The roll will be done by the plugin hosting player</param>
+        /// <param name="callback">What to do once the roll is received</param>
+        public void QueueExpectedRoll(string rollerFullName, AcceptedRollType type, int outOf, bool rollAsHouse, AwaitedRollCallback callback)
+        {
+            var record = new AwaitedRoll(rollerFullName, type, outOf, rollAsHouse, callback);
             awaitedRollQueue.Enqueue(record);
-            Plugin.Log.Info($"Queued awaited roll. {RollRecordToString}");
+            Plugin.Log.Info($"Queued awaited roll. {RollRecordToString(record)}");
         }
 
         public void Reset()
         {
             awaitedRollQueue.Clear();
-            acceptNextRollWithoutChecking = false;
-        }
-
-        // In case the house needs to roll for the player, forces the next roll to be accepted regardless of whom is it.
-        public void AcceptNextRollRegardless()
-        {
-            acceptNextRollWithoutChecking = true;
+            acceptNextRollWithoutCheckingPlayer = false;
         }
 
         public void ProcessRoll(DiceRoll roll)
@@ -48,22 +58,30 @@ namespace MinigameCollection.Dice
 
             Plugin.Log.Info($"Processing roll. From: {roll.PlayerFullName}, Type:{roll.Type} {roll.RollResult} out  of: {roll.OutOf}");
 
-            var expected = awaitedRollQueue.Peek();
+            AwaitedRoll expected = awaitedRollQueue.Peek();
             Plugin.Log.Info($"Checking match with: {RollRecordToString(expected)}");
 
-            if (acceptNextRollWithoutChecking ||
-                (roll.PlayerFullName == expected.rollerFullName
-                && roll.OutOf == expected.outOf
-                && DiceRollTypeMatches(roll, expected)))
+            if (roll.OutOf == expected.outOf
+                && DiceRollTypeMatches(roll, expected)
+                && (roll.PlayerFullName == expected.rollerFullName
+                || (expected.rolledByHouse && roll.PlayerFullName == objectTable.LocalPlayer?.GetFullName()))
+                || acceptNextRollWithoutCheckingPlayer)
             {
                 Plugin.Log.Info($"Roll accepted, running callback. From: {roll.PlayerFullName}, Type:{roll.Type} {roll.RollResult} out  of: {roll.OutOf}");
                 awaitedRollQueue.Dequeue();
-                acceptNextRollWithoutChecking = false;
+                acceptNextRollWithoutCheckingPlayer = false;
                 expected.callback(roll);
                 return;
             }
 
             Plugin.Log.Info($"Roll does not match any expected. From: {roll.PlayerFullName}, Type:{roll.Type} {roll.RollResult} out  of: {roll.OutOf}");
+            Plugin.Log.Info($"Expected: from: {expected.rollerFullName}, Type:{expected.type}  out  of: {expected.outOf}");
+        }
+        
+        // In case the house needs to roll for the player, forces the next roll to be accepted regardless of whom is it.
+        public void AcceptNextRollRegardless()
+        {
+            acceptNextRollWithoutCheckingPlayer = true;
         }
 
         private string RollRecordToString(AwaitedRoll roll)

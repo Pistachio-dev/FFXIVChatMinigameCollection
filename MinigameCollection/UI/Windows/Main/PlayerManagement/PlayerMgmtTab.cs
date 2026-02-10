@@ -49,7 +49,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.Players)
+                foreach (var player in host.Players.AllPlayers)
                 {
                     ImGui.TableNextRow();
                     var color = GetRowColor(playerCounter);

@@ -33,7 +33,7 @@ namespace MinigameCollection.Games.MicroGameGame
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.Players)
+                foreach (var player in host.Players.AllPlayers)
                 {
                     ImGui.TableNextRow();
                     var color = GetRowColor(playerCounter);
@@ -58,7 +58,7 @@ namespace MinigameCollection.Games.MicroGameGame
                 case MicroGameState.Playing:
                     if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Dice, "Roll random point"))
                     {
-                        var player = this.playerSet.Players[new Random().Next(0, this.playerSet.Players.Count)];
+                        var player = this.playerSet.AllPlayers[new Random().Next(0, this.playerSet.AllPlayers.Count)];
                         var data = player.GetData<MicroGamePlayerData>(Id);
                         data.Score += 1;
                         player.SetData(Id, data);
@@ -77,7 +77,7 @@ namespace MinigameCollection.Games.MicroGameGame
                         break;
                     }
                 case MicroGameState.NotStarted:
-                    if (playerSet.Players.Count > 1)
+                    if (playerSet.AllPlayers.Count > 1)
                     {
                         if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ArrowRight, "Start this random microgame"))
                         {
@@ -94,7 +94,7 @@ namespace MinigameCollection.Games.MicroGameGame
         {
             this.host = host;
             this.playerSet = host.Players;
-            foreach (var player in this.playerSet.Players)
+            foreach (var player in this.playerSet.AllPlayers)
             {
                 player.SetData(Id, new MicroGamePlayerData() { Score = 0 });
             }

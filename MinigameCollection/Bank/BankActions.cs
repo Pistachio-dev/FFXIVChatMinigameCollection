@@ -41,7 +41,7 @@ namespace MinigameCollection.Bank
 
         public void SetAllStored(PlayerSet playerSet, long amount)
         {
-            foreach (var player in playerSet.Players)
+            foreach (var player in playerSet.AllPlayers)
             {
                 SetStored(player, amount);
             }

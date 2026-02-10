@@ -65,7 +65,7 @@ namespace MinigameCollection
 
         public void ReturnInGameGil()
         {
-            foreach (var player in players.Players)
+            foreach (var player in players.AllPlayers)
             {
                 bankActions.StoreAll(player);
             }

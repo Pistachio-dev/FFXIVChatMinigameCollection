@@ -17,7 +17,7 @@ namespace MinigameCollection.Games.NoGameGame
         public override void DrawUI()
         {
             ImGui.TextUnformatted("No game selected. Select on on the \"Game select\" tab");
-            foreach (var player in players.Players)
+            foreach (var player in players.AllPlayers)
             {
                 ImGui.TextUnformatted(player.FullName);
             }

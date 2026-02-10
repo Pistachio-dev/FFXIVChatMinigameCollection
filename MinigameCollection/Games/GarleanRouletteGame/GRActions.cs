@@ -42,13 +42,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         }
         public void StartOrderRound()
         {
-            if (gameHost.Players.GetNonAfkPlayers().Count < 2)
+            if (gameHost.Players.ActivePlayers.Count < 2)
             {
                 gameHost.ChatGui.PrintError("Not enough players. Needs two at least");
                 return;
             }
 
-            if (gameHost.Players.GetNonAfkPlayers().Any(p => p.Bank.Stored < gameState.Bet))
+            if (gameHost.Players.ActivePlayers.Any(p => p.Bank.Stored < gameState.Bet))
             {
                 gameHost.ChatGui.PrintError("One or more players can't afford that bet");
                 return;
@@ -57,7 +57,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             gameState.Stage = GRStage.RollingOrder;
             gameHost.ChatOutput.WriteChat("Rolling player order");
 
-            foreach (var player in gameHost.Players.GetNonAfkPlayers())
+            foreach (var player in gameHost.Players.ActivePlayers)
             {
                 // Set up the bets
                 var data = player.GetData();
@@ -66,7 +66,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 bank.StoreAll(player);
                 bank.Draw(player, gameState.Bet);
             }
-            foreach (var player in gameHost.Players.GetNonAfkPlayers())
+            foreach (var player in gameHost.Players.ActivePlayers)
             {
                 // Prepare the expected roll
                 rollTracker.QueueExpectedRoll(gameHost.GetHostPlayerFullName(), config.AcceptedRollType, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult));
@@ -94,10 +94,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             Plugin.Log.Info("Ending roll order phase");
             ShufflePlayersBasedOnRolledOrder();
-            chatOutput.WritePlayerOrder(gameHost.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList());
+            chatOutput.WritePlayerOrder(gameHost.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).ToList());
             Plugin.Log.Info("Starting shooting phase");
             gameState.Stage = GRStage.Shooting;
-            gameState.CurrentPlayer = gameHost.Players.GetNonAfkPlayers().FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
+            gameState.CurrentPlayer = gameHost.Players.ActivePlayers.FirstOrDefault() ?? throw new Exception("Attempting to start shooting, but there are no players");
             AddBullet(true);
             SetupCurrentPlayerRoll();
         }
@@ -127,7 +127,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.CurrentPlayer.SetData(pData);
                 if (gameState.WinCondition())
                 {
-                    var winner = gameHost.Players.GetNonAfkPlayers().FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
+                    var winner = gameHost.Players.ActivePlayers.FirstOrDefault(p => p.GetData().Alive) ?? throw new Exception("Garlean Roulette ended with no winners. This is not supposed to happen");
                     chatOutput.WriteWinner(winner);
                     gameState.Stage = GRStage.Winner;
                     OnWin();
@@ -140,7 +140,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
 
             gameState.TriggerPulls++;
-            if (gameState.TriggerPulls == gameHost.Players.GetNonAfkPlayers().Count())
+            if (gameState.TriggerPulls == gameHost.Players.ActivePlayers.Count())
             {
                 AddBullet(false);
             }
@@ -187,19 +187,19 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private void ShufflePlayersBasedOnRolledOrder()
         {
             var ordered = gameHost.Players.Reorder(p => p.GetData().OrderRolled);
-            Plugin.Log.Verbose($"New player order: {gameHost.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).Humanize()}");
+            Plugin.Log.Verbose($"New player order: {gameHost.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).Humanize()}");
         }
 
         public void OnWin()
         {
-            MGPlayer? survivor = gameHost.Players.GetNonAfkPlayers().FirstOrDefault(p => p.GetData().Alive);
+            MGPlayer? survivor = gameHost.Players.ActivePlayers.FirstOrDefault(p => p.GetData().Alive);
             if (survivor == null)
             {
                 Plugin.Log.Warning("No survivors at the end of game. This should not happen.");
                 return;
             }
 
-            foreach (var player in gameHost.Players.GetNonAfkPlayers().Where(p => p != survivor))
+            foreach (var player in gameHost.Players.ActivePlayers.Where(p => p != survivor))
             {
                 bank.TransferInUse(player, survivor);
             }

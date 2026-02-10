@@ -13,7 +13,10 @@ namespace MinigameCollection
         private List<MGPlayer> _players { get; set; } = new();
 
         [JsonIgnore]
-        public List<MGPlayer> Players => _players;
+        public List<MGPlayer> AllPlayers => _players;
+
+        [JsonIgnore]
+        public List<MGPlayer> ActivePlayers => GetNonAfkPlayers();
 
         public PlayerSet()
         {
@@ -28,7 +31,7 @@ namespace MinigameCollection
         public void Restore(PlayerSet storedCopy)
         {
             _players.Clear();
-            _players.AddRange(storedCopy.Players);
+            _players.AddRange(storedCopy.AllPlayers);
         }
 
         public PlayerSet Reorder<T>(Func<MGPlayer, T> comparer)
@@ -111,9 +114,9 @@ namespace MinigameCollection
             return null;
         }
 
-        public List<MGPlayer> GetNonAfkPlayers()
+        private List<MGPlayer> GetNonAfkPlayers()
         {
-            return Players.Where(p => !p.Afk).ToList();
+            return AllPlayers.Where(p => !p.Afk).ToList();
         }
 
         public void Remove(MGPlayer player)

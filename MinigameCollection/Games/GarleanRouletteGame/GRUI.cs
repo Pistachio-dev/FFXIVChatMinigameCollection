@@ -58,7 +58,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void DrawPlayerOrder()
         {
-            ImGui.TextUnformatted($"Order: {host.Players.GetNonAfkPlayers().Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
+            ImGui.TextUnformatted($"Order: {host.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).ToList().GetWordsSeparatedByArrows()}");
         }
 
         private void DrawPlayerTable()
@@ -73,7 +73,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 ImGui.TableHeadersRow();
 
                 var playerCounter = 0;
-                foreach (var player in host.Players.GetNonAfkPlayers())
+                foreach (var player in host.Players.ActivePlayers)
                 {
                     ImGui.TableNextRow();
                     var color = palette.GetRowColor(playerCounter);

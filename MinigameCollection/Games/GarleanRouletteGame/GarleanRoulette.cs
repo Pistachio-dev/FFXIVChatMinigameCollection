@@ -82,7 +82,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private bool HaveAllRolledOrder()
         {
-            return !Host.Players.Players.Any(p => p.GetData().OrderRolled == -1);
+            return !Host.Players.AllPlayers.Any(p => p.GetData().OrderRolled == -1);
         }
     }
 }

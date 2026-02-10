@@ -130,7 +130,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 }
                 else
                 {                
-                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins!");
+                    ImGui.TextColored(palette.LightGreen, $"{survivor.FullName} wins! <se.15>");
                 }
                 if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Repeat, "Go again"))
                 {

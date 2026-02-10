@@ -205,6 +205,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             }
 
             Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil!");
+            gameState.ChambersLoaded.Clear();
+            chatOutput.WriteClearCylinder();
         }
     }
 }

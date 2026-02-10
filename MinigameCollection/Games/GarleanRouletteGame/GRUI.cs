@@ -32,12 +32,20 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 DrawBetSetting();
             }
             DrawButtons();
+            ImGui.SameLine();
+            ImGui.BeginDisabled(!ImGui.GetIO().KeyShift);
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Trash, "Reset"))
+            {
+                grActions.ResetGame(host);
+            }
+            DrawTooltip("Shift+Click to reset the game.");
+            ImGui.EndDisabled();
             if (gameState.Stage == GRStage.Shooting)
             {
                 DrawPlayerOrder();
                 DrawChambersLoaded();
                 DrawCurrentPlayer();
-            }           
+            }
         }
 
         private void DrawBetSetting()
@@ -136,17 +144,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 {
                     grActions.GoBackToBetting();
                 }
-            }
-
-            ImGui.SameLine();
-            ImGui.BeginDisabled(!ImGui.GetIO().KeyShift);
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Trash, "Reset"))
-            {
-                grActions.ResetGame(host);
-            }
-            DrawTooltip("Shift+Click to reset the game.");
-            ImGui.EndDisabled();
-            
+            }            
         }
 
         private void DrawChambersLoaded()

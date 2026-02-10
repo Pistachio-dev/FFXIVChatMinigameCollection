@@ -94,8 +94,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 // Prepare the expected roll
                 Plugin.Log.Warning("Roll expectation queued: " + player.FullName);
-                rollTracker.QueueExpectedRoll("Irrelevant, will match house", config.AcceptedRollType, OrderRollMax, true, (roll) => SetPlayerOrderRoll(player, roll.RollResult));
-                gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()}:", minSpacingBeforeInMs: 1500);
+                rollTracker.QueueExpectedRoll("Irrelevant, will match house", config.AcceptedRollType, OrderRollMax, true, 
+                (roll) => {
+                    gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()} rolled {roll.RollResult}");
+                    SetPlayerOrderRoll(player, roll.RollResult);
+                });
                 gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
             }
 

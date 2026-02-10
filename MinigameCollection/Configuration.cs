@@ -20,4 +20,6 @@ public class Configuration : IConfiguration
 
     public bool AutoBuyIn { get; set; } = true;
     public bool AutoCashOut { get; set; } = true;
+
+    public bool GarleanRouletteRestartIfGunEmpties { get; set; } = true;
 }

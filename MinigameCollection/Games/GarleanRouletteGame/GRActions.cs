@@ -172,7 +172,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 OnWin();
                 return;
             }
-            else if (gameState.ChambersLoaded.Count == 0 && gameState.TriggerPulls < gameHost.Players.ActivePlayers.Count())
+            else if (gameState.ChambersLoaded.Count == 0 && gameState.TriggerPulls < gameHost.Players.ActivePlayers.Count() && config.GarleanRouletteRestartIfGunEmpties)
             {
                 chatOutput.WriteGunEmptied();
                 return;
@@ -211,8 +211,16 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             else
             {
                 gameState.TriggerPulls = 0;
-                Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
-                gameState.CurrentPlayer = GetNextRoundFirstPlayer();
+                if (config.GarleanRouletteRestartIfGunEmpties)
+                {
+                    Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
+                    gameState.CurrentPlayer = GetNextRoundFirstPlayer();
+                }
+                else
+                {
+                    gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
+                }
+
             }
 
             Plugin.Log.Verbose("Setting next player: " + gameState.CurrentPlayer.FullName);

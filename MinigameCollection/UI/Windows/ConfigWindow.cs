@@ -4,11 +4,10 @@ using DalamudBasics.Configuration;
 using DalamudBasics.GUI.Forms;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
-using ECommons.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Games.GarleanRouletteGame;
 using System;
 using System.Linq;
-using System.Numerics;
 
 namespace MinigameCollection.UI.Windows;
 
@@ -17,12 +16,14 @@ public class ConfigWindow : PluginWindowBase, IDisposable
     private IConfigurationService<Configuration> configService;
     private Configuration configuration;
     private ImGuiFormFactory<Configuration> formFactory;
+    private GameHost host;
 
     public ConfigWindow(ILogService logService, IServiceProvider sp) : base(logService, "Configuration##MinigameCollectionConfiguration")
     {
         configService = sp.GetRequiredService<IConfigurationService<Configuration>>();
         configuration = configService.GetConfiguration();
         formFactory = new ImGuiFormFactory<Configuration>(() => configuration, (data) => Save());
+        host = sp.GetRequiredService<GameHost>();
     }
 
     public void Dispose()
@@ -56,6 +57,12 @@ public class ConfigWindow : PluginWindowBase, IDisposable
             }
             configService.GetConfiguration().DefaultOutputChatType = channels[local];
             configService.SaveConfiguration();
+        }
+
+        (var selectedGameId, _, _) = host.AvailableGames()[configuration.SelectedGame];
+        if (selectedGameId == GarleanRoulette.Id)
+        {
+            formFactory.DrawCheckbox("Start from first player if gun empties", nameof(Configuration.GarleanRouletteRestartIfGunEmpties));
         }
     }
 

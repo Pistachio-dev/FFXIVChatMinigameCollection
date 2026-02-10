@@ -49,9 +49,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WriteChat("The host empties the cylinder.");
         }
 
-        public void WriteGunEmptied(string fullPlayerName)
+        public void WriteGunEmptied()
         {
-            chatOutput.WriteChat($"No more bullets left. Let's start another round");
+            chatOutput.WriteChat($"No more bullets left. Let's start another round.");
         }
 
         public void WriteWinner(MGPlayer player)

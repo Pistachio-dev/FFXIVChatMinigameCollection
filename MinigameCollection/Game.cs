@@ -26,7 +26,7 @@ namespace MinigameCollection
             {
                 throw new Exception($"Game instance is not initialized");
             }
-            Update();
+            Update();            
         }
 
         public void SafeDrawUI()

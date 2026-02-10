@@ -144,8 +144,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 grActions.ResetGame(host);
             }
-            ImGui.EndDisabled();
             DrawTooltip("Shift+Click to reset the game.");
+            ImGui.EndDisabled();
+            
         }
 
         private void DrawChambersLoaded()

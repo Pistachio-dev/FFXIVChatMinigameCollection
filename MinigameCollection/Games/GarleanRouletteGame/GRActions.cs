@@ -192,7 +192,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 chatOutput.WritePlayerSurvives(gameState.CurrentPlayer);
             }
 
-            if (gameState.TriggerPulls == gameHost.Players.ActivePlayers.Count())
+            if (gameState.TriggerPulls >= gameHost.Players.ActivePlayers.Count())
             {
                 AddBullet(false);
             }

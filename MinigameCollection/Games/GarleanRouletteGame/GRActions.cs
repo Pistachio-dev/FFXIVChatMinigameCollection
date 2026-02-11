@@ -295,6 +295,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void AddTestPlayers(GameHost host)
         {
+            return;
             host.Players.AddPlayer("Pistachio Herald@Omega");
             host.Players.AddPlayer("Macalania Nut@Louisoix");
             host.Players.AddPlayer("Lion Around@Omega");

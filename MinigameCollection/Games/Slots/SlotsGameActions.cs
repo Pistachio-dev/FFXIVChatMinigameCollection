@@ -24,7 +24,7 @@ namespace MinigameCollection.Games.Slots
         private readonly RollTracker rollTracker;
         private readonly IChatListener chatListener;
         private readonly IChatGui chatGui;
-        private readonly Regex BetRegex = new Regex("bet ([0-9\\.,]+)([km]?)");
+        private readonly Regex BetRegex = new Regex("^bet ([0-9\\.,]+)([km]?)$");
 
         public SlotsGameActions(GameHost host, IChatOutput chatOutput, SlotsGameState gameState, BankActions bank, RollTracker rollTracker, IChatListener chatListener, IChatGui chatGui)
         {
@@ -98,7 +98,7 @@ namespace MinigameCollection.Games.Slots
 
         private void OnMessageDelegate(XivChatType type, string sender, string message, DateTime receivedAt)
         {
-            var match = BetRegex.Match(message);
+            var match = BetRegex.Match(message.ToLower());
             if (match.Success)
             {
                 gameState.Bet = GetBetAmount(match) * GetMultiplier(match);
@@ -108,7 +108,7 @@ namespace MinigameCollection.Games.Slots
             var player = host.Players.GetPlayer(sender);
             if (player == null)
             {
-                chatGui.Print($"Bet detected, but {sender} is not in the game.");
+                Plugin.Log.Warning($"Bet detected, but {sender} is not in the game.");
                 return;
             }
 

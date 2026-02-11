@@ -43,7 +43,7 @@ namespace MinigameCollection
         public virtual void OnDiceRoll(DiceRoll roll)
         { }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             host.DiceManager.OnDiceRoll -= OnDiceRoll;
         }

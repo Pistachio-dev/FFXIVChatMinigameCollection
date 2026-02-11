@@ -16,6 +16,7 @@ using MinigameCollection.Dice;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
+using MinigameCollection.Games.Slots;
 using MinigameCollection.Output;
 using MinigameCollection.Save;
 using MinigameCollection.Trader;
@@ -118,6 +119,10 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<TradingManager>();
         serviceCollection.AddSingleton<SaveManager>();
         serviceCollection.AddSingleton<CommonChatOutput>();
+        serviceCollection.AddSingleton<SlotsGame>();
+        serviceCollection.AddSingleton<SlotsGameState>();
+        serviceCollection.AddSingleton<SlotsGameActions>();
+        serviceCollection.AddSingleton<SlotsGameUI>();
 
         return serviceCollection.BuildServiceProvider();
     }

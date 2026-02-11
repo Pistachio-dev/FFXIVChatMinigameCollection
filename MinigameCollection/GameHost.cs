@@ -23,7 +23,8 @@ namespace MinigameCollection
             return [
                 (NoGame.Id, (sp) => sp.GetRequiredService<NoGame>(), NoGame.Description),
                 (Microgame.Id, (sp) => sp.GetRequiredService<Microgame>(), Microgame.Description),
-                (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>(), GarleanRoulette.Description)
+                (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>(), GarleanRoulette.Description),
+                (SlotsGame.Id,  (sp) => sp.GetRequiredService<SlotsGame>(), SlotsGame.Description)
             ];
         }
 
@@ -73,10 +74,17 @@ namespace MinigameCollection
 
         public void StartGame(GameId gameId)
         {
+            activeGame?.Dispose();
             RemoveStillTrackedRolls();
             (GameId id, Func<IServiceProvider, IGame> constructor, _) = AvailableGames().FirstOrDefault(p => p.id.Equals(gameId));
             activeGame = constructor(serviceProvider);
             activeGame.SafeInitialize(this);
+        }
+
+        public void DisposeGame()
+        {
+            RemoveStillTrackedRolls();
+            activeGame?.Dispose();
         }
 
         public void Update()
@@ -97,6 +105,7 @@ namespace MinigameCollection
         public void Dispose()
         {
             UnloadGameIfNecessary();
+            DisposeGame();
         }
 
         public void UnloadGameIfNecessary()

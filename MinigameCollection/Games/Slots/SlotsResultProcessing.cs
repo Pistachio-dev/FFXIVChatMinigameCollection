@@ -53,8 +53,7 @@ namespace MinigameCollection.Games.Slots
                 chatOutput.WriteChat($"{reels}<se.14>", minSpacingBeforeInMs: 1000);
             }
             foreach (var group in resultSymbolsGrouped)
-            {
-                
+            {                
                 var count = group.Count();
                 
                 var symbol = group.Key;
@@ -62,19 +61,20 @@ namespace MinigameCollection.Games.Slots
                 if (payout > 0)
                 {
                     int payoutGil = (int)Math.Floor(gameState.Bet * payout);
-                    chatOutput.WriteChat($"{PayoutSettingsTable[symbol].symbol}x{count}  bet x {payout}={payoutGil} <se.7>");
+                    chatOutput.WriteChat($"{PayoutSettingsTable[symbol].symbol}x{count}  bet x {payout} = {payoutGil.Formatted()} <se.7>");
                     total += payoutGil;
                 }
             }
 
+            bank.SetInUse(player, total);
+
             if (total > 0)
             {
                 chatOutput.WriteChat($"Total payout: {total.Formatted()} gil! <se.15>");
-                bank.SetInUse(player, total);
             }
             else
             {
-                chatOutput.WriteChat($"No luck this time. Try again!<se.5>");
+                chatOutput.WriteChat($"No luck this time. Try again! <se.5>");
             }
         }
 

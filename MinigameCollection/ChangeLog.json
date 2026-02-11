@@ -1,5 +1,11 @@
 [
   {
+    "AssemblyVersion": "0.0.1.1",
+    "DalamudApiLevel": 14,
+    "ChangeLog": "- Added Slots game mode",
+    "IsTest": false
+  },
+  {
     "AssemblyVersion": "0.0.1.0",
     "DalamudApiLevel": 14,
     "ChangeLog": "- Added Slots game mode",

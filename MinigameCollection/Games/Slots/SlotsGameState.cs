@@ -14,6 +14,18 @@ namespace MinigameCollection.Games.Slots
 
         public int ResultCount = 0;
 
-        public SlotGameStage Stage { get; set; }
+        public SlotsGameStage Stage { get; set; }
+
+        public void Reset()
+        {
+            Stage = SlotsGameStage.Idle;
+            Bet = 0;
+            Player = null;
+            ResultCount = 0;
+            for (int i = 0; i < Results.Length; i++)
+            {
+                Results[i] = 0;
+            }
+        }
     }
 }

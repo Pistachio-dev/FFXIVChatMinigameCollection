@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace MinigameCollection.Games.GarleanRouletteGame
 {
-    internal class GRActions
+    internal class GRActions : IDisposable
     {
         private readonly GameHost gameHost;
         private readonly GRGameState gameState;
@@ -47,8 +47,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 gameState.CurrentPlayer = firstPlayer;
             }
-
+#if DEBUG
             AddTestPlayers(host);
+#endif
             gameState.Stage = GRStage.NotStarted;
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }
@@ -298,6 +299,11 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             host.Players.AddPlayer("Macalania Nut@Louisoix");
             host.Players.AddPlayer("Lion Around@Omega");
             bank.SetAllStored(host.Players, 69420000);
+        }
+
+        public void Dispose()
+        {
+            rollTracker.Dispose();
         }
     }
 }

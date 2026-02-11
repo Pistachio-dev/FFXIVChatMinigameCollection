@@ -98,6 +98,13 @@ namespace MinigameCollection.Bank
             saveManager.Save();
         }
 
+        public void SetInUse(MGPlayer player, int amount)
+        {
+            player.Bank.InUse = amount;
+
+            saveManager.Save();
+        }
+
         private void DualPrint(string msg)
         {
             //chatGui.Print(msg);

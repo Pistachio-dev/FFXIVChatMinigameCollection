@@ -147,7 +147,7 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
             DrawTooltip("Move any gil in a game into the bank");
 
             ImGui.SameLine();
-            if (ImGuiComponents.IconButton($"##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.Crosshairs) && ImGui.GetIO().KeyShift)
+            if (ImGuiComponents.IconButton($"##{player.FullName}", Dalamud.Interface.FontAwesomeIcon.Trash) && ImGui.GetIO().KeyShift)
             {
                 thingsToDoAfterIteration.Add(() => playerMgmt.Remove(player));
             }

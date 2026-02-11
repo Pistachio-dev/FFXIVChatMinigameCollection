@@ -14,13 +14,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public static string Description { get; } = "Slot machine. Type !bet <amount>, like !bet 50k, to roll. Payouts are hardcoded for now";
         private readonly RollTracker rollTracker;
         private readonly IConfigurationService<Configuration> config1;
-        private readonly SlotGameActions actions;
+        private readonly SlotsGameActions actions;
         private readonly SlotsGameState state;
         private readonly Configuration config;
         private readonly BankActions bank;
         private readonly SlotsGameUI ui;
 
-        public SlotsGame(RollTracker rollTracker, IConfigurationService<Configuration> config, SlotGameActions actions, SlotsGameState state, BankActions bank, SlotsGameUI ui)
+        public SlotsGame(RollTracker rollTracker, IConfigurationService<Configuration> config, SlotsGameActions actions, SlotsGameState state, BankActions bank, SlotsGameUI ui)
         {
             this.rollTracker = rollTracker;
             config1 = config;
@@ -38,7 +38,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public override void Initialize(GameHost host)
         {
-            state.Stage = SlotGameStage.Idle;
+            state.Reset();
+            actions.AddTriggers();
             AddTestPlayers(host);
             Plugin.Log.Info($"{nameof(SlotsGame)} initialized.");
         }
@@ -53,6 +54,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public override void Update()
         {            
+        }
+
+        public override void Dispose()
+        {
+            actions.Dispose();
+            base.Dispose();
         }
     }
 }

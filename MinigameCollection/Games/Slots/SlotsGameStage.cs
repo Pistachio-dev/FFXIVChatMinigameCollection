@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MinigameCollection.Games.Slots
 {
-    public enum SlotGameStage
+    public enum SlotsGameStage
     {
         Idle,
         Rolling,

@@ -3,15 +3,17 @@ using DalamudBasics.Chat.Output;
 using DalamudBasics.DiceRolling;
 using System.Collections.Generic;
 using DalamudBasics.Extensions;
+using System;
 
 namespace MinigameCollection.Dice
 {
-    public class RollTracker
+    public class RollTracker : IDisposable
     {
         private bool acceptNextRollWithoutCheckingPlayer = false;
 
-        public RollTracker(IChatOutput chatOutput, IObjectTable objectTable)
+        public RollTracker(DiceRollManager diceManager, IChatOutput chatOutput, IObjectTable objectTable)
         {
+            this.diceManager = diceManager;
             this.chatOutput = chatOutput;
             this.objectTable = objectTable;
         }
@@ -20,8 +22,19 @@ namespace MinigameCollection.Dice
         private record AwaitedRoll(string rollerFullName, AcceptedRollType type, int outOf, bool rolledByHouse, AwaitedRollCallback callback);
 
         private Queue<AwaitedRoll> awaitedRollQueue = new();
+        private readonly DiceRollManager diceManager;
         private readonly IChatOutput chatOutput;
         private readonly IObjectTable objectTable;
+
+        public void Hook()
+        {
+            diceManager.OnDiceRoll += ProcessRoll;
+        }
+
+        public void Dispose()
+        {
+            diceManager.OnDiceRoll -= ProcessRoll;
+        }
 
         public void ClearQueue()
         {

@@ -41,7 +41,7 @@ namespace MinigameCollection.Games.Slots
 
         public void ProcessPayout(int[] results)
         {
-            var player = gameState.Player;
+            var player = gameState.Player ?? throw new Exception("Can't process payout: player is null!");
             var resultSymbols = results.Select(x => GetSymbolFromDiceResult(x)).ToList();
             var resultSymbolsGrouped = resultSymbols.GroupBy(x => x).ToList();
             int total = 0;

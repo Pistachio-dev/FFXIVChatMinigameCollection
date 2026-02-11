@@ -116,8 +116,10 @@ namespace MinigameCollection.Games.Slots
 
         private void OutputAndBankResult()
         {
+            slotsResultProcessing.ProcessPayout(gameState.Results);
             gameState.Stage = SlotsGameStage.ShowingResult;
-            Plugin.Log.Info($"Results: {gameState.Results.Humanize()}");
+            bank.StoreAll(gameState.Player ?? throw new Exception("Trying to store money of a null player"));
+            gameState.Reset();
             gameState.Stage = SlotsGameStage.Idle;
         }
 

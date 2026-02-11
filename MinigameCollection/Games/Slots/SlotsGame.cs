@@ -39,7 +39,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         public override void Initialize(GameHost host)
         {
             state.Reset();
-            actions.AddChatTrigger();
+            actions.AddTriggers();
             AddTestPlayers(host);
             Plugin.Log.Info($"{nameof(SlotsGame)} initialized.");
         }

@@ -10,15 +10,28 @@ namespace MinigameCollection.Games.Slots
     public class SlotsGameUI
     {
         private readonly SlotsGameActions actions;
+        private readonly SlotsGameState state;
 
-        public SlotsGameUI(SlotsGameActions actions)
+        public SlotsGameUI(SlotsGameActions actions, SlotsGameState state)
         {
             this.actions = actions;
-
+            this.state = state;
         }
         public void DrawUI()
         {
-            ImGui.TextUnformatted("Players type \"bet <amount> to roll the slots. For instance: \"bet 32k\" or \"bet 1m");
+            ImGui.TextUnformatted("Players type \"bet <amount> to roll the slots. For instance: \"bet 32k\" or \"bet 1m\"");
+            switch (state.Stage)
+            {
+                case SlotsGameStage.Idle:
+                    ImGui.TextUnformatted("Status: Waiting");
+                    break;
+                case SlotsGameStage.Rolling:
+                    ImGui.TextUnformatted("Status: Spinning");
+                    break;
+                case SlotsGameStage.ShowingResult:
+                    ImGui.TextUnformatted("Status: Showing results");
+                    break;                    
+            }
             ImGui.BeginDisabled(!ImGui.GetIO().KeyShift);
             if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Trash, "Reset"))
             {

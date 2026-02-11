@@ -43,9 +43,10 @@ namespace MinigameCollection.Games.Slots
         }
 
 
-        public void AddChatTrigger()
+        public void AddTriggers()
         {
             chatListener.AddPreprocessedMessageListener(OnMessageDelegate);
+            rollTracker.Hook();
         }
 
         private void Bet(MGPlayer player, long amount)
@@ -60,6 +61,7 @@ namespace MinigameCollection.Games.Slots
                 return;
             }
 
+            gameState.Stage = SlotsGameStage.Rolling;
             chatOutput.WriteChat($"{player.FullName.GetFirstName()} bets {amount.Formatted()} on slots!");
             gameState.Bet = amount;
             gameState.Player = player;
@@ -93,6 +95,7 @@ namespace MinigameCollection.Games.Slots
 
         private void OnRoll(DiceRoll result)
         {
+            Plugin.Log.Info("OnRoll");
             gameState.Results[gameState.ResultCount] = result.RollResult;
             gameState.ResultCount += 1;
 
@@ -106,6 +109,7 @@ namespace MinigameCollection.Games.Slots
 
         private void OutputAndBankResult()
         {
+            gameState.Stage = SlotsGameStage.ShowingResult;
             Plugin.Log.Info($"Results: {gameState.Results.Humanize()}");
             gameState.Stage = SlotsGameStage.Idle;
         }
@@ -158,6 +162,7 @@ namespace MinigameCollection.Games.Slots
         public void Dispose()
         {
             chatListener.Dispose();
+            rollTracker.Dispose();
         }
     }
 }

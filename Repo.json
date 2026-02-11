@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 14,
-    "AssemblyVersion": "0.0.0.3",
-    "Changelog": "- Garlean roulette: Gun is now emptied betwen rounds. If the gun gets emptied a new round starts. Fixed formatting on some output",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.0.3_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.0.3_release/MinigameCollection.zip",
-    "LastUpdate": 1770752336,
+    "AssemblyVersion": "0.0.1.0",
+    "Changelog": "- Added Slots game mode",
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.1.0_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.1.0_release/MinigameCollection.zip",
+    "LastUpdate": 1770830021,
     "InternalName": "MinigameCollection"
   }
 ]

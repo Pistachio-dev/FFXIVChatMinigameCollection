@@ -1,7 +1,5 @@
 using Dalamud.Game.Text;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Plugin.Services;
-using DalamudBasics.Chat.ClientOnlyDisplay;
 using DalamudBasics.Chat.Listener;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
@@ -26,10 +24,12 @@ namespace MinigameCollection.Games.Slots
         private readonly IChatListener chatListener;
         private readonly IChatGui chatGui;
         private readonly IConfigurationService<Configuration> config;
+        private readonly SlotsResultProcessing slotsResultProcessing;
         private readonly Regex BetRegex = new Regex("^bet ([0-9\\.,]+)([km]?)$");
 
         public SlotsGameActions(GameHost host, IChatOutput chatOutput, SlotsGameState gameState, BankActions bank,
-            RollTracker rollTracker, IChatListener chatListener, IChatGui chatGui, IConfigurationService<Configuration> config)
+            RollTracker rollTracker, IChatListener chatListener, IChatGui chatGui, IConfigurationService<Configuration> config,
+            SlotsResultProcessing slotsResultProcessing)
         {
             this.host = host;
             this.chatOutput = chatOutput;
@@ -39,6 +39,7 @@ namespace MinigameCollection.Games.Slots
             this.chatListener = chatListener;
             this.chatGui = chatGui;
             this.config = config;
+            this.slotsResultProcessing = slotsResultProcessing;
             this.chatListener = chatListener;
         }
 
@@ -47,6 +48,11 @@ namespace MinigameCollection.Games.Slots
         {
             chatListener.AddPreprocessedMessageListener(OnMessageDelegate);
             rollTracker.Hook();
+        }
+
+        public void PrintPayoutTable()
+        {
+            slotsResultProcessing.PrintPayoutTable();
         }
 
         private void Bet(MGPlayer player, long amount)

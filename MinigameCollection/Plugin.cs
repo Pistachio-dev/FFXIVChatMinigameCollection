@@ -123,6 +123,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<SlotsGameState>();
         serviceCollection.AddSingleton<SlotsGameActions>();
         serviceCollection.AddSingleton<SlotsGameUI>();
+        serviceCollection.AddSingleton<SlotsResultProcessing>();
 
         return serviceCollection.BuildServiceProvider();
     }

@@ -32,6 +32,12 @@ namespace MinigameCollection.Games.Slots
                     ImGui.TextUnformatted("Status: Showing results");
                     break;                    
             }
+
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Info, "Print payouts table"))
+            {
+                actions.PrintPayoutTable();
+            }
+
             ImGui.BeginDisabled(!ImGui.GetIO().KeyShift);
             if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Trash, "Reset"))
             {

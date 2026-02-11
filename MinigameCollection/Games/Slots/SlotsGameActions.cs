@@ -101,6 +101,7 @@ namespace MinigameCollection.Games.Slots
 
             if (gameState.ResultCount == 3)
             {
+                gameState.ResultCount = 0;
                 gameState.Stage = SlotsGameStage.ShowingResult;
                 OutputAndBankResult();
             }

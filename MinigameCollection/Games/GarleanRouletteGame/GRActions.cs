@@ -47,9 +47,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 gameState.CurrentPlayer = firstPlayer;
             }
-#if DEBUG
+
             AddTestPlayers(host);
-#endif
             gameState.Stage = GRStage.NotStarted;
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }
@@ -295,6 +294,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void AddTestPlayers(GameHost host)
         {
+            return;
             host.Players.AddPlayer("Pistachio Herald@Omega");
             host.Players.AddPlayer("Macalania Nut@Louisoix");
             host.Players.AddPlayer("Lion Around@Omega");

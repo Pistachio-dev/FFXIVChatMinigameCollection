@@ -1,6 +1,6 @@
 {
-    "AssemblyVersion": "0.0.0.3",
+    "AssemblyVersion": "0.0.1.0",
     "DalamudApiLevel": 14,
-    "ChangeLog": "- Garlean roulette: Gun is now emptied betwen rounds. If the gun gets emptied a new round starts. Fixed formatting on some output",
+    "ChangeLog": "- Added Slots game mode",
     "IsTest": false
 }

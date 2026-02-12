@@ -60,6 +60,7 @@ namespace MinigameCollection.Games.Slots
             if (gameState.Stage != SlotsGameStage.Idle)
             {
                 chatOutput.WriteChat($"{player.FullName.GetFirstName()}, the slot machine is busy right now.{amount.Formatted()}");
+                return;
             }
             if (player.Bank.Stored < amount)
             {

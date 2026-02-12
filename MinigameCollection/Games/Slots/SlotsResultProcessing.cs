@@ -24,7 +24,7 @@ namespace MinigameCollection.Games.Slots
 
         public SlotsSymbol GetSymbolFromDiceResult(int dice)
         {
-            int totalSymbols = 30 + 25 + 20 + 15 + 8 + 4 + 1 + 80;
+            int totalSymbols = 80 + 30 + 25 + 20 + 15 + 8 + 4 + 1;
             int cappedValue = dice % totalSymbols;
 
             if (cappedValue <= 80) return SlotsSymbol.Ilvlsync;
@@ -33,8 +33,8 @@ namespace MinigameCollection.Games.Slots
             if (cappedValue <= 80 + 30 + 25 + 20) return SlotsSymbol.PlaystationTriangle;
             if (cappedValue <= 80 + 30 + 25 + 20 + 15) return SlotsSymbol.PlaystationCircle;
             if (cappedValue <= 80 + 30 + 25 + 20 + 15 + 8) return SlotsSymbol.Sprout;
-            if (cappedValue <= 8030 + 25 + 20 + 15 + 8 + 4) return SlotsSymbol.HQ;
-            if (cappedValue <= 30 + 25 + 20 + 15 + 8 + 4 + 1) return SlotsSymbol.Lucky7;
+            if (cappedValue <= 80 + 30 + 25 + 20 + 15 + 8 + 4) return SlotsSymbol.HQ;
+            if (cappedValue <= 80 + 30 + 25 + 20 + 15 + 8 + 4 + 1) return SlotsSymbol.Lucky7;
 
             return SlotsSymbol.Ilvlsync;
         }

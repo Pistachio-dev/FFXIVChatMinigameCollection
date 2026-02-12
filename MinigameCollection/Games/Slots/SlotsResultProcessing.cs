@@ -70,7 +70,7 @@ namespace MinigameCollection.Games.Slots
 
             if (total > 0)
             {
-                chatOutput.WriteChat($"Total payout: {total.Formatted()} gil! <se.15>");
+                chatOutput.WriteChat($"Total payout: {total.Formatted()} gil! <se.15>");                
             }
             else
             {

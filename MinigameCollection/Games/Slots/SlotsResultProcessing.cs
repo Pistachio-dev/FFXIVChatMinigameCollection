@@ -121,7 +121,7 @@ namespace MinigameCollection.Games.Slots
                     sb.Append(kvp.Value.payoutFor1);
                     sb.Append("  ");
                 }
-                if (kvp.Value.payoutFor2 > 1)
+                if (kvp.Value.payoutFor2 > 0)
                 {
                     sb.Append(kvp.Value.symbol);
                     sb.Append(kvp.Value.symbol);
@@ -129,7 +129,7 @@ namespace MinigameCollection.Games.Slots
                     sb.Append(kvp.Value.payoutFor2);
                     sb.Append("  ");
                 }
-                if (kvp.Value.payoutFor3 > 1)
+                if (kvp.Value.payoutFor3 > 0)
                 {
                     sb.Append(kvp.Value.symbol);
                     sb.Append(kvp.Value.symbol);

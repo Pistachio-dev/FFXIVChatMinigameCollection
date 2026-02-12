@@ -47,9 +47,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 gameState.CurrentPlayer = firstPlayer;
             }
-#if DEBUG
-            AddTestPlayers(host);
-#endif
+            
+            // AddTestPlayers(host);
             gameState.Stage = GRStage.NotStarted;
             Plugin.Log.Info($"{nameof(GarleanRoulette)} initialized.");
         }

@@ -98,7 +98,7 @@ namespace MinigameCollection.Games.Slots
 
         public static Dictionary<SlotsSymbol, PayoutSettings> PayoutSettingsTable = new()
         { 
-            {SlotsSymbol.PlaystationX, new PayoutSettings("", 0, 0, 0) },
+            {SlotsSymbol.PlaystationX, new PayoutSettings("", 0, 0, 2) },
             {SlotsSymbol.PlaystationSquare, new PayoutSettings("",0, 2, 20) },
             {SlotsSymbol.PlaystationTriangle, new PayoutSettings("",0, 3, 30) },
             {SlotsSymbol.PlaystationCircle, new PayoutSettings("",0, 4, 60) },

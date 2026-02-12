@@ -106,7 +106,7 @@ namespace MinigameCollection.Games.Slots
             {SlotsSymbol.Sprout, new PayoutSettings("",2, 10, 100) },
             {SlotsSymbol.HQ, new PayoutSettings("", 0, 2, 500) },
             {SlotsSymbol.Lucky7, new PayoutSettings("", 5, 250, 2500) },
-            {SlotsSymbol.Ilvlsync, new PayoutSettings("", 0, 0, 2) },
+            {SlotsSymbol.Ilvlsync, new PayoutSettings("", 0, 0, 1) },
         };
 
         public void PrintPayoutTable()

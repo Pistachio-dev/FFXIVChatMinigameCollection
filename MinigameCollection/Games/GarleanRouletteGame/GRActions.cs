@@ -294,11 +294,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void AddTestPlayers(GameHost host)
         {
-            return;
+#if DEBUG
             host.Players.AddPlayer("Pistachio Herald@Omega");
             host.Players.AddPlayer("Macalania Nut@Louisoix");
             host.Players.AddPlayer("Lion Around@Omega");
             bank.SetAllStored(host.Players, 69420000);
+#endif
         }
 
         public void Dispose()

@@ -120,7 +120,7 @@ namespace MinigameCollection.Games.Slots
             slotsResultProcessing.ProcessPayout(gameState.Results);
             gameState.Stage = SlotsGameStage.ShowingResult;
             bank.StoreAll(gameState.Player ?? throw new Exception("Trying to store money of a null player"));
-            chatOutput.WriteChat($"Your bank: {gameState.Player.Bank.Stored.Formatted()} gil. <se.15>");
+            chatOutput.WriteChat($"Your bank: {gameState.Player.Bank.Stored.Formatted()} gil.");
             gameState.Reset();
             gameState.Stage = SlotsGameStage.Idle;
         }

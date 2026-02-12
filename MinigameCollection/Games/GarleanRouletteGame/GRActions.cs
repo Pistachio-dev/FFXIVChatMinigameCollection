@@ -287,7 +287,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 bank.TransferInUse(player, survivor);
             }
 
-            Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil!");
+            Plugin.Log.Warning($"{survivor.FullName} wins {survivor.Bank.InUse.Formatted()} gil! <se.15>");
             gameState.ChambersLoaded.Clear();
             chatOutput.WriteClearCylinder();
         }

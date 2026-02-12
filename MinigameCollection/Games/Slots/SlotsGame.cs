@@ -40,16 +40,18 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             state.Reset();
             actions.AddTriggers();
-            AddTestPlayers(host);
+            //AddTestPlayers(host);
             Plugin.Log.Info($"{nameof(SlotsGame)} initialized.");
         }
 
         private void AddTestPlayers(GameHost host)
         {
+#if DEBUG
             host.Players.AddPlayer("Pistachio Herald@Omega");
             host.Players.AddPlayer("Macalania Nut@Louisoix");
             host.Players.AddPlayer("Lion Around@Omega");
             bank.SetAllStored(host.Players, 69420000);
+#endif
         }
 
         public override void Update()

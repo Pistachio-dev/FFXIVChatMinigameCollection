@@ -11,7 +11,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
     internal class SlotsGame : Game
     {
         public static readonly GameId Id = new GameId("Slots");
-        public static string Description { get; } = "Slot machine. Type !bet <amount>, like !bet 50k, to roll. Payouts are hardcoded for now";
+        public static string Description { get; } = "Slot machine. Type !bet <amount>, like !bet 50k, to roll. Payouts are hardcoded for now. RTP rate is 0.897.";
         private readonly RollTracker rollTracker;
         private readonly IConfigurationService<Configuration> config1;
         private readonly SlotsGameActions actions;

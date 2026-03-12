@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 14,
-    "AssemblyVersion": "0.0.1.7",
-    "Changelog": "- Added Slots game mode.\n- Tweaked payout table.\n- Remaining banked gil is shown after a roll.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.1.7_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.1.7_release/MinigameCollection.zip",
-    "LastUpdate": 1770891338,
+    "AssemblyVersion": "0.0.2.0",
+    "Changelog": "- Added a button to add the host as player\n- When using a public chat (/say, /yell, /shout), rolls will use /random instead of dice.",
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.0_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.0_release/MinigameCollection.zip",
+    "LastUpdate": 1773340206,
     "InternalName": "MinigameCollection"
   }
 ]

@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 14,
-    "AssemblyVersion": "0.0.2.1",
+    "AssemblyVersion": "0.0.2.2",
     "Changelog": "- Added a button to add the host as player\n- When using a public chat (/say, /yell, /shout), rolls will use /random instead of dice.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.1_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.1_release/MinigameCollection.zip",
-    "LastUpdate": 1773342818,
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.2_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.2_release/MinigameCollection.zip",
+    "LastUpdate": 1773343402,
     "InternalName": "MinigameCollection"
   }
 ]

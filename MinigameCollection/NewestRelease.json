@@ -1,6 +1,6 @@
 {
-    "AssemblyVersion": "0.0.1.7",
+    "AssemblyVersion": "0.0.2.0",
     "DalamudApiLevel": 14,
-    "ChangeLog": "- Added Slots game mode.\n- Tweaked payout table.\n- Remaining banked gil is shown after a roll.",
+    "ChangeLog": "- Added a button to add the host as player\n- When using a public chat (/say, /yell, /shout), rolls will use /random instead of dice.",
     "IsTest": false
 }

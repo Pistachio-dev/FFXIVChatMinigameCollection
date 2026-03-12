@@ -114,11 +114,11 @@ public partial class MainWindow : PluginWindowBase, IDisposable
                 ImGui.EndTabItem();
             }
 #if DEBUG
-            if (ImGui.BeginTabItem("Experimental"))
-            {
-                DrawExperimentalButtons();
-                ImGui.EndTabItem();
-            }
+            //if (ImGui.BeginTabItem("Experimental"))
+            //{
+            //    DrawExperimentalButtons();
+            //    ImGui.EndTabItem();
+            //}
 #endif
             ImGui.EndTabBar();
         }

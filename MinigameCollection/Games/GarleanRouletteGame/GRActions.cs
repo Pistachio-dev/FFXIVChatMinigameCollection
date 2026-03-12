@@ -1,3 +1,4 @@
+using Dalamud.Game.Text;
 using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
@@ -149,8 +150,9 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public void SetupCurrentPlayerRoll(bool isHousePressingTheTrigger = false)
         {
+            string command = (config.DefaultOutputChatType is XivChatType.Say or XivChatType.Echo or XivChatType.Yell or XivChatType.Shout) ? "/random 7" : "/dice 7";
             var player = gameState.CurrentPlayer ?? throw new Exception("Trying to set up current player roll to be awaited, but current player is null");
-            gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. /dice 7, please. <se.3>", minSpacingBeforeInMs: 1000);
+            gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. {command}, please. <se.3>", minSpacingBeforeInMs: 1000);
             rollTracker.QueueExpectedRoll(player.FullName, AcceptedRollType.Any, RevolverRollMaxInclusive, false, ProcessShootRoll);
         }
 

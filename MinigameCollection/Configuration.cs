@@ -12,7 +12,7 @@ public class Configuration : IConfiguration
     public XivChatType DefaultOutputChatType { get; set; } = XivChatType.Party;
     public bool LogOutgoingChatOutput { get; set; } = true;
     public bool LogClientOnlyChatOutput { get; set; } = true;
-    public int LimitedChatChannelsMessageDelayInMs { get; set; } = 1000;
+    public int LimitedChatChannelsMessageDelayInMs { get; set; } = 1500;
 
     public int SelectedGame { get; set; } = 0;
 

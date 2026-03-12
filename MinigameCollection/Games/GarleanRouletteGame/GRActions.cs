@@ -94,7 +94,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             {
                 // Prepare the expected roll
                 Plugin.Log.Warning("Roll expectation queued: " + player.FullName);
-                rollTracker.QueueExpectedRoll("Irrelevant, will match house", config.AcceptedRollType, OrderRollMax, true, 
+                rollTracker.QueueExpectedRoll("Irrelevant, will match house", AcceptedRollType.Any, OrderRollMax, true, 
                 (roll) => {
                     gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()} rolled {roll.RollResult}");
                     SetPlayerOrderRoll(player, roll.RollResult);
@@ -151,7 +151,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             var player = gameState.CurrentPlayer ?? throw new Exception("Trying to set up current player roll to be awaited, but current player is null");
             gameHost.ChatOutput.WriteChat($"{gameState.CurrentPlayer?.FullName}'s turn. /dice 7, please. <se.3>", minSpacingBeforeInMs: 1000);
-            rollTracker.QueueExpectedRoll(player.FullName, config.AcceptedRollType, RevolverRollMaxInclusive, false, ProcessShootRoll);
+            rollTracker.QueueExpectedRoll(player.FullName, AcceptedRollType.Any, RevolverRollMaxInclusive, false, ProcessShootRoll);
         }
 
         private MGPlayer GetNextRoundFirstPlayer()

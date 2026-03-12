@@ -88,7 +88,7 @@ namespace MinigameCollection.Games.Slots
         {
             for (int i = 0; i < 3; i++)
             {
-                rollTracker.QueueExpectedRoll(host.GetHostPlayerFullName(), AcceptedRollType.Dice, 999, true, OnRoll);
+                rollTracker.QueueExpectedRoll(host.GetHostPlayerFullName(), AcceptedRollType.Any, 999, true, OnRoll);
             }
         }
 

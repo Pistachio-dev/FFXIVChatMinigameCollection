@@ -1,5 +1,11 @@
 [
   {
+    "AssemblyVersion": "0.0.1.7",
+    "DalamudApiLevel": 14,
+    "ChangeLog": "- Added Slots game mode.\n- Tweaked payout table.\n- Remaining banked gil is shown after a roll.",
+    "IsTest": false
+  },
+  {
     "AssemblyVersion": "0.0.1.6",
     "DalamudApiLevel": 14,
     "ChangeLog": "- Added Slots game mode.\n- Tweaked payout table.\n- Remaining banked gil is shown after a roll.",

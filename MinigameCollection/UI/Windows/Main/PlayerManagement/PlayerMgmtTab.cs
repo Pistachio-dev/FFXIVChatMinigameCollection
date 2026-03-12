@@ -84,13 +84,23 @@ namespace MinigameCollection.UI.Windows.Main.PlayerManagement
                 ImGui.EndTable();
             }
 
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Plus, "Add targeted player"))
+            if (!playerMgmt.IsHostInGame())
+            {
+                
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Plus, "Add yourself as player", palette.MidBlue))
+                {
+                    playerMgmt.AddHostAsPlayer();
+                }
+                ImGui.SameLine();
+            }
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Plus, "Add targeted player", palette.MidBlue))
             {
                 playerMgmt.TryAddTargetedPlayer();
             }
-            ImGui.SameLine();
-            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil")) ImGui.OpenPopup($"Funds");            
             DrawTooltip("Add the player you're currently targeting to the game.");
+
+            if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.DollarSign, "Manage gil", palette.MidGreen)) ImGui.OpenPopup($"Funds");            
+            
             ImGui.SameLine();
             if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.ChartBar, $"Print money on table"))
             {

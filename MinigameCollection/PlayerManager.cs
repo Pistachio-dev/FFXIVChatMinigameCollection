@@ -17,9 +17,10 @@ namespace MinigameCollection
         private readonly IClientChatGui chatGui;
         private readonly IChatOutput chatOutput;
         private readonly SaveManager saveManager;
+        private readonly IObjectTable objectTable;
 
         public PlayerManager(PlayerSet players, ILogService logService, ITargetManager targetManager,
-            IClientChatGui chatGui, IChatOutput chatOutput, SaveManager saveManager)
+            IClientChatGui chatGui, IChatOutput chatOutput, SaveManager saveManager, IObjectTable objectTable)
         {
             this.players = players;
             this.logService = logService;
@@ -27,9 +28,10 @@ namespace MinigameCollection
             this.chatGui = chatGui;
             this.chatOutput = chatOutput;
             this.saveManager = saveManager;
+            this.objectTable = objectTable;
         }
 
-        public MGPlayer GetPlayer(string fullName, bool muteLog = false)
+        public MGPlayer? GetPlayer(string fullName, bool muteLog = false)
         {
             if (!muteLog) logService.Debug($"Getting player {fullName}");
             var existing = players.GetPlayer(fullName);
@@ -41,6 +43,25 @@ namespace MinigameCollection
 
             if (!muteLog) logService.Debug("Not found");
             return null;
+        }
+
+        public bool IsHostInGame()
+        {
+            var localPlayer = objectTable.LocalPlayer;
+            if  (localPlayer == null) return false;
+
+            return GetPlayer(localPlayer.GetNameWithWorld(), true) != null;
+        }
+
+        public bool AddHostAsPlayer()
+        {
+            if (objectTable.LocalPlayer == null)
+            {
+                return false;
+            }
+
+            targetManager.Target = objectTable.LocalPlayer;
+            return TryAddTargetedPlayer();
         }
 
         public bool TryAddTargetedPlayer()

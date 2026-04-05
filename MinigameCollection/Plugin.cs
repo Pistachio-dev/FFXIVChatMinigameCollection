@@ -77,7 +77,7 @@ public sealed class Plugin : IDalamudPlugin
         pluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
     }
 
-    private bool IsMainWindowOpen()
+    public bool IsMainWindowOpen()
     {
         return MainWindow.IsOpen;
     }
@@ -99,6 +99,7 @@ public sealed class Plugin : IDalamudPlugin
         IServiceCollection serviceCollection = new ServiceCollection();
         serviceCollection.AddAllDalamudBasicsServices<Configuration>(pluginInterface);
         serviceCollection.AddSingleton<StringDebugUtils>();
+        serviceCollection.AddSingleton<Plugin>(sp => this);
         serviceCollection.AddSingleton<PlayerManager>();
         serviceCollection.AddSingleton<PlayerSet>((sp) => this.players);
         serviceCollection.AddSingleton<GameHost>();

@@ -25,6 +25,7 @@ namespace MinigameCollection.Trader
         private readonly IFramework framework;
         private readonly GameHost host;
         private readonly BankActions bankActions;
+        private readonly Plugin plugin;
         private TradeType currentTradeType;
         private MGTradeStatus currentTradeStatus;
         private long preTransactionGil; // How much gil you have before the trade
@@ -32,7 +33,7 @@ namespace MinigameCollection.Trader
         private string lastTradeTargetName = string.Empty;
 
         public TradingManager(IChatGui chatGui, IObjectTable objectTable, IPlayerState playerState, IChatOutput chatOutput, ITargetingService targeting, IFramework framework,
-            GameHost host, BankActions bankActions)
+            GameHost host, BankActions bankActions, Plugin plugin)
         {
             this.chatGui = chatGui;
             this.objectTable = objectTable;
@@ -42,6 +43,7 @@ namespace MinigameCollection.Trader
             this.framework = framework;
             this.host = host;
             this.bankActions = bankActions;
+            this.plugin = plugin;
         }
 
         public void Attach()
@@ -68,8 +70,12 @@ namespace MinigameCollection.Trader
             TransactionOngoing,
         }
 
-        public unsafe void OnTransactionStart()
+        private bool IsWindowOpen()
         {
+            return plugin.IsMainWindowOpen();
+        }
+        public unsafe void OnTransactionStart()
+        {            
             if (objectTable.LocalPlayer == null)
             {
                 throw new Exception("Local player is null when processing a transaction");
@@ -182,6 +188,7 @@ namespace MinigameCollection.Trader
             {
                 return;
             }
+            if (!IsWindowOpen()) return;
             var invManager = InventoryManager.Instance();
             switch (invManager->TradeLocalState)
             {

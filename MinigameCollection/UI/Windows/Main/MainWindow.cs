@@ -1,5 +1,6 @@
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Components;
+using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;

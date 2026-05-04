@@ -1,5 +1,11 @@
 [
   {
+    "AssemblyVersion": "0.0.2.3",
+    "DalamudApiLevel": 14,
+    "ChangeLog": "- Re-trading only works if you have the plugin window open now, instead of always.",
+    "IsTest": false
+  },
+  {
     "AssemblyVersion": "0.0.2.2",
     "DalamudApiLevel": 14,
     "ChangeLog": "- Added a button to add the host as player\n- When using a public chat (/say, /yell, /shout), rolls will use /random instead of dice.",

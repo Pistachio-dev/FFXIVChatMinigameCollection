@@ -15,12 +15,12 @@
       "darts"
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
-    "DalamudApiLevel": 14,
-    "AssemblyVersion": "0.0.2.3",
-    "Changelog": "- Re-trading only works if you have the plugin window open now, instead of always.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.3_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.3_release/MinigameCollection.zip",
-    "LastUpdate": 1775397586,
+    "DalamudApiLevel": 15,
+    "AssemblyVersion": "0.0.2.4",
+    "Changelog": "- Patch 4.5.",
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.4_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.4_release/MinigameCollection.zip",
+    "LastUpdate": 1777911378,
     "InternalName": "MinigameCollection"
   }
 ]

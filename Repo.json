@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 15,
-    "AssemblyVersion": "0.0.2.4",
+    "AssemblyVersion": "0.0.2.5",
     "Changelog": "- Patch 4.5.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.4_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.4_release/MinigameCollection.zip",
-    "LastUpdate": 1777911378,
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.5_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.2.5_release/MinigameCollection.zip",
+    "LastUpdate": 1778346670,
     "InternalName": "MinigameCollection"
   }
 ]

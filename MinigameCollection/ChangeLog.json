@@ -1,5 +1,11 @@
 [
   {
+    "AssemblyVersion": "0.0.2.5",
+    "DalamudApiLevel": 15,
+    "ChangeLog": "- Patch 4.5.",
+    "IsTest": false
+  },
+  {
     "AssemblyVersion": "0.0.2.4",
     "DalamudApiLevel": 15,
     "ChangeLog": "- Patch 4.5.",

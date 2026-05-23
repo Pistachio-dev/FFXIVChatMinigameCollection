@@ -1,5 +1,6 @@
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Extensions;
+using InteropGenerator.Runtime;
 using Model.Base;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,23 @@ namespace MinigameCollection.Games.Darts.Services
             chatOutput.WriteChat(message);
         }
 
+        public void ThrowDetected(DartResult result)
+        {
+            if (result.LandedNumber == 21)
+            {
+                if (result.LandedMultiplier > 3)
+                {
+                    chatOutput.WriteChat($"Bullseye, dead on! 50 points!!<se.15>");
+                    return;
+
+                }
+
+                chatOutput.WriteChat($"Hit the bullseye ring! 25 points!<se.7>!");
+                return;
+            }
+
+            chatOutput.WriteChat($"Hit: {result.LandedNumber} x{result.ActualMultiplier} for {result.GetPoints()} points!<se.7>");
+        }
         public void ThrowNotOnSnow()
         {
             var message = $"Stand in the snow before you /throw";

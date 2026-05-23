@@ -7,17 +7,54 @@ namespace MinigameCollection.Games.Darts
 {
     internal class DartResult
     {
+        public DartResult(int landedNumber, int landedMultiplier)
+        {
+            LandedNumber = landedNumber;
+            LandedMultiplier = landedMultiplier;
+        }
+
         public int LandedNumber { get; set; }
 
         public int LandedMultiplier { get; set; }
 
+        public int ActualMultiplier => Multiplier();
+
+        public int GetPoints()
+        {
+            if (LandedNumber == 21)
+            {
+                if (LandedMultiplier > 3)
+                {
+                    // Bullseye, dead on
+                    return 50;
+                }
+                else { 
+                    // Bullseye ring
+                    return 25;
+                }
+            }
+
+            var multiplier = LandedMultiplier switch
+            {
+                0 => 0,
+                > 3 and < 6 => 2,
+                6 => 3,
+                _ => 1,
+                };
+
+            return LandedNumber * multiplier;
+        }
+
         public int Multiplier() 
         {
-            if (LandedMultiplier == 6) return 3;
+            if (LandedMultiplier == 6)
+            {
+                return LandedNumber == 21 ? 2 : 3;
+            }
             if (LandedMultiplier > 3 && LandedMultiplier < 6) return 2;
             if (LandedMultiplier == 0)
             {
-                Plugin.Log.Warning("Landed an invalid multiplier: {LandedMultiplier}.");
+                Plugin.Log.Warning($"Landed an invalid multiplier: {LandedMultiplier}.");
                 return 0;
             }
             return 1;

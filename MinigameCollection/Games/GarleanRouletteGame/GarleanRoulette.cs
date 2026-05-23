@@ -17,14 +17,16 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private GRActions grActions;
         private readonly GRUI grui;
         private readonly BankActions bank;
+        private readonly GameHost host;
 
-        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions, GRUI grui, BankActions bank)
+        public GarleanRoulette(RollTracker rollTracker, IConfigurationService<Configuration> config, GRGameState gameState, GRActions grActions, GRUI grui, BankActions bank, GameHost host)
         {
             this.rollTracker = rollTracker;
             this.gameState = gameState;
             this.grActions = grActions;
             this.grui = grui;
             this.bank = bank;
+            this.host = host;
             this.config = config.GetConfiguration();
         }
 
@@ -43,6 +45,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             Plugin.Log.Info("Player trigger pull");
             grActions.ProcessRoll(roll);
+        }
+
+        public override void Dispose()
+        {
+            host.DiceManager.OnDiceRoll -= PlayerTriggerPull;
+            base.Dispose();
         }
 
         public override void Update()

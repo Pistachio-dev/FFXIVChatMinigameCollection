@@ -13,6 +13,7 @@ using ECommons;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
+using MinigameCollection.Emotes;
 using MinigameCollection.Games.Common;
 using MinigameCollection.Games.Darts.Services;
 using MinigameCollection.Games.GarleanRouletteGame;
@@ -133,6 +134,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<DartsActions>();
         serviceCollection.AddSingleton<DartsChatOutput>();
         serviceCollection.AddSingleton<CommonActions>();
+        serviceCollection.AddSingleton<EmoteReaderHooks>();
 
 
         return serviceCollection.BuildServiceProvider();

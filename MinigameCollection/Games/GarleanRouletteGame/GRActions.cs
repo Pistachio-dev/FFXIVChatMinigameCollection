@@ -218,8 +218,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.TriggerPulls = 0;
                 if (config.GarleanRouletteRestartIfGunEmpties)
                 {
-                    Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
                     gameState.CurrentPlayer = GetNextRoundFirstPlayer();
+                    Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
                 }
                 else
                 {

@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
 using MinigameCollection.Games;
+using MinigameCollection.Games.Darts.Services;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
@@ -24,7 +25,8 @@ namespace MinigameCollection
                 (NoGame.Id, (sp) => sp.GetRequiredService<NoGame>(), NoGame.Description),
                 (Microgame.Id, (sp) => sp.GetRequiredService<Microgame>(), Microgame.Description),
                 (GarleanRoulette.Id,  (sp) => sp.GetRequiredService<GarleanRoulette>(), GarleanRoulette.Description),
-                (SlotsGame.Id,  (sp) => sp.GetRequiredService<SlotsGame>(), SlotsGame.Description)
+                (SlotsGame.Id,  (sp) => sp.GetRequiredService<SlotsGame>(), SlotsGame.Description),
+                (DartsGame.Id, (sp) => sp.GetRequiredService<DartsGame>(), DartsGame.Description)
             ];
         }
 

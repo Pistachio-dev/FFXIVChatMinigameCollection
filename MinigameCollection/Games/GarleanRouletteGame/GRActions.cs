@@ -96,7 +96,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
             foreach (var player in gameHost.Players.ActivePlayers)
             {
-                commonActions.SetupRoll(AcceptedRollType.Any, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult), null);
+                commonActions.SetupRoll(AcceptedRollType.Any, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult), true, null);
             }
 
             //saveManager.Save();

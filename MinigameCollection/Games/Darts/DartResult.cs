@@ -17,8 +17,32 @@ namespace MinigameCollection.Games.Darts
 
         public int LandedMultiplier { get; set; }
 
-        public int ActualMultiplier => Multiplier();
+        public int ActualMultiplier => GetMultiplier();
 
+        public override string ToString()
+        {
+            if (LandedNumber == 21)
+            {
+                if (LandedMultiplier > 3)
+                {
+                    // Bullseye, dead on
+                    return $"Bullseye, dead on! 50 points!!";
+                }
+                else
+                {
+                    // Bullseye ring
+                    return $"Hit the bullseye ring! 25 points!";
+                }
+            }
+
+            var multiplier = GetMultiplier();
+            if (multiplier > 1)
+            {
+                return $"{LandedNumber}{multiplier}={GetPoints()}";
+            }
+
+            return $"{LandedNumber}";
+        }
         public int GetPoints()
         {
             if (LandedNumber == 21)
@@ -45,7 +69,7 @@ namespace MinigameCollection.Games.Darts
             return LandedNumber * multiplier;
         }
 
-        public int Multiplier() 
+        public int GetMultiplier() 
         {
             if (LandedMultiplier == 6)
             {

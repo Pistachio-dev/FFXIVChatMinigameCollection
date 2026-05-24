@@ -9,5 +9,7 @@ namespace MinigameCollection.Games.Darts.Services
     {
         public int Score { get; set; } = 0;
         public int OrderRolled { get; set; } = -1;
+
+        public int Place { get; set; } = -1;
     }
 }

@@ -22,4 +22,8 @@ public class Configuration : IConfiguration
     public bool AutoCashOut { get; set; } = true;
 
     public bool GarleanRouletteRestartIfGunEmpties { get; set; } = true;
+
+    public int DartsTargetScore { get; set; } = 301;
+
+    public bool DartsNeedExactThrow { get; set; } = true;
 }

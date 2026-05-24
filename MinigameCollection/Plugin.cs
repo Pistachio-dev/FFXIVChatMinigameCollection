@@ -135,6 +135,7 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<DartsChatOutput>();
         serviceCollection.AddSingleton<CommonActions>();
         serviceCollection.AddSingleton<EmoteReaderHooks>();
+        serviceCollection.AddSingleton<EmoteExpectedQueue>();
 
 
         return serviceCollection.BuildServiceProvider();

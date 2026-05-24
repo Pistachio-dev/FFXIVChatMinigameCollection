@@ -29,20 +29,20 @@ namespace MinigameCollection.Games.Common
             this.config = configService.GetConfiguration();
         }
 
-        public void SetupRoll(AcceptedRollType acceptedTypes, int max, Action<DiceRoll> onRollDetected, MGPlayer? player = null)
+        public void SetupRoll(AcceptedRollType acceptedTypes, int max, Action<DiceRoll> onRollDetected, bool quiet, MGPlayer? player = null)
         {
             bool isHouse = player == null;
             string playerFullName = isHouse ? "the house" : player!.FullName;
             Plugin.Log.Info("Roll expectation queued for " + playerFullName);
             rollTracker.QueueExpectedRoll(playerFullName, acceptedTypes, max, isHouse,
             (roll) => {
-                if (!isHouse)
+                if (!isHouse && !quiet)
                 {
                     gameHost.ChatOutput.WriteChat($"{(isHouse ? playerFullName : playerFullName.GetFirstName())} rolled {roll.RollResult}");
                 }
                 onRollDetected(roll);
             });
-            gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
+            gameHost.ChatOutput.WriteDiceCommand(max, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
 
         }      
     }

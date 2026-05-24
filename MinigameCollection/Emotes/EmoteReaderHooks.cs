@@ -51,8 +51,11 @@ namespace MinigameCollection.Emotes
             Plugin.Log.Info($"Emote triggered >> instigatorAddr:{instigatorAddr:X}, emoteId:{emoteId}, targetId:{targetId:X}");
             if (objectTable.LocalPlayer != null)
             {
-                if (targetId == objectTable.LocalPlayer.GameObjectId)
+                var instigator = objectTable.PlayerObjects.FirstOrDefault(p => p.Address == (nint)instigatorAddr);
+                if (instigator != null)
                 {
+                    Plugin.Log.Info(instigator.Name.ToString());
+
                     var instigatorOb = objectTable.FirstOrDefault(x => (ulong)x.Address == instigatorAddr) as IPlayerCharacter;
                     if (instigatorOb != null)
                     {

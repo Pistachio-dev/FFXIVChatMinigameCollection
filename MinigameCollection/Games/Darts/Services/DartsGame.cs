@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using DalamudBasics.Configuration;
 using DalamudBasics.DiceRolling;
+using DalamudBasics.Extensions;
 using MinigameCollection.Bank;
 using MinigameCollection.Emotes;
 using Model.Base;
@@ -13,8 +14,8 @@ namespace MinigameCollection.Games.Darts.Services
     internal class DartsGame : Game
     {
         public static readonly GameId Id = new GameId("Darts");
-        public const string Description = "/throw to roll a dart hit. Points are awarded based on where the dart hits. " +
-            "First to reach the target score wins. If you would go over the target score, your dart score is not added.";
+        public const string Description = "/throw to roll a dart hit. Points are awarded based on where the dart hits.\n" +
+            "First to reach the target score wins.\nIf you would go over the target score, your dart score is not added.";
         private readonly Configuration config;
         private readonly DartsGameState gameState;
         private readonly DartsActions actions;
@@ -62,6 +63,7 @@ namespace MinigameCollection.Games.Darts.Services
         {
             // Emote ids for throwing snowball is 86 (with target) and 87 (without target).
             Plugin.Log.Info("Emote detected: {Instigator} performed emote {EmoteId}", instigator.Name.TextValue, emoteId);
+            actions.ProcessEmote(instigator.GetFullName(), emoteId);
         }
     }
 }

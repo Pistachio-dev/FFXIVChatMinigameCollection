@@ -1,8 +1,8 @@
 {
     "Author": "Pistachio Herald",
     "Name": "Minigame Collection",
-    "Punchline": "A collection of of venue or casino games.",
-    "Description": "A collection of of venue or casino games. Type /minig to start.",
+    "Punchline": "A collection of venue or casino games.",
+    "Description": "A collection of venue or casino games. Type /minig to start.",
     "ApplicableVersion": "any",
     "Tags": [
         "party",

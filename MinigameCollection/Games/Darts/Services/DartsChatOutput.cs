@@ -40,7 +40,24 @@ namespace MinigameCollection.Games.Darts.Services
                 return;
             }
 
-            chatOutput.WriteChat($"Hit: {result.LandedNumber}{result.ActualMultiplier} for {result.GetPoints()} points!<se.7>");
+            var soundEffect = GetSoundEffect(result.GetPoints());
+            chatOutput.WriteChat($"Hit: {result.LandedNumber}{result.ActualMultiplier} for {result.GetPoints()} points!{soundEffect}");
+        }
+
+        private string GetSoundEffect(int score)
+        {
+            if (score >= 35)
+            {
+                return "<se.15>";
+            }
+            else if (score >= 9)
+            {
+                return "<se.7>";
+            }
+            else
+            {
+                return "<se.4>";
+            }
         }
 
         public void ThrowNotOnSnow()
@@ -88,7 +105,7 @@ namespace MinigameCollection.Games.Darts.Services
             chatOutput.WriteChat("Score table: ");
             foreach (var player in players.OrderByDescending(p => p.GetData().Score))
             {
-                chatOutput.WriteChat($"{player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");
+                chatOutput.WriteChat($"==={player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");
             }
         }
     }

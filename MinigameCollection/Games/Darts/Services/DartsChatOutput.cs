@@ -1,11 +1,9 @@
 using DalamudBasics.Chat.Output;
 using DalamudBasics.Configuration;
 using DalamudBasics.Extensions;
-using InteropGenerator.Runtime;
 using Model.Base;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace MinigameCollection.Games.Darts.Services
 {
@@ -20,9 +18,10 @@ namespace MinigameCollection.Games.Darts.Services
             config = configService.GetConfiguration();
         }
 
-        public void RequestThrow(MGPlayer player)
+        public void RequestThrow(MGPlayer player, int dartNumber)
         {
-            var message = $"{player.FullName.GetFirstName()}, time to /throw";
+            chatOutput.WriteChat($"----------<se.3>");
+            var message = $"{player.FullName.GetFirstName()}, time to /throw ({dartNumber} out of {config.DartsAmountPerTurn})";
             chatOutput.WriteChat(message);
         }
 
@@ -42,12 +41,6 @@ namespace MinigameCollection.Games.Darts.Services
             }
 
             chatOutput.WriteChat($"Hit: {result.LandedNumber}{result.ActualMultiplier} for {result.GetPoints()} points!<se.7>");
-        }
-
-        public void PrintScore(MGPlayer player)
-        {
-            var message = $"{player.FullName.GetFirstName()}'s score: {player.GetData().Score}/{config.DartsTargetScore}";
-            chatOutput.WriteChat(message);
         }
 
         public void ThrowNotOnSnow()
@@ -85,9 +78,18 @@ namespace MinigameCollection.Games.Darts.Services
             chatOutput.WriteChat($"Score: {config.DartsTargetScore}. {playerName} gets {place} place.");
         }
 
-        public void WriteDartHit(MGPlayer player, DartResult result)
+        public void WritePlayerScore(MGPlayer player)
         {
-            chatOutput.WriteChat($"{player.FullName.GetFirstName()} throws: {result}! Total score: {player.GetData().Score}");
+            chatOutput.WriteChat($"Total score: {player.GetData().Score}");
+        }
+
+        public void WriteScoreTable(List<MGPlayer> players)
+        {
+            chatOutput.WriteChat("Score table: ");
+            foreach (var player in players.OrderByDescending(p => p.GetData().Score))
+            {
+                chatOutput.WriteChat($"{player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");
+            }
         }
     }
 }

@@ -83,9 +83,6 @@ namespace MinigameCollection
             }
 
             throw new Exception($"Could not get next player. Current player is {current.FullName}");
-
-            Log.Warning($"Next player {current.FullName} is the previous one");
-            return current;
         }
 
         public bool AddPlayer(string fullName)

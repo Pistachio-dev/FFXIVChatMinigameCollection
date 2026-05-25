@@ -13,7 +13,9 @@ namespace MinigameCollection.Games.Darts.Services
 
         public int DartsThrownThisTurn { get; set; } = 0;
 
-        public int TotalTurnScore { get; set; } = 0;
+        public DartResult? LastDartHit { get; set; } = null;
+        
+        public DartsStage Stage { get; set; } = DartsStage.RollingOrder;
 
         public void Reset()
         {
@@ -22,8 +24,9 @@ namespace MinigameCollection.Games.Darts.Services
 
         public void ResetRound()
         {
+            Plugin.Log.Warning("Resetto!");
             DartsThrownThisTurn = 0;
-            TotalTurnScore = 0;
+            LastDartHit = null;
 
         }
     }

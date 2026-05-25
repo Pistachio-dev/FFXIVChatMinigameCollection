@@ -1,5 +1,4 @@
 using DalamudBasics.Configuration;
-using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Bank;
@@ -7,13 +6,12 @@ using MinigameCollection.Dice;
 using MinigameCollection.Emotes;
 using MinigameCollection.Games.Common;
 using MinigameCollection.Save;
-using Model.Base;
 using System;
 using System.Linq;
 
 namespace MinigameCollection.Games.Darts.Services
 {
-    internal class DartsActions
+    internal partial class DartsActions
     {
         private readonly GameHost gameHost;
         private readonly DartsGameState gameState;
@@ -45,25 +43,7 @@ namespace MinigameCollection.Games.Darts.Services
             this.commonActions = commonActions;
             this.expectedEmoteQueue = emoteQueue;
         }
-        public void StartOrderRound()
-        {
-            if (gameHost.Players.ActivePlayers.Any(p => p.Bank.Stored < gameState.Bet))
-            {
-                gameHost.ChatGui.PrintError("One or more players can't afford that bet");
-                return;
-            }
 
-            foreach (var player in gameHost.Players.ActivePlayers)
-            {
-                Plugin.Log.Warning($"Enqueing for {player.FullName}");
-                commonActions.SetupRoll(AcceptedRollType.Any, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult), true, null);
-            }
-        }
-
-        public void ProcessRoll(DiceRoll roll)
-        {
-            rollTracker.ProcessRoll(roll);
-        }
 
         public void ProcessEmote(string instigatorName, int emoteId)
         {
@@ -75,48 +55,57 @@ namespace MinigameCollection.Games.Darts.Services
 
             if (instigatorName != gameState.CurrentPlayer?.FullName)
             {
-                Plugin.Log.Verbose($"Emote instigator {instigatorName} is not the current player {gameState.CurrentPlayer}, ignoring");
+                Plugin.Log.Verbose($"Emote instigator {instigatorName} is not the current player {gameState.CurrentPlayer?.FullName}, ignoring");
                 return;
             }
-
-            ProcessThrow();
+            if (gameState.Stage == DartsStage.Throwing)
+            {
+                Plugin.Log.Warning("Still throwing last dart, ignoring the new emote");
+                return;
+            }
+            ExecuteThrow();
         }
 
         // Dart landing chain: 1
-        private void ProcessThrow()
+        private void ExecuteThrow()
         {
+            gameState.Stage = DartsStage.Throwing;
             RollDartLanding();
         }
+
         // Dart landing chain: 2
         private void RollDartLanding()
         {
-            // roll landing (1-20, 21 is bullseye)            
-            commonActions.SetupRoll(AcceptedRollType.Any, 21, (diceRoll) => RollDartMultiplier(diceRoll.RollResult), true, gameState.CurrentPlayer);
+            // roll landing (1-20, 21 is bullseye)
+            commonActions.SetupRoll(AcceptedRollType.Any, 21, (diceRoll) => RollDartMultiplier(diceRoll.RollResult), true, null);
         }
 
         // Dart landing chain: 3
         private void RollDartMultiplier(int landingResult)
         {
             // roll multiplier (1-3 is 1, 4-5 is 2, 6 is 3)
-            commonActions.SetupRoll(AcceptedRollType.Any, 6, (diceRoll) => RunHitResult(landingResult, diceRoll.RollResult), true, gameState.CurrentPlayer);
+            commonActions.SetupRoll(AcceptedRollType.Any, 6, (diceRoll) => RunHitResult(landingResult, diceRoll.RollResult), true, null);
         }
 
         // Dart landing chain: 4
         private void RunHitResult(int landingResult, int multiplierResult)
         {
+            gameState.Stage = DartsStage.AwaitingThrow;
             var hit = new DartResult(landingResult, multiplierResult);
             chatOutput.ThrowDetected(hit);
-            gameState.DartsThrownThisTurn++;
-            gameState.TotalTurnScore += hit.GetPoints();
-            UpdateScoreAndWinners();
-            NextTurn();
+            gameState.DartsThrownThisTurn+=1;
+            Plugin.Log.Info($"Darts thrown: {gameState.DartsThrownThisTurn}");
+            gameState.LastDartHit = hit;            
+            NextTurnOrtGameEnd();
         }
 
-        private void NextTurn()
+        private void NextTurnOrtGameEnd()
         {
             var amountOfWinners = UpdateScoreAndWinners();
+            chatOutput.WritePlayerScore(gameState.CurrentPlayer ?? throw new Exception("Landing hit of null player"));
             if (IsEndOfGame(amountOfWinners))
             {
+                Plugin.Log.Warning("End of game detected, resetting game state");
                 EndGame();
                 return;
             }
@@ -124,12 +113,13 @@ namespace MinigameCollection.Games.Darts.Services
             // Next dart
             if (gameState.DartsThrownThisTurn == 3 || gameState.CurrentPlayer?.GetData().Place > 0)
             {
+                Plugin.Log.Warning("Player turn finished, moving to next player");
                 // Next player
                 gameState.ResetRound();
                 NextPlayer();
             }
 
-            SetUpThrowForCurrentPlayer();
+            SetUpThrowForCurrentPlayer(gameState.DartsThrownThisTurn + 1);
         }
 
         private int UpdateScoreAndWinners()
@@ -143,7 +133,7 @@ namespace MinigameCollection.Games.Darts.Services
             }
 
             int scoreBeforeThrow = cpData.Score;
-            int turnFullScore = cpData.Score + gameState.TotalTurnScore;
+            int turnFullScore = cpData.Score + gameState.LastDartHit?.GetPoints() ?? throw new Exception("Last dart hit was null on read");
             int amountOfWinners = gameHost.Players.ActivePlayers.Count(p => p.GetData().Place > 0);
 
 
@@ -161,6 +151,7 @@ namespace MinigameCollection.Games.Darts.Services
                 cpData.Place = amountOfWinners + 1;
             }            
 
+            Plugin.Log.Verbose($"Score before throw: {scoreBeforeThrow}, dart points: {gameState.LastDartHit?.GetPoints()}, score after throw: {turnFullScore}");
             cpData.Score = turnFullScore;
             gameState.CurrentPlayer?.SetData(cpData);
 
@@ -189,27 +180,10 @@ namespace MinigameCollection.Games.Darts.Services
 
         private void NextPlayer()
         {
-            gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Score != config.DartsTargetScore);
-        }
+            Plugin.Log.Info("Getting next player");
+            chatOutput.WriteScoreTable(gameHost.Players.ActivePlayers);
 
-        // Called on detecting a /random or /dice
-        private void SetPlayerOrderRoll(MGPlayer? player, int order)
-        {
-            if (player == null)
-            {
-                Plugin.Log.Error("Attempting to set player order roll, but player is null");
-                return;
-            }
-            var data = player.GetData<DartsPlayerData>(DartsGame.Id);
-            data.OrderRolled = order;
-            player.SetData<DartsPlayerData>(DartsGame.Id, data);
-
-            if (gameHost.Players.ActivePlayers.All(p => p.GetData().OrderRolled != -1))
-            {
-                ShufflePlayersBasedOnRolledOrder();
-                chatOutput.WritePlayerOrder(gameHost.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).ToList());
-                StartGame();
-            }
+            gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Place == -1);
         }
 
         private void ShufflePlayersBasedOnRolledOrder()
@@ -223,17 +197,18 @@ namespace MinigameCollection.Games.Darts.Services
             gameState.CurrentPlayer = gameHost.Players.ActivePlayers.FirstOrDefault();
             if (gameState.CurrentPlayer == null)
             {
-                Plugin.Log.Error("Attempting to start game, but no current player found");
+                Plugin.Log.Error("Attempting to start game, but no player was found");
                 return;
             }
-            SetUpThrowForCurrentPlayer();
+            SetUpThrowForCurrentPlayer(1);
         }
 
-        private void SetUpThrowForCurrentPlayer()
+        private void SetUpThrowForCurrentPlayer(int dartNumber)
         {
-            gameState.ResetRound();
-            chatOutput.RequestThrow(gameState.CurrentPlayer ?? throw new Exception ("Starting turn for null current player"));
-            expectedEmoteQueue.ExpectEmote(gameState.CurrentPlayer?.FullName ?? "Null player", acceptedThrowEmoteIds, ProcessEmote);
+            var player = gameState.CurrentPlayer ?? throw new Exception("Starting turn for null current player");
+            chatOutput.RequestThrow(player, dartNumber);
+            expectedEmoteQueue.ExpectEmote(player.FullName, acceptedThrowEmoteIds, ProcessEmote);
+            gameState.Stage = DartsStage.AwaitingThrow;
         }
     }
 }

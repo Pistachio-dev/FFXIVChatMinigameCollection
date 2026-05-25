@@ -1,6 +1,6 @@
 {
-    "AssemblyVersion": "0.0.2.5",
+    "AssemblyVersion": "0.0.3.0",
     "DalamudApiLevel": 15,
-    "ChangeLog": "- Patch 4.5.",
+    "ChangeLog": "- Added Darts game.",
     "IsTest": false
 }

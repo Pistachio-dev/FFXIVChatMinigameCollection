@@ -5,6 +5,7 @@ using DalamudBasics.GUI.Forms;
 using DalamudBasics.GUI.Windows;
 using DalamudBasics.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using MinigameCollection.Games.Darts.Services;
 using MinigameCollection.Games.GarleanRouletteGame;
 using System;
 using System.Linq;
@@ -63,6 +64,12 @@ public class ConfigWindow : PluginWindowBase, IDisposable
         if (selectedGameId == GarleanRoulette.Id)
         {
             formFactory.DrawCheckbox("Start from first player if gun empties", nameof(Configuration.GarleanRouletteRestartIfGunEmpties));
+        }
+        if (selectedGameId == DartsGame.Id)
+        {
+            formFactory.DrawCheckbox("Fail if going over score", nameof(Configuration.DartsNeedExactThrow));
+            formFactory.DrawIntInput("Target score", nameof(Configuration.DartsTargetScore));
+            formFactory.DrawIntInput("Darts amount per turn", nameof(Configuration.DartsAmountPerTurn));
         }
     }
 

@@ -7,6 +7,12 @@ namespace MinigameCollection.Emotes
     internal class EmoteExpectedQueue
     {
         private Queue<ExpectedEmote> expectedEmotes = new();
+
+        public void Reset()
+        {
+            expectedEmotes.Clear();
+        }
+
         public void ExpectEmote(string instigatorName, int[] emoteIds, EmoteCallback callback)
         {
             var expectedEmote = new ExpectedEmote(instigatorName, emoteIds, callback);

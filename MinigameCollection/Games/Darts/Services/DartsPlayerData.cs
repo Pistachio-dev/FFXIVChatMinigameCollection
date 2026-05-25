@@ -11,5 +11,12 @@ namespace MinigameCollection.Games.Darts.Services
         public int OrderRolled { get; set; } = -1;
 
         public int Place { get; set; } = -1;
+
+        public override void Reset(){
+            Score = 0;
+            OrderRolled = -1;
+            Place = -1;
+            base.Reset();
+        }
     }
 }

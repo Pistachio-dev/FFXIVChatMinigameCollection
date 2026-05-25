@@ -6,6 +6,7 @@ using MinigameCollection.Dice;
 using MinigameCollection.Emotes;
 using MinigameCollection.Games.Common;
 using MinigameCollection.Save;
+using Model.Base;
 using System;
 using System.Linq;
 
@@ -21,6 +22,7 @@ namespace MinigameCollection.Games.Darts.Services
         private readonly SaveManager saveManager;
         private readonly CommonActions commonActions;
         private readonly EmoteExpectedQueue expectedEmoteQueue;
+        private readonly BankActions bankActions;
         private readonly Configuration config;
         private const int OrderRollMax = 100;
         // /throw without snow: 85
@@ -31,7 +33,7 @@ namespace MinigameCollection.Games.Darts.Services
 
         public DartsActions(GameHost gameHost, DartsGameState gameState, RollTracker rollTracker,
             IConfigurationService<Configuration> config, DartsChatOutput chatOutput, BankActions bank, SaveManager saveManager, CommonActions commonActions,
-            EmoteExpectedQueue emoteQueue)
+            EmoteExpectedQueue emoteQueue, BankActions bankActions)
         {
             this.gameHost = gameHost;
             this.gameState = gameState;
@@ -42,6 +44,7 @@ namespace MinigameCollection.Games.Darts.Services
             this.saveManager = saveManager;
             this.commonActions = commonActions;
             this.expectedEmoteQueue = emoteQueue;
+            this.bankActions = bankActions;
         }
 
 
@@ -144,18 +147,18 @@ namespace MinigameCollection.Games.Darts.Services
                 return amountOfWinners;
             }
 
-            if (turnFullScore >= config.DartsTargetScore && !config.DartsNeedExactThrow)
+            if (turnFullScore == config.DartsTargetScore)
             {
                 // Win
-                chatOutput.WriteWin(amountOfWinners, gameState.CurrentPlayer?.FullName ?? "Null player");
                 cpData.Place = amountOfWinners + 1;
+                chatOutput.WriteWin(cpData.Place, gameState.CurrentPlayer?.FullName ?? "Null player");
             }            
 
             Plugin.Log.Verbose($"Score before throw: {scoreBeforeThrow}, dart points: {gameState.LastDartHit?.GetPoints()}, score after throw: {turnFullScore}");
             cpData.Score = turnFullScore;
             gameState.CurrentPlayer?.SetData(cpData);
 
-            return amountOfWinners;
+            return cpData.Place;
         }
 
         private bool IsEndOfGame(int amountOfWinners)
@@ -166,8 +169,24 @@ namespace MinigameCollection.Games.Darts.Services
             if ((amountOfWinners == players - 1)) return true;
             return false;
         }
+
+        private void SetRemainingPlayersPositions()
+        {
+            var amountOfWinners = gameHost.Players.ActivePlayers.Count(p => p.GetData().Place > 0);
+            foreach (var player in gameHost.Players.ActivePlayers.Where(p => p.GetData().Place == -1))
+            {
+                var data = player.GetData();
+                data.Place = amountOfWinners + 1;
+                player.SetData(data);
+                amountOfWinners++;
+            }
+        }
         private void EndGame()
         {
+            SetRemainingPlayersPositions();
+            chatOutput.WriteFinalResultsTable(gameHost.Players.ActivePlayers);
+            gameState.Stage = DartsStage.ShowingWinners;
+            DistributeBets(gameHost.Players.ActivePlayers.FirstOrDefault(p => p.GetData().Place == 1) ?? throw new Exception("No winner found to distribute bets to"));
             foreach (var player in gameHost.Players.ActivePlayers)
             {
                 var data = player.GetData();
@@ -209,6 +228,18 @@ namespace MinigameCollection.Games.Darts.Services
             chatOutput.RequestThrow(player, dartNumber);
             expectedEmoteQueue.ExpectEmote(player.FullName, acceptedThrowEmoteIds, ProcessEmote);
             gameState.Stage = DartsStage.AwaitingThrow;
+        }
+
+        public void DistributeBets(MGPlayer winner)
+        {
+            foreach (var player in gameHost.Players.ActivePlayers)
+            {
+                if (player == winner) continue;
+                if (player == winner) continue;
+                bankActions.TransferInUse(player, winner);
+            }
+
+            bankActions.StoreAll(winner);
         }
     }
 }

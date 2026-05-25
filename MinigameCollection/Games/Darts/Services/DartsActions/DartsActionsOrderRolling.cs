@@ -1,12 +1,8 @@
 using DalamudBasics.DiceRolling;
 using DalamudBasics.Extensions;
 using MinigameCollection.Dice;
-using MinigameCollection.Games.Common;
 using Model.Base;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MinigameCollection.Games.Darts.Services
 {
@@ -14,17 +10,43 @@ namespace MinigameCollection.Games.Darts.Services
     {
         public void StartOrderRound()
         {
-            gameState.Stage = DartsStage.RollingOrder;
             if (gameHost.Players.ActivePlayers.Any(p => p.Bank.Stored < gameState.Bet))
             {
                 gameHost.ChatGui.PrintError("One or more players can't afford that bet");
                 return;
             }
 
+            ResetState();
+            LoadBets();
+
+            gameState.Stage = DartsStage.RollingOrder;
+
             foreach (var player in gameHost.Players.ActivePlayers)
             {
                 Plugin.Log.Warning($"Enqueing for {player.FullName}");
                 commonActions.SetupRoll(AcceptedRollType.Any, OrderRollMax, (roll) => OnOrderRollDetected(player, roll.RollResult), true, null);
+            }
+        }
+
+        public void ResetState()
+        {
+            expectedEmoteQueue.Reset();
+            rollTracker.Reset();
+            gameState.Stage = DartsStage.BeforeGame;
+            gameState.ResetRound();
+            foreach (var player in gameHost.Players.ActivePlayers)
+            {
+                var data = player.GetData<DartsPlayerData>(DartsGame.Id);
+                data.Reset();
+                player.SetData<DartsPlayerData>(DartsGame.Id, data);
+            }
+        }
+        public void LoadBets()
+        {
+            foreach (var player in gameHost.Players.ActivePlayers)
+            {
+                bankActions.StoreAll(player);
+                bankActions.Draw(player, gameState.Bet);
             }
         }
 

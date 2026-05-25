@@ -27,6 +27,7 @@ namespace MinigameCollection.Games.Darts.Services
 
         public void ThrowDetected(DartResult result)
         {
+            chatOutput.WriteChat("----------");
             if (result.LandedNumber == 21)
             {
                 if (result.LandedMultiplier > 3)
@@ -78,23 +79,27 @@ namespace MinigameCollection.Games.Darts.Services
 
         public void WriteBounce(int prevScore, int totalScore)
         {
-            var message = $"Score: {totalScore}, over {config.DartsTargetScore}! Bounced back to {prevScore}.";
+            var message = $"Score: {totalScore}, over {config.DartsTargetScore}! Bounced back to {prevScore}. <se.11>";
             chatOutput.WriteChat(message);
         }
 
         public void WriteWin(int position, string playerName)
         {
-            string place = position switch
+            string place = GetPlaceString(position);
+
+            chatOutput.WriteChat($"Goal score reached: {config.DartsTargetScore}. {playerName} gets {place} place.");
+        }
+
+        private string GetPlaceString(int place)
+        {
+            return place switch
             {
                 1 => "1st",
                 2 => "2nd",
                 3 => "3rd",
-                _ => position + "th"
+                _ => place + "th"
             };
-
-            chatOutput.WriteChat($"Score: {config.DartsTargetScore}. {playerName} gets {place} place.");
         }
-
         public void WritePlayerScore(MGPlayer player)
         {
             chatOutput.WriteChat($"Total score: {player.GetData().Score}");
@@ -106,6 +111,16 @@ namespace MinigameCollection.Games.Darts.Services
             foreach (var player in players.OrderByDescending(p => p.GetData().Score))
             {
                 chatOutput.WriteChat($"==={player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");
+            }
+        }
+
+        public void WriteFinalResultsTable(List<MGPlayer> players)
+        {
+            chatOutput.WriteChat("Final standings: ");
+            foreach (var player in players.OrderBy(p => p.GetData().Place))
+            {
+                var place = GetPlaceString(player.GetData().Place);
+                chatOutput.WriteChat($"{place}: {player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");
             }
         }
     }

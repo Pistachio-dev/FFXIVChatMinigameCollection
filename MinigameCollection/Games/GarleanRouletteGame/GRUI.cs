@@ -144,7 +144,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 {
                     grActions.GoBackToBetting();
                 }
-            }            
+            }
         }
 
         private void DrawChambersLoaded()

@@ -5,6 +5,7 @@ using DalamudBasics.Extensions;
 using Humanizer;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
+using MinigameCollection.Games.Common;
 using MinigameCollection.Save;
 using Model.Base;
 using System;
@@ -21,12 +22,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         private readonly GRChatOutput chatOutput;
         private readonly BankActions bank;
         private readonly SaveManager saveManager;
+        private readonly CommonActions commonActions;
         private const int RevolverRollMin = 1;
         private const int RevolverRollMaxInclusive = 7;
         private const int OrderRollMax = 100;
 
         public GRActions(GameHost gameHost, GRGameState gameState, RollTracker rollTracker, 
-            IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank, SaveManager saveManager)
+            IConfigurationService<Configuration> config, GRChatOutput chatOutput, BankActions bank, SaveManager saveManager, CommonActions commonActions)
         {
             this.gameHost = gameHost;
             this.gameState = gameState;
@@ -35,6 +37,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             this.chatOutput = chatOutput;
             this.bank = bank;
             this.saveManager = saveManager;
+            this.commonActions = commonActions;
         }
 
         public void ResetGame(GameHost host)
@@ -93,21 +96,19 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
             foreach (var player in gameHost.Players.ActivePlayers)
             {
-                // Prepare the expected roll
-                Plugin.Log.Warning("Roll expectation queued: " + player.FullName);
-                rollTracker.QueueExpectedRoll("Irrelevant, will match house", AcceptedRollType.Any, OrderRollMax, true, 
-                (roll) => {
-                    gameHost.ChatOutput.WriteChat($"{player.FullName.GetFirstName()} rolled {roll.RollResult}");
-                    SetPlayerOrderRoll(player, roll.RollResult);
-                });
-                gameHost.ChatOutput.WriteDiceCommand(100, config.DefaultOutputChatType == Dalamud.Game.Text.XivChatType.Alliance);
+                commonActions.SetupRoll(AcceptedRollType.Any, OrderRollMax, (roll) => SetPlayerOrderRoll(player, roll.RollResult), true, null);
             }
 
             //saveManager.Save();
         }
 
-        private void SetPlayerOrderRoll(MGPlayer player, int order)
+        private void SetPlayerOrderRoll(MGPlayer? player, int order)
         {
+            if (player == null)
+            {
+                Plugin.Log.Error("Attempting to set player order roll, but player is null");
+                return;
+            }
             var data = player.GetData();
             data.OrderRolled = order;
             player.SetData(data);
@@ -218,8 +219,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 gameState.TriggerPulls = 0;
                 if (config.GarleanRouletteRestartIfGunEmpties)
                 {
-                    Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
                     gameState.CurrentPlayer = GetNextRoundFirstPlayer();
+                    Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
                 }
                 else
                 {

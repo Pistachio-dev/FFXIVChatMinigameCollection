@@ -1,0 +1,22 @@
+using Model.Base;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace MinigameCollection.Games.Darts.Services
+{
+    internal class DartsPlayerData : GameSpecificPlayerData
+    {
+        public int Score { get; set; } = 0;
+        public int OrderRolled { get; set; } = -1;
+
+        public int Place { get; set; } = -1;
+
+        public override void Reset(){
+            Score = 0;
+            OrderRolled = -1;
+            Place = -1;
+            base.Reset();
+        }
+    }
+}

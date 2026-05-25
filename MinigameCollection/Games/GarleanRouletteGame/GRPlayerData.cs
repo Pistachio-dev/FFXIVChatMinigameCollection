@@ -10,7 +10,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public bool Alive { get; set; } = true;
 
-        public void Reset()
+        public override void Reset()
         {
             OrderRolled = -1;
             Roll = -1;

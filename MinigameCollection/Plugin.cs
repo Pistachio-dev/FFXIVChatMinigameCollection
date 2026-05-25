@@ -13,6 +13,9 @@ using ECommons;
 using Microsoft.Extensions.DependencyInjection;
 using MinigameCollection.Bank;
 using MinigameCollection.Dice;
+using MinigameCollection.Emotes;
+using MinigameCollection.Games.Common;
+using MinigameCollection.Games.Darts.Services;
 using MinigameCollection.Games.GarleanRouletteGame;
 using MinigameCollection.Games.MicroGameGame;
 using MinigameCollection.Games.NoGameGame;
@@ -125,6 +128,15 @@ public sealed class Plugin : IDalamudPlugin
         serviceCollection.AddSingleton<SlotsGameActions>();
         serviceCollection.AddSingleton<SlotsGameUI>();
         serviceCollection.AddSingleton<SlotsResultProcessing>();
+        serviceCollection.AddSingleton<DartsGame>();
+        serviceCollection.AddSingleton<DartsGameState>();
+        serviceCollection.AddSingleton<DartsUI>();
+        serviceCollection.AddSingleton<DartsActions>();
+        serviceCollection.AddSingleton<DartsChatOutput>();
+        serviceCollection.AddSingleton<CommonActions>();
+        serviceCollection.AddSingleton<EmoteReaderHooks>();
+        serviceCollection.AddSingleton<EmoteExpectedQueue>();
+
 
         return serviceCollection.BuildServiceProvider();
     }

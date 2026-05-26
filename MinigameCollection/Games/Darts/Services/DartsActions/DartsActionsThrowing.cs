@@ -147,7 +147,7 @@ namespace MinigameCollection.Games.Darts.Services
                 return amountOfWinners;
             }
 
-            if (turnFullScore == config.DartsTargetScore)
+            if (turnFullScore == config.DartsTargetScore || (turnFullScore >= config.DartsTargetScore && !config.DartsNeedExactThrow))
             {
                 // Win
                 cpData.Place = amountOfWinners + 1;

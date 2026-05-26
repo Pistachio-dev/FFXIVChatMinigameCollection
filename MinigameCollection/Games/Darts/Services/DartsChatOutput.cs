@@ -20,7 +20,7 @@ namespace MinigameCollection.Games.Darts.Services
 
         public void RequestThrow(MGPlayer player, int dartNumber)
         {
-            chatOutput.WriteChat($"----------<se.3>");
+            chatOutput.WriteChat($"----------<se.3>", null, 1300);
             var message = $"{player.FullName.GetFirstName()}, time to /throw ({dartNumber} out of {config.DartsAmountPerTurn})";
             chatOutput.WriteChat(message);
         }
@@ -102,7 +102,7 @@ namespace MinigameCollection.Games.Darts.Services
         }
         public void WritePlayerScore(MGPlayer player)
         {
-            chatOutput.WriteChat($"Total score: {player.GetData().Score}");
+            chatOutput.WriteChat($"Total score: {player.GetData().Score}", null, 1000);
         }
 
         public void WriteScoreTable(List<MGPlayer> players)

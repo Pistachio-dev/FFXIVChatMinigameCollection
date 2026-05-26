@@ -107,7 +107,7 @@ namespace MinigameCollection.Games.Darts.Services
 
         public void WriteScoreTable(List<MGPlayer> players)
         {
-            chatOutput.WriteChat("Score table: ");
+            chatOutput.WriteChat("Score table: ", null, 2000);
             foreach (var player in players.OrderByDescending(p => p.GetData().Score))
             {
                 chatOutput.WriteChat($"==={player.GetData().Score.ToString("000")} points <=={player.FullName.GetFirstName()}:");

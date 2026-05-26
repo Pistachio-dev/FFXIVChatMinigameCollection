@@ -4,6 +4,7 @@ using DalamudBasics.Extensions;
 using MinigameCollection.Bank;
 using MinigameCollection.UI;
 using System.Linq;
+using System.Numerics;
 
 namespace MinigameCollection.Games.Darts.Services
 {
@@ -33,12 +34,17 @@ namespace MinigameCollection.Games.Darts.Services
             DrawCurrentPlayer();
             if (gameState.Stage == DartsStage.BeforeGame || gameState.Stage == DartsStage.ShowingWinners)
             {
-                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Play, "Start Game"))
+                if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Play, "Start Game", new Vector4(0,0,1,1)))
                 {
                     actions.StartOrderRound();
                 }
                 DrawBetSetting();
             }
+            else if (ImGuiComponents.IconButtonWithText(Dalamud.Interface.FontAwesomeIcon.Backward, $"Reset game", new Vector4(0.4f, 0, 0, 1)) && ImGui.GetIO().KeyShift)
+            {
+                actions.ResetState();
+            }
+            DrawTooltip("Shift+Click to reset game");
         }
 
         private void DrawCurrentPlayer()

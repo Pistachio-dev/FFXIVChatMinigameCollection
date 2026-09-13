@@ -22,6 +22,8 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         public int TriggerPulls { get; set; } = 0;
 
+        public int AliveMembersAtTheStartOfRound { get; set; } = 0;
+
         public bool DidSomeoneDieThisRound = false;
 
         public long Bet { get; set; } = 0;

@@ -39,6 +39,15 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             "<T> ran towards the light"
         ];
 
+        private readonly string[] RoundEndedWithDeathQuips = [
+            "Round ended. You're dropping like flies.",
+            "Round ended. Casualties are mounting.",
+            "Round ended. Someone will have to clean up this mess.",
+            "Round ended. They were lucky, until they weren't.",
+            "Round ended. Someone call the undertaker."
+            ];
+
+
         public GRChatOutput(IChatOutput chatOutput)
         {
             this.chatOutput = chatOutput;
@@ -99,6 +108,12 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             chatOutput.WriteChat(randomQuip);
             var randomDeathQuip = PlayerDeadQuips[new Random().Next(0, PlayerDeadQuips.Length)];
             chatOutput.WriteChat(randomDeathQuip.Replace("<T>", player?.FullName.GetNameOnly() ?? "nobody"));
+        }
+
+        public void WriteRoundEndedWithDeaths()
+        {
+            var randomDeathQuip = RoundEndedWithDeathQuips[new Random().Next(0, RoundEndedWithDeathQuips.Length)];
+            chatOutput.WriteChat(randomDeathQuip);
         }
     }
 }

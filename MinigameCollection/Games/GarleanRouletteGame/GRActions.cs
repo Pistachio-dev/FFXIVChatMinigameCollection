@@ -44,7 +44,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             ResetPlayers();
             rollTracker.Reset();
-            gameState.TriggerPulls = 0;
+            ResetRound();
             gameState.ChambersLoaded.Clear();
             var firstPlayer = host.Players?.GetFirst();
             if (firstPlayer != null)
@@ -184,7 +184,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void ProcessShootRoll(DiceRoll role)
         {
-            int numPlayersBeforeProcessingShot = gameHost.Players.ActivePlayers.Count(p => p.GetData().Alive == true);
             gameState.TriggerPulls++;
             if (gameState.ChambersLoaded.Contains(role.RollResult))
             {
@@ -195,7 +194,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 chatOutput.WritePlayerSurvives(gameState.CurrentPlayer);
             }
 
-            if (gameState.TriggerPulls >= numPlayersBeforeProcessingShot)
+            if (gameState.TriggerPulls == gameState.AliveMembersAtTheStartOfRound)
             {
                 Plugin.Log.Info("Round finished");
                 if(!gameState.DidSomeoneDieThisRound)
@@ -205,14 +204,20 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 }
                 else
                 {
-                    gameHost.ChatOutput.WriteChat("You're dropping like flies. Let's continue.");
-                    gameState.DidSomeoneDieThisRound = false;
-                    gameState.TriggerPulls = 0;
+                    chatOutput.WriteRoundEndedWithDeaths();
                 }
 
+                ResetRound();
             }
 
             var reloaded = TryReloadAndSetNextPlayer();
+        }
+
+        private void ResetRound()
+        {
+            gameState.TriggerPulls = 0;
+            gameState.DidSomeoneDieThisRound = false;
+            gameState.AliveMembersAtTheStartOfRound = gameHost.Players.ActivePlayers.Count(p => p.GetData().Alive == true);
         }
 
         private bool TryReloadAndSetNextPlayer()
@@ -257,8 +262,6 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
         private void AddBullet(bool isFirstTime)
         {            
-            gameState.DidSomeoneDieThisRound = false;
-            gameState.TriggerPulls = 0;
             if (gameState.ChambersLoaded.Count == RevolverRollMaxInclusive)
             {
                 gameHost.ChatOutput.WriteChat("All chambers are loaded! How lucky can you get?");

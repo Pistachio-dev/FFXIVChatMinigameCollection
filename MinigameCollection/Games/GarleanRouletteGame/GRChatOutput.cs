@@ -18,6 +18,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 "E A T  L E A D",
                 "T O U G H  L U C K",
                 "Y O U  L O S E",
+                "W R O N G  C H O I C E",
             ];
 
         private readonly string[] PlayerDeadQuips = [
@@ -29,8 +30,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             "<T> receives a dose of lead applied via gun",
             "<T> gets zeroed",
             "<T> is gone, but not forgotten",
-            "<T> regrets their decision"
-
+            "<T> regrets their decision",
+            "<T> is no longer with us",
+            "<T> has been eliminated from the game",
+            "<T> is now a permanent resident of the afterlife",
+            "<T> is added to the statistics",
+            "<T> is now but a fading memory. And a stinky corpse",
+            "<T> ran towards the light"
         ];
 
         public GRChatOutput(IChatOutput chatOutput)

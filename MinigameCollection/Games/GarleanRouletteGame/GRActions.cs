@@ -202,7 +202,14 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 {
                     gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes", minSpacingBeforeInMs: 2000);
                     AddBullet(false);
-                }                                
+                }
+                else
+                {
+                    gameHost.ChatOutput.WriteChat("You're dropping like flies. Let's continue.");
+                    gameState.DidSomeoneDieThisRound = false;
+                    gameState.TriggerPulls = 0;
+                }
+
             }
 
             var reloaded = TryReloadAndSetNextPlayer();

@@ -124,6 +124,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         {
             Plugin.Log.Info("Ending roll order phase");
             ShufflePlayersBasedOnRolledOrder();
+            ResetRound();
             chatOutput.WritePlayerOrder(gameHost.Players.ActivePlayers.Select(p => p.FullName.GetFirstName()).ToList());
             Plugin.Log.Info("Starting shooting phase");
             gameState.Stage = GRStage.Shooting;

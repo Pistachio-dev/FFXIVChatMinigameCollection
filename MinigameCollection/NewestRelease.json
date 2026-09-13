@@ -1,6 +1,6 @@
 {
-    "AssemblyVersion": "0.0.3.1",
+    "AssemblyVersion": "0.0.3.2",
     "DalamudApiLevel": 15,
-    "ChangeLog": "- Added Darts game.",
+    "ChangeLog": "- Fixed a bug in the Garlean Roulette game that caused a player to be prompted over and over if a middle player died.",
     "IsTest": false
 }

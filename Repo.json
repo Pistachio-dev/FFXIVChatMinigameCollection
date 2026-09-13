@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 15,
-    "AssemblyVersion": "0.0.3.2",
+    "AssemblyVersion": "0.0.3.3",
     "Changelog": "- Fixed a bug in the Garlean Roulette game that caused a player to be prompted over and over if a middle player died.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.2_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.2_release/MinigameCollection.zip",
-    "LastUpdate": 1789296820,
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.3_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.3_release/MinigameCollection.zip",
+    "LastUpdate": 1789312179,
     "InternalName": "MinigameCollection"
   }
 ]

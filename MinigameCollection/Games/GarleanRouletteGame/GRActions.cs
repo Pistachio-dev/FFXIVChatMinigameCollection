@@ -165,7 +165,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
 
 
         // Returns true if the shot should cause a skip to the first player
-        private void OnPlayerShot(int rollResult)
+        private bool OnPlayerShot(int rollResult)
         {
             chatOutput.WritePlayerShot(gameState.CurrentPlayer);
             gameState.ChambersLoaded = gameState.ChambersLoaded.Where(n => n != rollResult).ToList();
@@ -176,61 +176,71 @@ namespace MinigameCollection.Games.GarleanRouletteGame
             if (gameState.WinCondition())
             {
                 OnWin();
-                return;
-            }
-            else if (gameState.ChambersLoaded.Count == 0 && gameState.TriggerPulls < gameHost.Players.ActivePlayers.Count() && config.GarleanRouletteRestartIfGunEmpties)
-            {
-                chatOutput.WriteGunEmptied();
-                return;
+                return true;
             }
 
+            return false;
         }
 
         private void ProcessShootRoll(DiceRoll role)
         {
+            int numPlayersBeforeProcessingShot = gameHost.Players.ActivePlayers.Count(p => p.GetData().Alive == true);
             gameState.TriggerPulls++;
             if (gameState.ChambersLoaded.Contains(role.RollResult))
             {
-                OnPlayerShot(role.RollResult);
+                if (OnPlayerShot(role.RollResult)) return;
             }
             else
             {
                 chatOutput.WritePlayerSurvives(gameState.CurrentPlayer);
             }
 
-            if (gameState.TriggerPulls >= gameHost.Players.ActivePlayers.Count())
+            if (gameState.TriggerPulls >= numPlayersBeforeProcessingShot)
             {
-                AddBullet(false);
+                Plugin.Log.Info("Round finished");
+                if(!gameState.DidSomeoneDieThisRound)
+                {
+                    gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes", minSpacingBeforeInMs: 2000);
+                    AddBullet(false);
+                }                                
             }
 
-            SetNextPlayer();
+            var reloaded = TryReloadAndSetNextPlayer();
         }
 
-        private void SetNextPlayer()
+        private bool TryReloadAndSetNextPlayer()
         {
-            if (gameHost.Players.ActivePlayers.Count(p => p.GetData().Alive) <= 1) return;
-
-            if (gameState.ChambersLoaded.Any())
+            if (!gameState.ChambersLoaded.Any())
             {
-                gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
-            }
-            else
-            {
-                gameState.TriggerPulls = 0;
                 if (config.GarleanRouletteRestartIfGunEmpties)
                 {
+                    chatOutput.WriteGunEmptiedResetPlayer();
                     gameState.CurrentPlayer = GetNextRoundFirstPlayer();
                     Plugin.Log.Info("Skipping to first player: " + gameState.CurrentPlayer.FullName);
                 }
                 else
                 {
-                    gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
+                    Plugin.Log.Info("Continuing after emptied gun to first player: " + gameState.CurrentPlayer?.FullName ?? "Unable to retrieve");
+
+                    chatOutput.WriteGunEmptiedContinue();
+                    AdvancePlayer();
                 }
 
+                AddBullet(false);
+                SetupCurrentPlayerRoll();
+                return true;
             }
 
+            AdvancePlayer();            
+            SetupCurrentPlayerRoll();
+            return false;
+        }
+
+        private void AdvancePlayer()
+        {
+            gameState.CurrentPlayer = gameHost.Players.GetNext(gameState.CurrentPlayer, p => p.GetData().Alive);
             Plugin.Log.Verbose("Setting next player: " + gameState.CurrentPlayer.FullName);
-            SetupCurrentPlayerRoll();            
+
         }
         public void SetBet(long bet)
         {
@@ -239,11 +249,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
         }
 
         private void AddBullet(bool isFirstTime)
-        {
-            if (!isFirstTime && !gameState.DidSomeoneDieThisRound)
-            {
-                gameHost.ChatOutput.WriteChat("Everybody has survived so far... Let's up the stakes", minSpacingBeforeInMs: 2000);
-            }
+        {            
             gameState.DidSomeoneDieThisRound = false;
             gameState.TriggerPulls = 0;
             if (gameState.ChambersLoaded.Count == RevolverRollMaxInclusive)
@@ -252,8 +258,13 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 return;
             }
 
-            bool bulletInserted = false;
-            while (!bulletInserted)
+            AddRandomBullet();
+        }
+
+
+        private void AddRandomBullet()
+        {
+            while (true)
             {
                 var bullet = new Random().Next(RevolverRollMin, RevolverRollMaxInclusive + 1);
                 if (!gameState.ChambersLoaded.Contains(bullet))
@@ -262,11 +273,10 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                     gameHost.ChatOutput.WriteChat($"Inserting a new bullet on chamber {bullet}");
                     gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}", minSpacingBeforeInMs: 2000);
                     gameHost.ChatOutput.WriteChat($"The host spins the cylinder.");
-                    bulletInserted = true;
+                    return;
                 }
             }
         }
-
         private void ShufflePlayersBasedOnRolledOrder()
         {
             var ordered = gameHost.Players.Reorder(p => p.GetData().OrderRolled);

@@ -277,7 +277,7 @@ namespace MinigameCollection.Games.GarleanRouletteGame
                 if (!gameState.ChambersLoaded.Contains(bullet))
                 {
                     gameState.ChambersLoaded.Add(bullet);
-                    gameHost.ChatOutput.WriteChat($"Inserting a new bullet on chamber {bullet}");
+                    gameHost.ChatOutput.WriteChat($"Inserting a new bullet in chamber {bullet}");
                     gameHost.ChatOutput.WriteChat($"The chambers with bullets are now: {gameState.ChambersLoaded.Humanize()}", minSpacingBeforeInMs: 2000);
                     gameHost.ChatOutput.WriteChat($"The host spins the cylinder.");
                     return;

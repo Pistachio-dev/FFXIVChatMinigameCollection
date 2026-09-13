@@ -16,11 +16,11 @@
     ],
     "IconUrl": "https://raw.githubusercontent.com/Pistachio-dev/FFXIVChatMinigameCollection/refs/heads/main/images/icon.png",
     "DalamudApiLevel": 15,
-    "AssemblyVersion": "0.0.3.0",
+    "AssemblyVersion": "0.0.3.1",
     "Changelog": "- Added Darts game.",
-    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.0_release/MinigameCollection.zip",
-    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.0_release/MinigameCollection.zip",
-    "LastUpdate": 1779725215,
+    "DownloadLinkInstall": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.1_release/MinigameCollection.zip",
+    "DownloadLinkUpdate": "https://github.com/Pistachio-dev/FFXIVChatMinigameCollection/releases/download/0.0.3.1_release/MinigameCollection.zip",
+    "LastUpdate": 1779788718,
     "InternalName": "MinigameCollection"
   }
 ]
